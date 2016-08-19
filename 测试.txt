@@ -1,0 +1,24 @@
+*** Settings ***
+Resource          公共模块.txt
+
+*** Test Cases ***
+测试
+    登录
+    打开功能模块    我的项目    内业分配
+    打开功能模块    我的项目    项目审核
+    打开功能模块    财务管理    收费确认
+    关闭功能模块    项目审核
+    关闭功能模块    收费确认
+    关闭功能模块    内业分配
+    [Teardown]    Close Browser
+
+创建PEP对象
+    #创建pep对象
+    ${PEP}    Create Pep Object
+    #给pep对象输入值
+    Set Pep Value    ${PEP}    流水号    12312
+    Set Pep Value    ${PEP}    小区名    五栋大楼
+    #获取pep对象里面的某个值
+    log    ${PEP}    #直接输出对象时，输出流水号
+    log    ${PEP.get_value(u'流水号')}    #指定获取某个值
+    log    ${PEP.get_value(u'小区名')}

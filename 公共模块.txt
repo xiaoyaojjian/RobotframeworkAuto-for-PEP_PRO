@@ -1,0 +1,48 @@
+*** Settings ***
+Library           Selenium2Library
+Library           PepExt.py
+
+*** Variables ***
+${PEP_URL}        http://inworktest.yunfangdata.com:82/    # 评E评URL地址
+${USER_NAME}      李楠    # 全局用户名
+${PASSWORD}       123456    # 登录密码
+
+*** Keywords ***
+登录
+    打开网页
+    Input Text    xpath=//*[@id="username"]    ${USER_NAME}
+    Input Text    xpath=//*[@id="password"]    ${PASSWORD}
+    click Button    xpath=//button[contains(.,'登录')]
+    Wait Until Page Contains    修改密码
+    ${用户名}    get text    xpath=.//i[contains(@class,'user-name')]/..
+    should Be Equal    ${用户名}    ${USER_NAME}
+
+打开网页
+    Open Browser    ${PEP_URL}    chrome
+    Maximize Browser Window
+
+等待加载完毕
+    Set Selenium Speed    0.5s
+    Wait Until Page Contains Element    xpath=//*[@id="LoadingBG" and @style="display: none;"]    timeout=30s
+    Wait Until Page Contains Element    xpath=//*[@id="load_Tips" and contains(@style,"display: none")]    timeout=30s
+
+等待列表创建完毕
+    Wait Until Page Does Not Contain Element    xpath=//*[@class="datagrid-mask" and contains(@style,"display:block")]    timeout=30s
+
+等待提示框出现
+    Wait Until Page Contains Element    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]    60s
+
+等待弹出窗口出现
+    Wait Until Page Contains Element    xpath=//*[contains(@id,'xubox_iframe')]    60s
+
+打开功能模块
+    [Arguments]    ${主模块}    ${子模块}
+    Set Selenium Speed    0.5s
+    ${count}    Get Matching Xpath Count    //span[contains(.,'${主模块}')]/../span[@class="arrow down"]
+    Run Keyword If    '${count}'=='1'    Click Element    xpath=//span[contains(.,'${主模块}')]
+    Wait Until Page Does Not Contain Element    xpath=.//ul[@class="menu" and @style="display: none;"]//a[text()="${子模块}"]    timeout=10s
+    Click Element    //a[contains(.,'${子模块}')]
+
+关闭功能模块
+    [Arguments]    ${模块名称}
+    Click Element    xpath=.//*[@id='framecenter']/div[@class="l-tab-links"]//a[text()="${模块名称}"]/../div[@class="l-tab-links-item-close"]

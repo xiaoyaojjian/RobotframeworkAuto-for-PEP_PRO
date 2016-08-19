@@ -1,0 +1,2 @@
+*** Settings ***
+Resource          ../公共模块.txt
