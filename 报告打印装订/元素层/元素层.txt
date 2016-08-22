@@ -14,8 +14,17 @@ Resource          ../流程层/流程层.txt
 点击查询按钮
     click Element    id=BtnSearch
 
-校验流水号
-    [Arguments]    ${table}
-
-清空输入框流水号
+清空输入框装订流水号
     clear Element Text    id=ProjectNo
+
+报告号
+    [Arguments]    ${输入报告号}
+    Run Keyword And Continue On Failure    Input Text    id=ReportNo    ${输入报告号}
+
+项目地址
+    [Arguments]    ${输入项目地址}
+    Run Keyword And Continue On Failure    Input Text    id=ResidentialAreaAddress    ${输入项目地址}
+
+小区名称
+    [Arguments]    ${输入小区名称}
+    Run Keyword And Continue On Failure    Input Text    id=ResidentialAreaAddress    ${输入小区名称}
