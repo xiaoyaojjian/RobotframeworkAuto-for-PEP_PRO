@@ -1,6 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#_*_ coding:utf-8 _*_
+
+
 from PepObject import PepObject
+import sys
+
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 class PepExt:
     

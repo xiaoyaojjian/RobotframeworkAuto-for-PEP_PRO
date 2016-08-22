@@ -142,7 +142,7 @@ Resource          ../元素层/元素层.txt
 超长项目地址字符校验
     [Arguments]    ${n}
     Comment    Should Be Equal    ${n}    int('100')
-    Run Keyword If    ${n}==int('100')    log    pass
+    Run Keyword If    ${n}==int('300')    log    pass
     ...    ELSE    Fail
 
 超长小区名称字符校验
@@ -152,8 +152,25 @@ Resource          ../元素层/元素层.txt
     ...    ELSE    Fail
 
 获取输入参数最终值
-    [Arguments]    ${查询类型}    ${n}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
-    Run Keyword If    '${查询类型}'=='流水号'    超长流水号字符校验    ${n}
-    ...    ELSE IF    '${查询类型}'=='报告号'    超长报告号字符校验    ${n}
-    ...    ELSE IF    '${查询类型}'=='项目地址'    超长项目地址字符校验    ${n}
-    ...    ELSE IF    '${查询类型}'=='小区名称'    超长小区名称字符校验    ${n}
+    [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    ${获取输入参数最终值}    Run Keyword If    '${查询类型}'=='流水号'    获取流水号输入最终值
+    ...    ELSE IF    '${查询类型}'=='报告号'    获取报告号输入最终值
+    ...    ELSE IF    '${查询类型}'=='项目地址'    获取项目地址输入最终值
+    ...    ELSE IF    '${查询类型}'=='小区名称'    获取小区名称输入最终值
+    [Return]    ${获取输入参数最终值}
+
+获取流水号输入最终值
+    ${获取输入参数最终值}    Get Value    id=ProjectNo
+    [Return]    ${获取输入参数最终值}
+
+获取报告号输入最终值
+    ${获取输入参数最终值}    Get Value    id=ReportNo
+    [Return]    ${获取输入参数最终值}
+
+获取项目地址输入最终值
+    ${获取输入参数最终值}    Get Value    id=ResidentialAreaAddress
+    [Return]    ${获取输入参数最终值}
+
+获取小区名称输入最终值
+    ${获取输入参数最终值}    Get Value    id=ResidentialAreaName
+    [Return]    ${获取输入参数最终值}

@@ -27,4 +27,4 @@ Resource          ../流程层/流程层.txt
 
 小区名称
     [Arguments]    ${输入小区名称}
-    Run Keyword And Continue On Failure    Input Text    id=ResidentialAreaAddress    ${输入小区名称}
+    Run Keyword And Continue On Failure    Input Text    id=ResidentialAreaName    ${输入小区名称}
