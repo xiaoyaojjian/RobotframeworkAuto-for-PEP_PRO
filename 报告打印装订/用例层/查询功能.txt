@@ -1,0 +1,10 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../流程层/流程层.txt
+
+*** Test Cases ***
+流水号查询
+    [Setup]
+    正确的流水号查询    559265219879
+    错误的流水号查询    是多少水电费
+    流水号为空查询    ${empty}

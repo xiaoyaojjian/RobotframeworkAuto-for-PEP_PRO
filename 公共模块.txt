@@ -1,5 +1,6 @@
 *** Settings ***
 Library           Selenium2Library
+Library           DateTime
 Library           PepExt.py
 
 *** Variables ***
@@ -34,6 +35,7 @@ ${PASSWORD}       123456    # 登录密码
 
 等待弹出窗口出现
     Wait Until Page Contains Element    xpath=//*[contains(@id,'xubox_iframe')]    60s
+    select Frame    xpath=//iframe[contains(@id,"xubox_iframe")]
 
 打开功能模块
     [Arguments]    ${主模块}    ${子模块}
@@ -46,3 +48,25 @@ ${PASSWORD}       123456    # 登录密码
 关闭功能模块
     [Arguments]    ${模块名称}
     Click Element    xpath=.//*[@id='framecenter']/div[@class="l-tab-links"]//a[text()="${模块名称}"]/../div[@class="l-tab-links-item-close"]
+
+文本框清空并输入
+    [Arguments]    ${locator}    ${text}
+    Clear Element Text    xpath=${locator}
+    Input Text    xpath=${locator}    ${text}
+    log    ${text}
+
+点击提示框中的${button_name}按钮
+    Click Element    xpath=//div[contains(@class,"messager-window")]//span[text()="${button_name}"]/ancestor::a
+
+获取当前时间
+    [Arguments]    ${format}=%Y%m%d%H%M%S%f
+    [Documentation]    根据输入的格式返回指定格式的时间，默认格式为%Y%m%d%H%M%S%f
+    ${time}    Get Current Date    result_format=${format}
+    [Return]    ${time}
+
+切换到${sub_model_name}子模块
+    Click Element    xpath=.//span[text()="${sub_model_name}"]/ancestor::a
+
+页数
+    [Arguments]    ${总共多少条[0]}    ${列表数目显示模式}
+    ${页数}    Evaluate    ${总共多少条[0]}/${列表数目显示模式}

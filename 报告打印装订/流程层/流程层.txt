@@ -1,0 +1,35 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../组件层/报告装订打印.txt
+Resource          ../../公共模块.txt
+Resource          ../元素层/元素层.txt
+
+*** Keywords ***
+正确的流水号查询
+    [Arguments]    ${流水号}    ${table}    ${table1}    ${table2}    ${查询条件}    ${查询条件名}
+    登录
+    打开功能模块    我的项目    报告打印装订
+    报告装订打印窗口
+    等待列表创建完毕
+    输入流水号    ${流水号}
+    点击查询按钮
+    等待列表创建完毕
+    获取公共列表    ${table}    ${table1}    ${table2}    ${查询条件}    ${查询条件名}
+
+错误的流水号查询
+    [Arguments]    ${流水号}
+    清空输入框流水号
+    等待列表创建完毕
+    输入流水号    ${流水号}
+    ${提示语}    get text    xpath=html/body/div[2]/div[1]
+    should be equal    ${提示语}    请输入正确流水号
+    点击查询按钮
+    等待列表创建完毕
+
+流水号为空查询
+    [Arguments]    ${流水号}
+    清空输入框流水号
+    等待列表创建完毕
+    输入流水号    ${流水号}
+    点击查询按钮
+    等待列表创建完毕

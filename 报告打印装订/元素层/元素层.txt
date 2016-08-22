@@ -1,0 +1,21 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../流程层/流程层.txt
+
+*** Keywords ***
+流水号
+    [Arguments]    ${输入流水号}
+    Run Keyword And Continue On Failure    Input Text    id=ProjectNo    ${输入流水号}
+
+报告装订打印窗口
+    Run Keyword And Continue On Failure    select frame    id=ProjectAllot_PrintSewing
+    Wait Until Page Contains    流水号
+
+点击查询按钮
+    click Element    id=BtnSearch
+
+校验流水号
+    [Arguments]    ${table}
+
+清空输入框流水号
+    clear Element Text    id=ProjectNo

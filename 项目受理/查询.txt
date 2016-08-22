@@ -1,0 +1,25 @@
+*** Settings ***
+Test Teardown     Close Browser
+Resource          项目受理业务层.txt
+
+*** Test Cases ***
+线上业务查询
+    登录
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到暂存项目子模块
+    等待列表创建完毕
+    点击立项按钮
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待加载完毕
+    ${PEP}    Create Pep Object
+    通过手机号码获取客户信息    ${PEP}    13418024243
+    log    ${PEP.get_value(u'所属机构')}
+    填写项目信息    发送份数=5    小区名=新世界太华公寓
+    将项目信息写入PEP对象    ${PEP}
+    log    ${PEP.get_value(u'所属机构')}
+    log    ${PEP.get_value(u'小区名')}
+    填写收费信息    票据类型=增值税专用发票    (专票)名称=名称    (专票)纳税人识别号=识别号    (专票)开户行=开户行
+    将收费信息写入PEP对象    ${PEP}

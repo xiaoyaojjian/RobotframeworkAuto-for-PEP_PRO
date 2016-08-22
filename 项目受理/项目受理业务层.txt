@@ -1,0 +1,3 @@
+*** Settings ***
+Resource          项目受理操作层.txt
+Resource          项目受理校验层.txt

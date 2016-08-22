@@ -1,0 +1,35 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../元素层/元素层.txt
+
+*** Keywords ***
+输入流水号
+    [Arguments]    ${输入流水号}
+    流水号    ${输入流水号}
+
+获取公共列表
+    [Arguments]    ${table}    ${table1}    ${table2}    ${查询条件}    ${查询条件名}
+    sleep    2
+    ${列表数目显示模式}    get text    xpath=//button[@data-toggle='dropdown']
+    ${列表总共数据数}    get text    xpath=//span[contains(@class,'pagination-info')]
+    log    ${列表总共数据数}
+    ${显示第}    Findall    显示第 (.*) 到    ${列表总共数据数}
+    ${到第}    Findall    到第 (.*) 条记录，总    ${列表总共数据数}
+    ${总共多少条}    Findall    总共 (.*) 条    ${列表总共数据数}
+    log    ${总共多少条[0]}
+    Run Keyword If    '${列表数目显示模式}'!=''    页数    ${总共多少条[0]}    ${列表数目显示模式}
+    Comment    获取行数
+    Execute Javascript    jquery=num=$('#${table}').children('tbody').children('tr').length    #原来不需要定义标识符var，坑啊
+    ${num}    Execute Javascript    return num
+    Convert To Integer    ${num}
+    Comment    获取列数    xpath=/html/body/div[1]/div[1]/div[2]/div[1]/table/thead/tr/th
+    ${b}    Get Matching Xpath Count    xpath=//*[@id="${table}"]/${table1}/tr/th
+    ${b}    Evaluate    ${b}+1
+    Comment    获取列表框表头
+    : FOR    ${row}    IN RANGE    1    ${b}
+    \    log    ${row}
+    \    Comment    \    xpath=/html/body/div[1]/div[1]/div[2]/div[1]/table/thead/tr/th[${row}]/div[1]
+    \    ${字段值}    Get Text    xpath=//*[@id="${table}"]/${table1}/tr/th[${row}]/div[1]
+    \    Comment    sleep    2
+    \    Run Keyword If    '${字段值}'=='${查询条件名}'    列表循环语句    ${num}    ${row}    ${查询条件}
+    \    ...    ${table}

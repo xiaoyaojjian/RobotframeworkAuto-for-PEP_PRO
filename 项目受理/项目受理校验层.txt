@@ -1,0 +1,43 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Keywords ***
+验证字段的记录数是否一致
+    [Arguments]    ${行数}    ${xpath}
+    ${相匹配记录数}    Get Matching Xpath Count    ${xpath}
+    Should Be Equal    ${相匹配记录数}    ${行数}    msg='查询的记录数不匹配！'
+
+验证暂存项目查询数据
+    [Arguments]    ${流水号}=None    ${项目地址}=None    ${小区名称}=None    ${项目分类}=None    ${物业类型}=None    ${估价目的}=None
+    ...    ${报告类型}=None    ${业务来源}=None    ${客户姓名}=None    ${估价委托方}=None    ${暂存时间}=None
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div
+    Run Keyword If    '${流水号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div[contains(text(),'${流水号}')]
+    Run Keyword If    '${项目地址}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ResidentialAreaAddress"]/div[contains(text(),'${项目地址}')]
+    Run Keyword If    '${小区名称}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ResidentialAreaName"]/div[contains(text(),'${小区名称}')]
+    Run Keyword If    '${项目分类}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ReportType"]/div[contains(text(),'${项目分类}')]
+    Run Keyword If    '${物业类型}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectType"]/div[contains(text(),'${物业类型}')]
+    Run Keyword If    '${估价目的}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="BusinessType"]/div[contains(text(),'${估价目的}')]
+    Run Keyword If    '${报告类型}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ReportCategory"]/div[contains(text(),'${报告类型}')]
+    Run Keyword If    '${业务来源}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectSource"]/div[contains(text(),'${业务来源}')]
+    Run Keyword If    '${客户姓名}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="crmname"]/div[contains(text(),'${客户姓名}')]
+    Run Keyword If    '${估价委托方}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="PriceDelegate"]/div[contains(text(),'${估价委托方}')]
+    Run Keyword If    '${暂存时间}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="date"]/div[contains(text(),'${暂存时间}')]
+
+验证线上业务查询数据
+    [Arguments]    ${交易编号}=None    ${是否受理}=None    ${项目来源}=None    ${是否终止}=None    ${业务类型}=None    ${紧急程度}=None
+    ...    ${小区名}=None    ${小区地址}=None    ${流水号}=None    ${报告号}=None    ${贷款类型}=None    ${物业类型}=None
+    ...    ${创建时间}=None
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="bscode"]/div
+    Run Keyword If    '${交易编号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="bscode"]/div[contains(text(),'${交易编号}')]
+    Run Keyword If    '${是否受理}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="IsAcceptstr"]/div[contains(text(),'${是否受理}')]
+    Run Keyword If    '${项目来源}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="DataSource"]/div[contains(text(),'${项目来源}')]
+    Run Keyword If    '${是否终止}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="IsCancelName"]/div[contains(text(),'${是否终止}')]
+    Run Keyword If    '${业务类型}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="WeituoTypeName"]/div[contains(text(),'${业务类型}')]
+    Run Keyword If    '${紧急程度}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="urgency"]/div[contains(text(),'${紧急程度}')]
+    Run Keyword If    '${小区名}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="community"]/div[contains(text(),'${小区名}')]
+    Run Keyword If    '${小区地址}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="houseAddr"]/div[contains(text(),'${小区地址}')]
+    Run Keyword If    '${流水号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div[contains(text(),'${流水号}')]
+    Run Keyword If    '${报告号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ReportNo"]/div[contains(text(),'${报告号}')]
+    Run Keyword If    '${贷款类型}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="businessType"]/div[contains(text(),'${贷款类型}')]
+    Run Keyword If    '${物业类型}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="houseType"]/div[contains(text(),'${物业类型}')]
+    Run Keyword If    '${创建时间}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="CreatDate"]/div[contains(text(),'${创建时间}')]
