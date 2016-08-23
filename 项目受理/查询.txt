@@ -14,12 +14,16 @@ Resource          项目受理业务层.txt
     Unselect Frame
     Select Frame    id=create_project_
     等待加载完毕
-    ${PEP}    Create Pep Object
-    通过手机号码获取客户信息    ${PEP}    13418024243
-    log    ${PEP.get_value(u'所属机构')}
+    ${pep}    Create Pep Object
+    通过手机号码获取客户信息    ${pep}    13418024243
+    log    ${pep.get_value(u'所属机构')}
     填写项目信息    发送份数=5    小区名=新世界太华公寓
-    将项目信息写入PEP对象    ${PEP}
-    log    ${PEP.get_value(u'所属机构')}
-    log    ${PEP.get_value(u'小区名')}
-    填写收费信息    票据类型=增值税专用发票    (专票)名称=名称    (专票)纳税人识别号=识别号    (专票)开户行=开户行
-    将收费信息写入PEP对象    ${PEP}
+    将项目信息写入PEP对象    ${pep}
+    log    ${pep.get_value(u'所属机构')}
+    log    ${pep.get_value(u'小区名')}
+    Comment    填写收费信息    票据类型=增值税专用发票    (专票)名称=名称    (专票)纳税人识别号=识别号    (专票)开户行=开户行
+    Comment    将收费信息写入PEP对象    ${pep}
+    填写勘查信息    看房联系人=李楠    联系人电话=13489090908
+    将勘查信息写入PEP对象    ${pep}
+    log    ${pep.get_value(u'看房联系人信息')}
+    log    ${pep.get_value(u'看房联系人信息')[0][u'姓名']}

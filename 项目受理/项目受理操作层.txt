@@ -231,21 +231,35 @@ Resource          ../公共模块.txt
     Set Pep Value    ${PEP}    (专票)电话    ${(专票)电话}
 
 填写勘查信息
-    [Arguments]    ${市场负责人}=None    ${收费责任人}=${USER_NAME}    ${内部报单人}=None    ${结算方式}=None    ${应收金额}=None    ${收费方式}=None
-    ...    ${公司帐号}=None    ${票据类型}=None    ${(普票)发票抬头}=None    ${(专票)名称}=None    ${(专票)纳税人识别号}=None    ${(专票)开户行}=None
-    ...    ${(专票)账号}=None    ${(专票)地址}=None    ${(专票)电话}=None
-    Run Keyword If    '${市场负责人}'!='None'    Input Text    xpath=.//*[@name="Market_EmployeeTID"]/..//input[@type="text"]    ${市场负责人}
-    Run Keyword If    '${收费责任人}'!='None'    Input Text    xpath=.//*[@name="Finance_EmployeeTID"]/..//input[@type="text"]    ${收费责任人}
-    Run Keyword If    '${内部报单人}'!='None'    Input Text    xpath=.//*[@name="InnerOrder_EmployeeID"]/..//input[@type="text"]    ${内部报单人}
-    Run Keyword If    '${结算方式}'!='None'    Select From List By Label    xpath=.//*[@id='CalculateType']    ${结算方式}
-    Run Keyword If    '${应收金额}'!='None'    Input Text    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]    ${应收金额}
-    Run Keyword If    '${收费方式}'!='None'    Select From List By Label    xpath=.//*[@id='PaymentType']    ${收费方式}
-    Run Keyword If    '${公司帐号}'!='None'    Select From List By Label    xpath=.//*[@id='PaymentAccount']    ${公司帐号}
-    Run Keyword If    '${票据类型}'!='None'    Select From List By Label    xpath=.//*[@id='BillType']    ${票据类型}
-    Run Keyword If    '${(普票)发票抬头}'!='None'    Input Text    xpath=.//*[@id='InvoiceTitle']    ${(普票)发票抬头}
-    Run Keyword If    '${(专票)名称}'!='None'    Input Text    xpath=.//*[@id='BillName']    ${(专票)名称}
-    Run Keyword If    '${(专票)纳税人识别号}'!='None'    Input Text    xpath=.//*[@id='BillIdentifyNumber']    ${(专票)纳税人识别号}
-    Run Keyword If    '${(专票)开户行}'!='None'    Input Text    xpath=.//*[@id='BillBank']    ${(专票)开户行}
-    Run Keyword If    '${(专票)账号}'!='None'    Input Text    xpath=.//*[@id='BillAccountNumber']    ${(专票)账号}
-    Run Keyword If    '${(专票)地址}'!='None'    Input Text    xpath=.//*[@id='BillAddress']    ${(专票)地址}
-    Run Keyword If    '${(专票)电话}'!='None'    Input Text    xpath=.//*[@id='BillPhone']    ${(专票)电话}
+    [Arguments]    ${是否勘查}=是    ${预收费用}=None    ${资料提供方式}=None    ${看房联系人}=None    ${联系人电话}=None
+    [Documentation]    这个方法只能添加一次看房联系人，如果需要添加多个，请使用“添加看房联系人”方法
+    Select Radio Button    IsLiveSearch    ${是否勘查}
+    Run Keyword If    '${预收费用}'!='None'    Input Text    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]    ${预收费用}
+    Run Keyword If    '${资料提供方式}'!='None'    Select From List By Label    xpath=.//*[@id=id="ReportSupplyType"]/..//input[@type="text"]    ${资料提供方式}
+    Run Keyword If    '${看房联系人}'!='None' and '${联系人电话}'!='None'    添加看房联系人    ${看房联系人}    ${联系人电话}
+
+添加看房联系人
+    [Arguments]    ${看房联系人}    ${联系人电话}
+    Click Element    xpath=.//span[text()="增加联系人"]/ancestor::a
+    等待弹出窗口出现
+    Input Text    xpath=.//*[@id='Contacts']    ${看房联系人}
+    Input Text    xpath=.//*[@id='Phone']    ${联系人电话}
+    Click Element    xpath=.//span[text()="保存"]/ancestor::a
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待提示框出现
+    点击提示框中的确定按钮
+
+将勘查信息写入PEP对象
+    [Arguments]    ${PEP}
+    ${是否勘查}    Get Value    xpath=//input[@name="IsLiveSearch" and @checked="checked"]
+    Set Pep Value    ${PEP}    是否勘查    ${是否勘查}
+    ${预收费用}    Get Value    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]
+    Set Pep Value    ${PEP}    预收费用    ${预收费用}
+    ${资料提供方式}    Get Value    xpath=.//*[@id=id="ReportSupplyType"]/..//input[@type="text"]
+    Set Pep Value    ${PEP}    资料提供方式    ${资料提供方式}
+    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//td[@field="Contacts"]
+    : FOR    ${row_num}    IN RANGE    ${row_count}
+    \    ${联系人姓名}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
+    \    ${联系人电话}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
+    \    Set Kanfang Value    ${PEP}    ${联系人姓名}    ${联系人电话}
