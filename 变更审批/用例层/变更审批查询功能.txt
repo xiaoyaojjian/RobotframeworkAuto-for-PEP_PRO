@@ -1,13 +1,7 @@
 *** Settings ***
-Documentation     该用例含有
-...               1、正确查询
-...               2、错误含特殊字符的查询
-...               3、为空查询
-...               4、模糊查询
-...               5、错误查询
-...               编写人：吕梓清
-Resource          ../../公共模块.txt
 Resource          ../流程层/流程层.txt
+Resource          ../../公共模块.txt
+Resource          ../../报告打印装订/流程层/流程层.txt
 
 *** Test Cases ***
 流水号查询
@@ -20,17 +14,17 @@ Resource          ../流程层/流程层.txt
     ...
     ...    编写人：吕梓清
     [Setup]    登录
-    报告装订打印打开模块公共方法
-    ${总数据量}    正确数据查询    流水号    559265219879    ${empty}    ${empty}    ${empty}
-    ...    ProjectNo
-    错误特殊字符查询    流水号    多个大范甘迪发    ${empty}    ${empty}    ${empty}    ProjectNo
+    变更审批打开模块公共方法
+    ${总数据量}    正确数据查询    流水号    532636259525    ${empty}    ${empty}    ${empty}
+    ...    pno
+    错误特殊字符查询    流水号    多个大范甘迪发    ${empty}    ${empty}    ${empty}    pno
     为空查询    流水号    ${总数据量}    ${empty}    ${empty}    ${empty}    ${empty}
-    ...    ProjectNo
-    模糊查询    流水号    5592652    ${empty}    ${empty}    ${empty}    ProjectNo
+    ...    pno
+    模糊查询    流水号    79637    ${empty}    ${empty}    ${empty}    pno
     错误查询    流水号    ${总数据量}    123456789564    ${empty}    ${empty}    ${empty}
-    ...    ProjectNo
+    ...    pno
     超长字符查询    流水号    ${总数据量}    1234567895643    ${empty}    ${empty}    ${empty}
-    ...    ProjectNo
+    ...    pno
     [Teardown]    Close Browser
 
 报告号查询
@@ -43,17 +37,17 @@ Resource          ../流程层/流程层.txt
     ...
     ...    编写人：吕梓清
     [Setup]    登录
-    报告装订打印打开模块公共方法
-    ${总数据量}    正确数据查询    报告号    ${empty}    201601101003727    ${empty}    ${empty}
-    ...    ReportNo
-    错误特殊字符查询    报告号    ${empty}    多个大范甘迪发    ${empty}    ${empty}    ReportNo
+    变更审批打开模块公共方法
+    ${总数据量}    正确数据查询    报告号    ${empty}    201601101003462    ${empty}    ${empty}
+    ...    rpno
+    错误特殊字符查询    报告号    ${empty}    多个大范甘迪发    ${empty}    ${empty}    rpno
     为空查询    报告号    ${总数据量}    ${empty}    ${empty}    ${empty}    ${empty}
-    ...    ReportNo
-    模糊查询    报告号    ${empty}    003554    ${empty}    ${empty}    ReportNo
+    ...    rpno
+    模糊查询    报告号    ${empty}    3407    ${empty}    ${empty}    rpno
     错误查询    报告号    ${总数据量}    ${empty}    123456789564    ${empty}    ${empty}
-    ...    ReportNo
+    ...    rpno
     超长字符查询    报告号    ${总数据量}    ${empty}    1231232312312312    ${empty}    ${empty}
-    ...    ReportNo
+    ...    rpno
     [Teardown]    Close Browser
 
 项目地址查询
@@ -66,17 +60,17 @@ Resource          ../流程层/流程层.txt
     ...
     ...    编写人：吕梓清
     [Setup]    登录
-    报告装订打印打开模块公共方法
-    ${总数据量}    正确数据查询    项目地址    ${empty}    ${empty}    北京市通州区远洋东方公馆(远洋东方公馆20160822022020)    ${empty}
-    ...    ResidentialAreaAddress
-    错误特殊字符查询    项目地址    ${empty}    ${empty}    @#@###￥￥@@￥@￥@￥    ${empty}    ResidentialAreaAddress
+    变更审批打开模块公共方法
+    ${总数据量}    正确数据查询    项目地址    ${empty}    ${empty}    北京市通州区远洋东方公馆(远洋东方公馆2016-07-15 02:12:07)    ${empty}
+    ...    address
+    错误特殊字符查询    项目地址    ${empty}    ${empty}    @#@###￥￥@@￥@￥@￥    ${empty}    address
     为空查询    项目地址    ${总数据量}    ${empty}    ${empty}    ${empty}    ${empty}
-    ...    ResidentialAreaAddress
-    模糊查询    项目地址    ${empty}    ${empty}    远洋东方公馆    ${empty}    ResidentialAreaAddress
+    ...    address
+    模糊查询    项目地址    ${empty}    ${empty}    远洋东方公馆    ${empty}    address
     错误查询    项目地址    ${总数据量}    ${empty}    ${empty}    234234啥时发放的是方法反反复复凤飞飞发手动阀    ${empty}
-    ...    ResidentialAreaAddress
+    ...    address
     超长字符查询    项目地址    ${总数据量}    ${empty}    ${empty}    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ${empty}
-    ...    ResidentialAreaAddress
+    ...    address
     [Teardown]    Close Browser
 
 小区名称查询
@@ -89,30 +83,33 @@ Resource          ../流程层/流程层.txt
     ...
     ...    编写人：吕梓清
     [Setup]    登录
-    报告装订打印打开模块公共方法
-    ${总数据量}    正确数据查询    小区名称    ${empty}    ${empty}    ${empty}    宋家路甲12号院
-    ...    ResidentialAreaName
-    错误特殊字符查询    小区名称    ${empty}    ${empty}    ${empty}    @$@    ResidentialAreaName
+    变更审批打开模块公共方法
+    ${总数据量}    正确数据查询    小区名称    ${empty}    ${empty}    ${empty}    北岸莱茵
+    ...    areaname
+    错误特殊字符查询    小区名称    ${empty}    ${empty}    ${empty}    @$@    areaname
     为空查询    小区名称    ${总数据量}    ${empty}    ${empty}    ${empty}    ${empty}
-    ...    ResidentialAreaName
-    模糊查询    小区名称    ${empty}    ${empty}    ${empty}    禄米仓胡同    ResidentialAreaName
+    ...    areaname
+    模糊查询    小区名称    ${empty}    ${empty}    ${empty}    远洋东方公馆    areaname
     错误查询    小区名称    ${总数据量}    ${empty}    ${empty}    ${empty}    232收到罚单是打发反反
-    ...    ResidentialAreaName
+    ...    areaname
     超长字符查询    小区名称    ${总数据量}    ${empty}    ${empty}    ${empty}    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1
-    ...    ResidentialAreaName
+    ...    areaname
     [Teardown]    Close Browser
 
-装订状态查询
+状 态查询
     [Documentation]    该用例含有
-    ...    1、装订未完成查询
-    ...    2、装订已完成查询
+    ...    1、申请中查询
+    ...    2、未通过查询
     ...    3、全部数据查询
+    ...    4、已通过查询
+    ...    5、已撤销查询
     ...    流程：
-    ...    装订状态——查询
+    ...    状态——查询
     ...
     ...    编写人：吕梓清
-    [Setup]    登录
-    报告装订打印打开模块公共方法
-    ${已完成数据总量}    装订状态查询    装订完成
-    ${未完成数据总量}    装订状态查询    装订未完成
-    ${全部数据总量}    装订状态查询    全部
+    变更审批打开模块公共方法
+    ${申请中数据总量}    状态查询    申请中
+    ${未通过数据总量}    状态查询    未通过
+    ${全部数据总量}    状态查询    全部
+    ${已通过数据总量}    状态查询    已通过
+    ${已撤销数据总量}    状态查询    已撤销

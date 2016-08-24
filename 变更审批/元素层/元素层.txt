@@ -1,0 +1,12 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../变更审批/流程层/流程层.txt
+
+*** Keywords ***
+变更流水号
+    [Arguments]    ${输入流水号}
+    Run Keyword And Continue On Failure    Input Text    id=pno    ${输入流水号}
+
+变更审批窗口
+    Run Keyword And Continue On Failure    select frame    id=ProjectAllot_ChangeApprove
+    Wait Until Page Contains    流水号

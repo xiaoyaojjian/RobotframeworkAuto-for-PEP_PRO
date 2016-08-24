@@ -4,8 +4,8 @@ Resource          ../元素层/元素层.txt
 
 *** Keywords ***
 输入流水号
-    [Arguments]    ${输入流水号}
-    流水号    ${输入流水号}
+    [Arguments]    ${输入流水号}    ${路径}
+    流水号    ${输入流水号}    ${路径}
 
 获取公共列表
     [Arguments]    ${table}    ${table1}    ${table2}    ${查询条件}    ${查询条件名}
@@ -51,25 +51,29 @@ Resource          ../元素层/元素层.txt
     [Return]    ${rowNumberP1}
 
 查询结果检测
-    [Arguments]    ${行数}    ${列数}    ${查询条件名}    ${查询类型}
+    [Arguments]    ${行数}    ${列数}    ${查询条件名}    ${查询类型}    ${路径}
     : FOR    ${row}    IN RANGE    1    ${行数}+1
     \    log    ${row}
     \    ${字段值}    Run Keyword If    '${查询类型}'=='流水号'    获取单元格的值    2    ${row}
+    \    ...    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='报告号'    获取单元格的值    3    ${row}
+    \    ...    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='项目地址'    获取单元格的值    4    ${row}
+    \    ...    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='小区名称'    获取单元格的值    5    ${row}
+    \    ...    ${路径}
     \    should match    ${字段值}    *${查询条件名}*
 
 根据查询条件选择查询类型
-    [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
-    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${流水号}
-    ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${报告号}
-    ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${项目地址}
-    ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${小区名称}
+    [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}    ${路径}
+    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${流水号}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${报告号}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${项目地址}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${小区名称}    ${路径}
 
 输入报告号
-    [Arguments]    ${输入报告号}
-    报告号    ${输入报告号}
+    [Arguments]    ${输入报告号}    ${路径}
+    报告号    ${输入报告号}    ${路径}
 
 列表循环语句
     [Arguments]    ${num}    ${row}    ${查询条件}    ${table}
@@ -83,18 +87,18 @@ Resource          ../元素层/元素层.txt
     \    Comment    Run Keyword If    ${start}<${temp}<${last}    Continue For Loop    #假如正确，继续循环
 
 获取单元格的值
-    [Arguments]    ${参数}    ${row}
+    [Arguments]    ${参数}    ${row}    ${路径}
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[${参数}]/div[1]
     log    ${流水号字段值}
     [Return]    ${流水号字段值}
 
 输入项目地址
-    [Arguments]    ${输入项目地址}
-    项目地址    ${输入项目地址}
+    [Arguments]    ${输入项目地址}    ${路径}
+    项目地址    ${输入项目地址}    ${路径}
 
 输入小区名称
-    [Arguments]    ${输入小区名称}
-    小区名称    ${输入小区名称}
+    [Arguments]    ${输入小区名称}    ${路径}
+    小区名称    ${输入小区名称}    ${路径}
 
 特殊字符校验提示语
     [Arguments]    ${查询类型}    ${提示语}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
@@ -152,27 +156,31 @@ Resource          ../元素层/元素层.txt
     ...    ELSE    Fail
 
 获取输入参数最终值
-    [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
-    ${获取输入参数最终值}    Run Keyword If    '${查询类型}'=='流水号'    获取流水号输入最终值
-    ...    ELSE IF    '${查询类型}'=='报告号'    获取报告号输入最终值
-    ...    ELSE IF    '${查询类型}'=='项目地址'    获取项目地址输入最终值
-    ...    ELSE IF    '${查询类型}'=='小区名称'    获取小区名称输入最终值
+    [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}    ${路径}
+    ${获取输入参数最终值}    Run Keyword If    '${查询类型}'=='流水号'    获取流水号输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    获取报告号输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    获取项目地址输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    获取小区名称输入最终值    ${路径}
     [Return]    ${获取输入参数最终值}
 
 获取流水号输入最终值
-    ${获取输入参数最终值}    Get Value    id=ProjectNo
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    id=${路径}
     [Return]    ${获取输入参数最终值}
 
 获取报告号输入最终值
-    ${获取输入参数最终值}    Get Value    id=ReportNo
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    id=${路径}
     [Return]    ${获取输入参数最终值}
 
 获取项目地址输入最终值
-    ${获取输入参数最终值}    Get Value    id=ResidentialAreaAddress
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    id=${路径}
     [Return]    ${获取输入参数最终值}
 
 获取小区名称输入最终值
-    ${获取输入参数最终值}    Get Value    id=ResidentialAreaName
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    id=${路径}
     [Return]    ${获取输入参数最终值}
 
 根据装订状态选择查询方式
@@ -249,18 +257,17 @@ Resource          ../元素层/元素层.txt
 报告装订打印打开模块公共方法
     打开功能模块    我的项目    报告打印装订
     报告装订打印窗口
-    等待列表创建完毕
-    ${总数据量}    获取页面显示总数据量
-    [Return]    ${总数据量}
+    Comment    等待列表创建完毕
+    Comment    ${总数据量}    获取页面显示总数据量
 
 检测是否存在装订未完成数据
-    [Arguments]    ${获取报告打印第一页行数}    ${流水号}
-    Run Keyword If    ${获取报告打印第一页行数}!=0    执行装订完成操作    ${流水号}
+    [Arguments]    ${获取报告打印第一页行数}    ${流水号}    ${路径}
+    Run Keyword If    ${获取报告打印第一页行数}!=0    执行装订完成操作    ${流水号}    ${路径}
     ...    ELSE    log    无装订未完成数据，无法完成操作
 
 执行装订完成操作
-    [Arguments]    ${流水号}
-    输入流水号    ${流水号}
+    [Arguments]    ${流水号}    ${路径}
+    输入流水号    ${流水号}    ${路径}
     点击查询按钮
     等待列表创建完毕
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[2]/div[1]
@@ -279,7 +286,7 @@ Resource          ../元素层/元素层.txt
     点击查询按钮
     等待列表创建完毕
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[2]/div[1]
-    ${打印完成时间字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[2]/div[6]
+    ${打印完成时间字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[6]/div
     Should Be Equal    ${流水号字段值}    ${流水号}
     [Return]    ${打印完成时间字段值}
 
@@ -299,6 +306,7 @@ Resource          ../元素层/元素层.txt
     ${row}    Evaluate    random.randint(1,${行数}+1)    random
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
     Click Element    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
+    sleep    5
     ${获取资料类型字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[1]/div[1]
     ${获取资料名称字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[2]/div[1]
     ${获取操作字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[3]/div[1]

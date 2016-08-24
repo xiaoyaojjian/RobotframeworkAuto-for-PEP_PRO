@@ -1,0 +1,9 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../元素层/元素层.txt
+Resource          ../../报告打印装订/组件层/报告装订打印.txt
+
+*** Keywords ***
+变更审批打开模块公共方法
+    打开功能模块    我的项目    变更审批
+    变更审批窗口

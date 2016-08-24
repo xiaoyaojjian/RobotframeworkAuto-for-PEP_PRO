@@ -4,8 +4,8 @@ Resource          ../流程层/流程层.txt
 
 *** Keywords ***
 流水号
-    [Arguments]    ${输入流水号}
-    Run Keyword And Continue On Failure    Input Text    id=ProjectNo    ${输入流水号}
+    [Arguments]    ${输入流水号}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入流水号}
 
 报告装订打印窗口
     Run Keyword And Continue On Failure    select frame    id=ProjectAllot_PrintSewing
@@ -15,19 +15,20 @@ Resource          ../流程层/流程层.txt
     click Element    id=BtnSearch
 
 清空输入框装订流水号
-    clear Element Text    id=ProjectNo
+    [Arguments]    ${路径}
+    clear Element Text    id=${路径}
 
 报告号
-    [Arguments]    ${输入报告号}
-    Run Keyword And Continue On Failure    Input Text    id=ReportNo    ${输入报告号}
+    [Arguments]    ${输入报告号}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入报告号}
 
 项目地址
-    [Arguments]    ${输入项目地址}
-    Run Keyword And Continue On Failure    Input Text    id=ResidentialAreaAddress    ${输入项目地址}
+    [Arguments]    ${输入项目地址}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入项目地址}
 
 小区名称
-    [Arguments]    ${输入小区名称}
-    Run Keyword And Continue On Failure    Input Text    id=ResidentialAreaName    ${输入小区名称}
+    [Arguments]    ${输入小区名称}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入小区名称}
 
 装订状态
     [Arguments]    ${装订状态列表值}
