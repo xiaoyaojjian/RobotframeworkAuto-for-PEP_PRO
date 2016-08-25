@@ -3,14 +3,339 @@ Library           Selenium2Library
 Resource          ../公共模块.txt
 
 *** Keywords ***
+填写勘查信息
+    [Arguments]    ${pep}
+    [Documentation]    这个方法只能添加一次看房联系人，如果需要添加多个，请使用“添加看房联系人”方法
+    Run Keyword If    '${pep.get_value(u'是否勘查')}'!=''    Select Radio Button    IsLiveSearch    ${pep.get_value(u'是否勘查')}
+    Run Keyword If    '${pep.get_value(u'预收费用')}'!=''    Input Text    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]    ${pep.get_value(u'预收费用')}
+    Run Keyword If    '${pep.get_value(u'资料提供方式')}'!=''    Select From List By Label    xpath=.//*[@id="ReportSupplyType"]    ${pep.get_value(u'资料提供方式')}
+    Run Keyword If    '${pep.get_value(u'看房联系人')}'!=''    添加看房联系人    ${pep.get_value(u'看房联系人')}    ${pep.get_value(u'联系人电话')}
+    等待加载完毕
+
+填写备注信息
+    [Arguments]    ${remark}
+    Input Text    xpath=.//*[@id='Remark']    ${remark}
+
+填写收件信息
+    [Arguments]    ${pep}
+    [Documentation]    这个方法只能添加一次快递收件人信息，如果需要添加多个，请使用“添加快递收件人信息”方法
+    ${原有收取方式}    Get Value    xpath=.//*[@id='ReceiptWay']
+    Run Keyword If    '${pep.get_value(u'收取方式')}'!='${原有收取方式}'    Select From List By Label    xpath=.//*[@id='ReceiptWay']    ${pep.get_value(u'收取方式')}
+    Run Keyword If    '${pep.get_value(u'收取方式')}'=='快递' and '${pep.get_value(u'姓名')}'!='' and '${pep.get_value(u'联系方式')}'!=''    添加快递收件人信息    ${pep.get_value(u'姓名')}    ${pep.get_value(u'联系方式')}    ${pep.get_value(u'邮政编码')}    ${pep.get_value(u'公司名称')}
+    ...    ${pep.get_value(u'快递地址')}
+    等待加载完毕
+
+填写收费信息
+    [Arguments]    ${pep}
+    Run Keyword If    '${pep.get_value(u'市场负责人')}'!=''    Input Text    xpath=.//*[@name="Market_EmployeeTID"]/..//input[@type="text"]    ${pep.get_value(u'市场负责人')}
+    Run Keyword If    '${pep.get_value(u'收费责任人')}'!=''    Input Text    xpath=.//*[@name="Finance_EmployeeTID"]/..//input[@type="text"]    ${pep.get_value(u'收费责任人')}
+    Run Keyword If    '${pep.get_value(u'内部报单人')}'!=''    Input Text    xpath=.//*[@name="InnerOrder_EmployeeID"]/..//input[@type="text"]    ${pep.get_value(u'内部报单人')}
+    Run Keyword If    '${pep.get_value(u'结算方式')}'!=''    Select From List By Label    xpath=.//*[@id='CalculateType']    ${pep.get_value(u'结算方式')}
+    Run Keyword If    '${pep.get_value(u'应收金额')}'!=''    Input Text    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]    ${pep.get_value(u'应收金额')}
+    Run Keyword If    '${pep.get_value(u'收费方式')}'!=''    Select From List By Label    xpath=.//*[@id='PaymentType']    ${pep.get_value(u'收费方式')}
+    Run Keyword If    '${pep.get_value(u'公司帐号')}'!=''    Select From List By Label    xpath=.//*[@id='PaymentAccount']    ${pep.get_value(u'公司帐号')}
+    Run Keyword If    '${pep.get_value(u'票据类型')}'!=''    Select From List By Label    xpath=.//*[@id='BillType']    ${pep.get_value(u'票据类型')}
+    Run Keyword If    '${pep.get_value(u'(普票)发票抬头')}'!=''    Input Text    xpath=.//*[@id='InvoiceTitle']    ${pep.get_value(u'(普票)发票抬头')}
+    Run Keyword If    '${pep.get_value(u'(专票)名称')}'!=''    Input Text    xpath=.//*[@id='BillName']    ${pep.get_value(u'(专票)名称')}
+    Run Keyword If    '${pep.get_value(u'(专票)纳税人识别号')}'!=''    Input Text    xpath=.//*[@id='BillIdentifyNumber']    ${pep.get_value(u'(专票)纳税人识别号')}
+    Run Keyword If    '${pep.get_value(u'(专票)开户行')}'!=''    Input Text    xpath=.//*[@id='BillBank']    ${pep.get_value(u'(专票)开户行')}
+    Run Keyword If    '${pep.get_value(u'(专票)账号')}'!=''    Input Text    xpath=.//*[@id='BillAccountNumber']    ${pep.get_value(u'(专票)账号')}
+    Run Keyword If    '${pep.get_value(u'(专票)地址')}'!=''    Input Text    xpath=.//*[@id='BillAddress']    ${pep.get_value(u'(专票)地址')}
+    Run Keyword If    '${pep.get_value(u'(专票)电话')}'!=''    Input Text    xpath=.//*[@id='BillPhone']    ${pep.get_value(u'(专票)电话')}
+
+填写项目信息
+    [Arguments]    ${pep}
+    Run Keyword If    '${pep.get_value(u'项目来源')}'!=''    Select From List By Label    xpath=.//*[@id='ProjectSource']    ${pep.get_value(u'项目来源')}
+    Run Keyword If    '${pep.get_value(u'项目类型')}'!=''    Select From List By Label    xpath=.//*[@id='ItemType']    ${pep.get_value(u'项目类型')}
+    Run Keyword If    '${pep.get_value(u'项目分类')}'!=''    Select From List By Label    xpath=.//*[@id='ReportType']    ${pep.get_value(u'项目分类')}
+    Run Keyword If    '${pep.get_value(u'估价目的')}'!=''    Select From List By Label    xpath=.//*[@id='BusinessType']    ${pep.get_value(u'估价目的')}
+    Run Keyword If    '${pep.get_value(u'物业类型')}'!=''    Select From List By Label    xpath=.//*[@id='ProjectType']    ${pep.get_value(u'物业类型')}
+    Run Keyword If    '${pep.get_value(u'子物业类型')}'!=''    Input Text    xpath=.//input[@name="ChildProjectType"]/../input[@type="text"]    ${pep.get_value(u'子物业类型')}
+    Run Keyword If    '${pep.get_value(u'报告类型')}'!=''    Select From List By Label    xpath=.//*[@id='ReportCategory']    ${pep.get_value(u'报告类型')}
+    Run Keyword If    '${pep.get_value(u'发送份数')}'!=''    Input Text    xpath=.//*[@id='SendCount']/..//span/input[1]    ${pep.get_value(u'发送份数')}
+    Run Keyword If    '${pep.get_value(u'城市')}'!=''    Input Text    xpath=.//*[@id='CityId']/..//input[@type="text"]    ${pep.get_value(u'城市')}
+    Run Keyword If    '${pep.get_value(u'行政区')}'!=''    Input Text    xpath=.//*[@id='DistrictId']/..//input[@type="text"]    ${pep.get_value(u'行政区')}
+    Run Keyword If    '${pep.get_value(u'小区名')}'!=''    Input Text    xpath=.//*[@id='ResidentialAreaName']    ${pep.get_value(u'小区名')}
+    Run Keyword If    '${pep.get_value(u'小区地址')}'!=''    Input Text    xpath=.//*[@id='ResidentialAddress']    ${pep.get_value(u'小区地址')}
+    Run Keyword If    '${pep.get_value(u'楼栋号')}'!=''    Input Text    xpath=.//*[@id='Building']/..//input[@type="text"]    ${pep.get_value(u'楼栋号')}
+    Run Keyword If    '${pep.get_value(u'单元号')}'!=''    Input Text    xpath=.//*[@id='BuildingUnitName']/..//input[@type="text"]    ${pep.get_value(u'单元号')}
+    Run Keyword If    '${pep.get_value(u'户号名')}'!=''    Input Text    xpath=.//*[@id='HouseName']/..//input[@type="text"]    ${pep.get_value(u'户号名')}
+    Run Keyword If    '${pep.get_value(u'项目地址')}'!=''    Input Text    xpath=.//*[@id='ResidentialAreaAddress']    ${pep.get_value(u'项目地址')}
+    Run Keyword If    '${pep.get_value(u'建筑面积')}'!=''    Input Text    xpath=.//*[@name="BuildingArea"]/..//input[@type="text"]    ${pep.get_value(u'建筑面积')}
+    Run Keyword If    '${pep.get_value(u'土地面积')}'!=''    Input Text    xpath=.//*[@name="LandArea"]/..//input[@type="text"]    ${pep.get_value(u'土地面积')}
+    Run Keyword If    '${pep.get_value(u'询值单价')}'!=''    Input Text    xpath=.//*[@name="InquiryPrice"]/..//input[@type="text"]    ${pep.get_value(u'询值单价')}
+    Run Keyword If    '${pep.get_value(u'询值总价')}'!=''    Input Text    xpath=.//*[@name="InquiryResult"]/..//input[@type="text"]    ${pep.get_value(u'询值总价')}
+    Run Keyword If    '${pep.get_value(u'建成年代')}'!=''    Input Text    xpath=.//*[@name="BuildedYear"]/..//input[@type="text"]    ${pep.get_value(u'建成年代')}
+    Run Keyword If    '${pep.get_value(u'紧急程度')}'!=''    Select From List By Label    xpath=.//*[@id='PriorityLevel']    ${pep.get_value(u'紧急程度')}
+    Run Keyword If    '${pep.get_value(u'贷款机构')}'!=''    Input Text    xpath=.//*[@id='LendersCompany']    ${pep.get_value(u'贷款机构')}
+    Run Keyword If    '${pep.get_value(u'贷款支行')}'!=''    Input Text    xpath=.//*[@id='LendersBranch']    ${pep.get_value(u'贷款支行')}
+    Run Keyword If    '${pep.get_value(u'期贷信息')}'!=''    Input Text    xpath=.//*[@id='LendingInfo']    ${pep.get_value(u'期贷信息')}
+    Run Keyword If    '${pep.get_value(u'估价委托方')}'!=''    Input Text    xpath=.//*[@id='PriceDelegate']    ${pep.get_value(u'估价委托方')}
+    Run Keyword If    '${pep.get_value(u'所属部门')}'!=''    Select From List By Label    xpath=.//*[@id='Department']    ${pep.get_value(u'所属部门')}
+
+将其他信息写入pep对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    ${立项备注}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='Remark']
+    ...    ELSE    Get Text    xpath=.//*[@id='Remark']
+    Set Pep Value    ${pep}    立项备注    ${立项备注}
+    ${是否有线上备注}    Get Matching Xpath Count    .//tr[@id="OnlineMessage" and not(contains(@style,"display: none"))]
+    ${线上备注}    Run Keyword If    '${是否有线上备注}'=='1' and ${is_get_text}==0    Get Value    xpath=.//*[@id='Comment']
+    ...    ELSE IF    '${是否有线上备注}'=='1' and ${is_get_text}==1    Get Text    xpath=.//*[@id='Comment']
+    Run Keyword If    '${是否有线上备注}'!='0'    Set Pep Value    ${pep}    线上备注    ${线上备注}
+
+将勘查信息写入pep对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    ${是否勘查}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=//input[@name="IsLiveSearch" and @checked="checked"]
+    ...    ELSE    Get Text    xpath=.//*[@id='IsLiveSearch']
+    Set Pep Value    ${pep}    是否勘查    ${是否勘查}
+    ${预收费用}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="LiveSearchCharge"]
+    ${预收费用}=    Set Variable If    '${预收费用}'==''    0.00    ${预收费用}
+    Set Pep Value    ${pep}    预收费用    ${预收费用}
+    ${资料提供方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="ReportSupplyType"]
+    ...    ELSE    Get Text    xpath=.//*[@id="ReportSupplyType"]
+    Set Pep Value    ${pep}    资料提供方式    ${资料提供方式}
+    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//td[@field="Contacts"]
+    : FOR    ${row_num}    IN RANGE    ${row_count}
+    \    ${联系人姓名}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
+    \    ${联系人电话}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
+    \    Set Kanfang Value    ${pep}    ${联系人姓名}    ${联系人电话}
+
+将客户信息写入PEP对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    ${手机号码}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='MobileNumber']
+    ...    ELSE    Get Text    xpath=.//*[@id='MobileNumber']
+    Set Pep Value    ${pep}    客户手机    ${手机号码}
+    ${固定电话}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='Telephone']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='Telephone']
+    Set Pep Value    ${pep}    固定电话    ${固定电话}
+    ${客户姓名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="CustomerName"]
+    Set Pep Value    ${pep}    客户姓名    ${客户姓名}
+    ${所属机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="CustomerType"]
+    Set Pep Value    ${pep}    所属机构    ${所属机构}
+    ${分支机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="organichildid"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="CustomerTypeChild"]
+    Set Pep Value    ${pep}    分支机构    ${分支机构}
+    ${客户QQ}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="QQ"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="QQ"]
+    Set Pep Value    ${pep}    客户QQ    ${客户QQ}
+
+将收件信息写入pep对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    ${收取方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReceiptWay']
+    ...    ELSE    Get Text    xpath=.//*[@id='ReceiptWay']
+    Set Pep Value    ${pep}    收取方式    ${收取方式}
+    ${row_count}    Get Matching Xpath Count    //*[@id="divReceipt"]//div[@class="datagrid-body"]//td[@field="Receiver"]/div
+    Run Keyword If    '${row_count}'!='0'    遍历快递信息到pep对象    ${row_count}    ${pep}
+
+将收费信息写入pep对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    ${市场负责人}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="Market_EmployeeTID"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="Market_EmployeeName"]
+    Set Pep Value    ${pep}    市场负责人    ${市场负责人}
+    ${收费责任人}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="Finance_EmployeeTID"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="Finance_EmployeeName"]
+    Set Pep Value    ${pep}    收费责任人    ${收费责任人}
+    ${内部报单人}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InnerOrder_EmployeeID"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="InnerOrder_EmployeeName"]
+    Set Pep Value    ${pep}    内部报单人    ${内部报单人}
+    ${结算方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='CalculateType']
+    ...    ELSE    Get Text    xpath=.//*[@id='CalculateType']
+    Set Pep Value    ${pep}    结算方式    ${结算方式}
+    ${应收金额}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="AdjustFee"]
+    Set Pep Value    ${pep}    应收金额    ${应收金额}
+    ${收费方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PaymentType']
+    ...    ELSE    Get Text    xpath=.//*[@id='PaymentType']
+    Set Pep Value    ${pep}    收费方式    ${收费方式}
+    ${公司帐号}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PaymentAccount']
+    ...    ELSE    Get Text    xpath=.//*[@id='PaymentAccount']
+    Set Pep Value    ${pep}    公司帐号    ${公司帐号}
+    ${票据类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillType']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillType']
+    Set Pep Value    ${pep}    票据类型    ${票据类型}
+    ${(普票)发票抬头}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='InvoiceTitle']
+    ...    ELSE    Get Text    xpath=.//*[@id='InvoiceTitle']
+    Set Pep Value    ${pep}    (普票)发票抬头    ${(普票)发票抬头}
+    ${(专票)名称}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillName']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillName']
+    Set Pep Value    ${pep}    (专票)名称    ${(专票)名称}
+    ${(专票)纳税人识别号}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillIdentifyNumber']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillIdentifyNumber']
+    Set Pep Value    ${pep}    (专票)纳税人识别号    ${(专票)纳税人识别号}
+    ${(专票)开户行}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillBank']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillBank']
+    Set Pep Value    ${pep}    (专票)开户行    ${(专票)开户行}
+    ${(专票)账号}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillAccountNumber']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillAccountNumber']
+    Set Pep Value    ${pep}    (专票)账号    ${(专票)账号}
+    ${(专票)地址}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillAddress']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillAddress']
+    Set Pep Value    ${pep}    (专票)地址    ${(专票)地址}
+    ${(专票)电话}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillPhone']
+    ...    ELSE    Get Text    xpath=.//*[@id='BillPhone']
+    Set Pep Value    ${pep}    (专票)电话    ${(专票)电话}
+
+将项目信息写入pep对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    ${项目来源}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ProjectSource']
+    ...    ELSE    Get Text    xpath=.//*[@id='ProjectSource']
+    Set Pep Value    ${pep}    项目来源    ${项目来源}
+    ${项目类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ItemType']
+    ...    ELSE    Get Text    xpath=.//*[@id='ItemType']
+    Set Pep Value    ${pep}    项目类型    ${项目类型}
+    ${项目分类}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReportType']
+    ...    ELSE    Get Text    xpath=.//*[@id='ReportType']
+    Set Pep Value    ${pep}    项目分类    ${项目分类}
+    ${估价目的}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BusinessType']
+    ...    ELSE    Get Text    xpath=.//*[@id='BusinessType']
+    Set Pep Value    ${pep}    估价目的    ${估价目的}
+    ${物业类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ProjectType']
+    ...    ELSE    Get Text    xpath=.//*[@id='ProjectType']
+    Set Pep Value    ${pep}    物业类型    ${物业类型}
+    ${子物业类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name='ChildProjectType']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='ChildPropertyType']
+    Set Pep Value    ${pep}    子物业类型    ${子物业类型}
+    ${报告类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReportCategory']
+    ...    ELSE    Get Text    xpath=.//*[@id='ReportCategory']
+    Set Pep Value    ${pep}    报告类型    ${报告类型}
+    ${发送份数}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='SendCount']/..//span/input[1]
+    ...    ELSE    Get Text    xpath=.//*[@id='SendCount']
+    Set Pep Value    ${pep}    发送份数    ${发送份数}
+    ${城市}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='CityId']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='City']
+    Set Pep Value    ${pep}    城市    ${城市}
+    ${行政区}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='DistrictId']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='District']
+    Set Pep Value    ${pep}    行政区    ${行政区}
+    ${小区名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ResidentialAreaName']
+    ...    ELSE    Get Text    xpath=.//*[@id='ResidentialAreaName']
+    Set Pep Value    ${pep}    小区名    ${小区名}
+    ${小区地址}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ResidentialAddress']
+    ...    ELSE    Get Text    xpath=.//*[@id='ResidentialAddress']
+    Set Pep Value    ${pep}    小区地址    ${小区地址}
+    ${楼栋号}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='Building']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='BuildingName']
+    Set Pep Value    ${pep}    楼栋号    ${楼栋号}
+    ${单元号}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BuildingUnitName']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='BuildingUnitName']
+    Set Pep Value    ${pep}    单元号    ${单元号}
+    ${户号名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='HouseName']/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id='HouseName']
+    Set Pep Value    ${pep}    户号名    ${户号名}
+    ${项目地址}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ResidentialAreaAddress']
+    ...    ELSE    Get Text    xpath=.//*[@id='ResidentialAreaAddress']
+    Set Pep Value    ${pep}    项目地址    ${项目地址}
+    ${建筑面积}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="BuildingArea"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="BuildingArea"]
+    Set Pep Value    ${pep}    建筑面积    ${建筑面积}
+    ${土地面积}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="LandArea"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="LandArea"]
+    Set Pep Value    ${pep}    土地面积    ${土地面积}
+    ${询值单价}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InquiryPrice"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="InquiryPrice"]
+    Set Pep Value    ${pep}    询值单价    ${询值单价}
+    ${询值总价}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InquiryResult"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="InquiryResult"]
+    Set Pep Value    ${pep}    询值总价    ${询值总价}
+    ${建成年代}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="BuildedYear"]/..//input[@type="text"]
+    ...    ELSE    Get Text    xpath=.//*[@id="BuildedYear"]
+    Set Pep Value    ${pep}    建成年代    ${建成年代}
+    ${紧急程度}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PriorityLevel']
+    ...    ELSE    Get Text    xpath=.//*[@id='PriorityLevel']
+    Set Pep Value    ${pep}    紧急程度    ${紧急程度}
+    ${贷款机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='LendersCompany']
+    ...    ELSE    Get Text    xpath=.//*[@id='LendersCompany']
+    Set Pep Value    ${pep}    贷款机构    ${贷款机构}
+    ${贷款支行}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='LendersBranch']
+    ...    ELSE    Get Text    xpath=.//*[@id='LendersBranch']
+    Set Pep Value    ${pep}    贷款支行    ${贷款支行}
+    ${期贷信息}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='LendingInfo']
+    ...    ELSE    Get Text    xpath=.//*[@id='LendingInfo']
+    Set Pep Value    ${pep}    期贷信息    ${期贷信息}
+    ${估价委托方}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PriceDelegate']
+    ...    ELSE    Get Text    xpath=.//*[@id='PriceDelegate']
+    Set Pep Value    ${pep}    估价委托方    ${估价委托方}
+    ${所属部门}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='Department']
+    ...    ELSE    Get Text    xpath=.//*[@id='CrmDepartmentName']
+    ${所属部门}    Run Keyword If    ${is_get_text}==0    Get Text    xpath=.//*[@id='Department']/option[@value='${所属部门}']
+    ...    ELSE    Set Variable    ${所属部门}
+    Set Pep Value    ${pep}    所属部门    ${所属部门}
+
+添加快递收件人信息
+    [Arguments]    ${姓名}    ${联系方式}    ${邮政编码}    ${公司名称}    ${快递地址}
+    Click Element    xpath=.//span[text()="新增地址"]/ancestor::a
+    等待弹出窗口出现
+    Input Text    xpath=.//*[@id='Receiver']    ${姓名}
+    Input Text    xpath=.//*[@id='Phone']    ${联系方式}
+    Input Text    xpath=.//input[@name="PostCode"]/../input[@type="text"]    ${邮政编码}
+    Input Text    xpath=.//*[@id='Company']    ${公司名称}
+    Input Text    xpath=.//*[@id='Address']    ${快递地址}
+    Click Element    xpath=.//span[text()="保存"]/ancestor::a
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待提示框出现
+    点击提示框中的确定按钮
+
+添加看房联系人
+    [Arguments]    ${看房联系人}    ${联系人电话}
+    Click Element    xpath=.//span[text()="增加联系人"]/ancestor::a
+    等待弹出窗口出现
+    Input Text    xpath=.//*[@id='Contacts']    ${看房联系人}
+    Input Text    xpath=.//*[@id='Phone']    ${联系人电话}
+    Click Element    xpath=.//span[text()="保存"]/ancestor::a
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待提示框出现
+    点击提示框中的确定按钮
+
 点击列表中的${buttun_name}按钮
-    Click Element    xpath=.//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
 
 点击查询按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/..
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/ancestor::a
+    等待列表创建完毕
 
 点击立项按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="立项"]/..
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="立项"]/ancestor::a
+
+点击立项页面中的${button_name}按钮
+    Click Element    xpath=//span[text()='${button_name}']/ancestor::a
+
+点击资料齐全按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="资料齐全"]/ancestor::a
+
+输入已立项查询条件
+    [Arguments]    ${流水号}=None    ${报告编号}=None    ${项目地址}=None    ${小区名称}=None    ${估价目的}=None    ${项目类型}=None
+    ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
+    ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
+    Run Keyword If    '${流水号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']    ${流水号}
+    Run Keyword If    '${报告编号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    ${报告编号}
+    Run Keyword If    '${项目地址}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    ${项目地址}
+    Run Keyword If    '${小区名称}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    ${小区名称}
+    Run Keyword If    '${估价目的}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    ${估价目的}
+    Run Keyword If    '${项目类型}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportCategory']    ${项目类型}
+    Run Keyword If    '${业务来源}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    ${业务来源}
+    Run Keyword If    '${物业类型}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    ${物业类型}
+    Run Keyword If    '${受理人}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName']    ${受理人}
+    Run Keyword If    '${受理开始时间}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//input[@name="CreatedDateFrom"]/../input[@type="text"]    ${受理开始时间}
+    Run Keyword If    '${受理结束时间}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//input[@name="CreatedDateTo"]/../input[@type="text"]    ${受理结束时间}
+    Run Keyword If    '${估价委托方}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    ${估价委托方}
+    Run Keyword If    '${客户姓名}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CustomerName']    ${客户姓名}
+    Run Keyword If    '${客户手机}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//input[@name="MobileNumber"]/../input[@type="text"]    ${客户手机}
+    Run Keyword If    '${看房联系人电话}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Phone']    ${看房联系人电话}
+    Run Keyword If    '${资料是否齐全}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteResource']    ${资料是否齐全}
+    Run Keyword If    '${收费责任人}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='FinanceEmployeeName']    ${收费责任人}
+    Run Keyword If    '${外业是否完成}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteWaiCai']    ${外业是否完成}
+
+输入提取信息查询条件
+    [Arguments]    ${流水号}=None    ${报告号}=None    ${小区名称}=None    ${项目地址}=None
+    Run Keyword If    '${流水号}'!='None'    文本框清空并输入    .//*[@id='ProjectNo']    ${流水号}
+    Run Keyword If    '${报告号}'!='None'    文本框清空并输入    .//*[@id='ReportNo']    ${报告号}
+    Run Keyword If    '${小区名称}'!='None'    文本框清空并输入    .//*[@id='AreaName']    ${小区名称}
+    Run Keyword If    '${项目地址}'!='None'    文本框清空并输入    .//*[@id='Address']    ${项目地址}
 
 输入暂存项目查询条件
     [Arguments]    ${流水号}=None    ${项目地址}=None    ${小区名称}=None    ${估价委托方}=None    ${项目分类}=None    ${物业类型}=None
@@ -57,6 +382,86 @@ Resource          ../公共模块.txt
     Wait Until Page Contains Element    xpath=//div[text()="在线业务处理"]//ancestor::div[contains(@style,"display: block")]    30s
     Click Element    xpath=//span[text()="受理"]/ancestor::a
 
+进行任务分配操作
+    [Arguments]    ${pep}    ${是否下发到PAD}=否    ${加急金额}=None
+    点击立项页面中的任务分配按钮
+    等待弹出窗口出现
+    ${下拉框是否禁用}    Get Matching Xpath Count    .//*[@id='outtask' and @disabled="disabled"]
+    Run Keyword If    '${pep.get_value(u'是否勘查')}'=='是'    Should Be Equal    ${下拉框是否禁用}    0
+    ...    ELSE IF    '${pep.get_value(u'是否勘查')}'=='否'    Should Be Equal    ${下拉框是否禁用}    1
+    ...    ELSE    Fail    msg=勘查人员下拉框状态错误
+    Run Keyword If    '${pep.get_value(u'是否勘查')}'=='是'    Select From List By Label    xpath=.//*[@id='outtask']    ${USER_NAME}    #选择查勘人员
+    Run Keyword If    '${pep.get_value(u'是否勘查')}'=='是'    Set Pep Value    ${pep}    查勘人员    ${USER_NAME}
+    Select From List By Label    xpath=.//*[@id='intask']    ${USER_NAME}    #选择撰写人员
+    Set Pep Value    ${pep}    撰写人员    ${USER_NAME}
+    Run Keyword If    '${是否下发到PAD}'=='是'    Select Checkbox    xpath=.//*[@id='toPad']
+    ${查勘表}    Run Keyword If    '${是否下发到PAD}'=='是'    Get Value    xpath=.//*[@id='eiastype']
+    Run Keyword If    '${是否下发到PAD}'=='是'    Set Pep Value    ${pep}    查勘表    ${查勘表}
+    Run Keyword If    '${加急金额}'=='None'    Input Text    xpath=.//input[@name="QuickPrice"]/../input[@type="text"]    ${加急金额}
+    Set Pep Value    ${pep}    加急金额    ${加急金额}
+    Click Element    xpath=//span[text()='确定']/ancestor::a
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待提示框出现
+    ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'
+    ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    ${流水号}    Findall    :(.*)    ${msg}
+    Run Keyword If    len(${流水号}) >0    Set Pep Value    ${pep}    流水号    ${流水号[0]}
+    Run Keyword If    len(${流水号}) >1    Set Pep Value    ${pep}    报告号    ${流水号[1]}
+    点击提示框中的确定按钮
+    Unselect Frame
+
+进行提取信息操作
+    [Arguments]    ${流水号}
+    点击立项页面中的提取信息按钮
+    等待弹出窗口出现
+    输入提取信息查询条件    ${流水号}
+    Click Element    xpath=.//*[@id='BtnSearch']    #点击查询按钮
+    等待列表创建完毕
+    Select Checkbox    xpath=.//tr[@datagrid-row-index="0"]//td[@field="cb"]//input    #选中第一条记录
+    Click Element    xpath=.//*[@id='BtnChose']    #点击确认选中按钮
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待加载完毕
+
+进行暂存操作
+    [Arguments]    ${pep}
+    点击立项页面中的暂存按钮
+    等待提示框出现
+    ${是否暂存成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'暂存成功')]
+    Run Keyword If    '${是否暂存成功}'=='0'    FAIL    msg='暂存失败'
+    ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'暂存成功')]
+    ${流水号}    Findall    :(.*)    ${msg}
+    Set Pep Value    ${pep}    流水号    ${流水号[0]}
+    点击提示框中的确定按钮
+    Unselect Frame
+
+进行立项并继续操作
+    [Arguments]    ${pep}
+    点击立项页面中的立项并继续按钮
+    等待提示框出现
+    ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'
+    ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    ${流水号}    Findall    :(.*)    ${msg}
+    Run Keyword If    len(${流水号}) >0    Set Pep Value    ${pep}    流水号    ${流水号[0]}
+    Run Keyword If    len(${流水号}) >1    Set Pep Value    ${pep}    报告号    ${流水号[1]}
+    点击提示框中的确定按钮
+
+进行立项操作
+    [Arguments]    ${pep}
+    点击立项页面中的立项按钮
+    等待提示框出现
+    ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'
+    ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    ${流水号}    Findall    :(.*)    ${msg}
+    Run Keyword If    len(${流水号}) >0    Set Pep Value    ${pep}    流水号    ${流水号[0]}
+    Run Keyword If    len(${流水号}) >1    Set Pep Value    ${pep}    报告号    ${流水号[1]}
+    点击提示框中的确定按钮
+    Unselect Frame
+
 进行线上业务反馈
     [Arguments]    ${反馈意见}=缺少材料    ${备注}=${反馈意见}的测试备注
     [Documentation]    点击【反馈】按钮并填写反馈信息，点击确定，该步骤后需要重新select frame
@@ -70,196 +475,18 @@ Resource          ../公共模块.txt
     点击提示框中的确定按钮
 
 通过手机号码获取客户信息
-    [Arguments]    ${PEP}    ${手机号码}
-    Input Text    xpath=.//*[@id='MobileNumber']    ${手机号码}
-    Click Element    xpath=.//*[@id='customer_search']    #点击查询按钮
+    [Arguments]    ${pep}
+    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Input Text    xpath=.//*[@id='MobileNumber']    ${pep.get_value(u'客户手机')}
+    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Click Element    xpath=.//*[@id='customer_search']    #点击查询按钮
     等待加载完毕
-    Set Pep Value    ${PEP}    客户手机    ${手机号码}
-    ${固定电话}    Get Value    xpath=.//*[@id='Telephone']/..//input[@type="text"]
-    Set Pep Value    ${PEP}    固定电话    ${固定电话}
-    ${客户姓名}    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    客户姓名    ${客户姓名}
-    ${所属机构}    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    所属机构    ${所属机构}
-    ${分支机构}    Get Value    xpath=.//*[@id="organichildid"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    分支机构    ${分支机构}
-    ${客户QQ}    Get Value    xpath=.//*[@id="QQ"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    客户QQ    ${客户QQ}
 
-填写项目信息
-    [Arguments]    ${项目来源}=None    ${项目类型}=None    ${项目分类}=None    ${估价目的}=None    ${物业类型}=None    ${子物业类型}=None
-    ...    ${报告类型}=None    ${发送份数}=None    ${城市}=None    ${行政区}=None    ${小区名}=None    ${小区地址}=None
-    ...    ${楼栋号}=None    ${单元号}=None    ${户号名}=None    ${项目地址}=None    ${建筑面积}=None    ${土地面积}=None
-    ...    ${询值单价}=None    ${询值总价}=None    ${建成年代}=None    ${紧急程度}=None    ${贷款机构}=None    ${贷款支行}=None
-    ...    ${期贷信息}=None    ${估价委托方}=None    ${所属部门}=None
-    Run Keyword If    '${项目来源}'!='None'    Select From List By Label    xpath=.//*[@id='ProjectSource']    ${项目来源}
-    Run Keyword If    '${项目类型}'!='None'    Select From List By Label    xpath=.//*[@id='ItemType']    ${项目类型}
-    Run Keyword If    '${项目分类}'!='None'    Select From List By Label    xpath=.//*[@id='ReportType']    ${项目分类}
-    Run Keyword If    '${估价目的}'!='None'    Select From List By Label    xpath=.//*[@id='BusinessType']    ${估价目的}
-    Run Keyword If    '${物业类型}'!='None'    Select From List By Label    xpath=.//*[@id='ProjectType']    ${物业类型}
-    Run Keyword If    '${子物业类型}'!='None'    Select From List By Label    xpath=.//*[@id='ChildProjectType']    ${子物业类型}
-    Run Keyword If    '${报告类型}'!='None'    Select From List By Label    xpath=.//*[@id='ReportCategory']    ${报告类型}
-    Run Keyword If    '${发送份数}'!='None'    Input Text    xpath=.//*[@id='SendCount']/..//span/input[1]    ${发送份数}
-    Run Keyword If    '${城市}'!='None'    Input Text    xpath=.//*[@id='CityId']/..//input[@type="text"]    ${城市}
-    Run Keyword If    '${行政区}'!='None'    Input Text    xpath=.//*[@id='DistrictId']/..//input[@type="text"]    ${行政区}
-    Run Keyword If    '${小区名}'!='None'    Input Text    xpath=.//*[@id='ResidentialAreaName']    ${小区名}
-    Run Keyword If    '${小区地址}'!='None'    Input Text    xpath=.//*[@id='ResidentialAddress']    ${小区地址}
-    Run Keyword If    '${楼栋号}'!='None'    Input Text    xpath=.//*[@id='Building']/..//input[@type="text"]    ${楼栋号}
-    Run Keyword If    '${单元号}'!='None'    Input Text    xpath=.//*[@id='BuildingUnitName']/..//input[@type="text"]    ${单元号}
-    Run Keyword If    '${户号名}'!='None'    Input Text    xpath=.//*[@id='HouseName']/..//input[@type="text"]    ${户号名}
-    Run Keyword If    '${项目地址}'!='None'    Input Text    xpath=.//*[@id='ResidentialAreaAddress']    ${项目地址}
-    Run Keyword If    '${建筑面积}'!='None'    Input Text    xpath=.//*[@name="BuildingArea"]/..//input[@type="text"]    ${建筑面积}
-    Run Keyword If    '${土地面积}'!='None'    Input Text    xpath=.//*[@name="LandArea"]/..//input[@type="text"]    ${土地面积}
-    Run Keyword If    '${询值单价}'!='None'    Input Text    xpath=.//*[@name="InquiryPrice"]/..//input[@type="text"]    ${询值单价}
-    Run Keyword If    '${询值总价}'!='None'    Input Text    xpath=.//*[@name="InquiryResult"]/..//input[@type="text"]    ${询值总价}
-    Run Keyword If    '${建成年代}'!='None'    Input Text    xpath=.//*[@name="BuildedYear"]/..//input[@type="text"]    ${建成年代}
-    Run Keyword If    '${紧急程度}'!='None'    Select From List By Label    xpath=.//*[@id='PriorityLevel']    ${紧急程度}
-    Run Keyword If    '${贷款机构}'!='None'    Input Text    xpath=.//*[@id='LendersCompany']    ${贷款机构}
-    Run Keyword If    '${贷款支行}'!='None'    Input Text    xpath=.//*[@id='LendersBranch']    ${贷款支行}
-    Run Keyword If    '${期贷信息}'!='None'    Input Text    xpath=.//*[@id='LendingInfo']    ${期贷信息}
-    Run Keyword If    '${估价委托方}'!='None'    Input Text    xpath=.//*[@id='PriceDelegate']    ${估价委托方}
-    Run Keyword If    '${所属部门}'!='None'    Select From List By Label    xpath=.//*[@id='Department']    ${所属部门}
-
-将项目信息写入PEP对象
-    [Arguments]    ${PEP}
-    ${项目来源}    Get Value    xpath=.//*[@id='ProjectSource']
-    Set Pep Value    ${PEP}    项目来源    ${项目来源}
-    ${项目类型}    Get Value    xpath=.//*[@id='ItemType']
-    Set Pep Value    ${PEP}    项目类型    ${项目类型}
-    ${项目分类}    Get Value    xpath=.//*[@id='ReportType']
-    Set Pep Value    ${PEP}    项目分类    ${项目分类}
-    ${估价目的}    Get Value    xpath=.//*[@id='BusinessType']
-    Set Pep Value    ${PEP}    估价目的    ${估价目的}
-    ${物业类型}    Get Value    xpath=.//*[@id='ProjectType']
-    Set Pep Value    ${PEP}    物业类型    ${物业类型}
-    ${子物业类型}    Get Value    xpath=.//*[@id='ChildProjectType']
-    Set Pep Value    ${PEP}    子物业类型    ${子物业类型}
-    ${报告类型}    Get Value    xpath=.//*[@id='ReportCategory']
-    Set Pep Value    ${PEP}    报告类型    ${报告类型}
-    ${发送份数}    Get Value    xpath=.//*[@id='SendCount']/..//span/input[1]
-    Set Pep Value    ${PEP}    发送份数    ${发送份数}
-    ${城市}    Get Value    xpath=.//*[@id='CityId']/..//input[@type="text"]
-    Set Pep Value    ${PEP}    城市    ${城市}
-    ${行政区}    Get Value    xpath=.//*[@id='DistrictId']/..//input[@type="text"]
-    Set Pep Value    ${PEP}    行政区    ${行政区}
-    ${小区名}    Get Value    xpath=.//*[@id='ResidentialAreaName']
-    Set Pep Value    ${PEP}    小区名    ${小区名}
-    ${小区地址}    Get Value    xpath=.//*[@id='ResidentialAddress']
-    Set Pep Value    ${PEP}    小区地址    ${小区地址}
-    ${楼栋号}    Get Value    xpath=.//*[@id='Building']/..//input[@type="text"]
-    Set Pep Value    ${PEP}    楼栋号    ${楼栋号}
-    ${单元号}    Get Value    xpath=.//*[@id='BuildingUnitName']/..//input[@type="text"]
-    Set Pep Value    ${PEP}    单元号    ${单元号}
-    ${户号名}    Get Value    xpath=.//*[@id='HouseName']/..//input[@type="text"]
-    Set Pep Value    ${PEP}    户号名    ${户号名}
-    ${项目地址}    Get Value    xpath=.//*[@id='ResidentialAreaAddress']
-    Set Pep Value    ${PEP}    项目地址    ${项目地址}
-    ${建筑面积}    Get Value    xpath=.//*[@name="BuildingArea"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    建筑面积    ${建筑面积}
-    ${土地面积}    Get Value    xpath=.//*[@name="LandArea"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    土地面积    ${土地面积}
-    ${询值单价}    Get Value    xpath=.//*[@name="InquiryPrice"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    询值单价    ${询值单价}
-    ${询值总价}    Get Value    xpath=.//*[@name="InquiryResult"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    询值总价    ${询值总价}
-    ${建成年代}    Get Value    xpath=.//*[@name="BuildedYear"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    建成年代    ${建成年代}
-    ${紧急程度}    Get Value    xpath=.//*[@id='PriorityLevel']
-    Set Pep Value    ${PEP}    紧急程度    ${紧急程度}
-    ${贷款机构}    Get Value    xpath=.//*[@id='LendersCompany']
-    Set Pep Value    ${PEP}    贷款机构    ${贷款机构}
-    ${贷款支行}    Get Value    xpath=.//*[@id='LendersBranch']
-    Set Pep Value    ${PEP}    贷款支行    ${贷款支行}
-    ${期贷信息}    Get Value    xpath=.//*[@id='LendingInfo']
-    Set Pep Value    ${PEP}    期贷信息    ${期贷信息}
-    ${估价委托方}    Get Value    xpath=.//*[@id='PriceDelegate']
-    Set Pep Value    ${PEP}    估价委托方    ${估价委托方}
-    ${所属部门}    Get Value    xpath=.//*[@id='Department']
-    Set Pep Value    ${PEP}    所属部门    ${所属部门}
-
-填写收费信息
-    [Arguments]    ${市场负责人}=None    ${收费责任人}=${USER_NAME}    ${内部报单人}=None    ${结算方式}=None    ${应收金额}=None    ${收费方式}=None
-    ...    ${公司帐号}=None    ${票据类型}=None    ${(普票)发票抬头}=None    ${(专票)名称}=None    ${(专票)纳税人识别号}=None    ${(专票)开户行}=None
-    ...    ${(专票)账号}=None    ${(专票)地址}=None    ${(专票)电话}=None
-    Run Keyword If    '${市场负责人}'!='None'    Input Text    xpath=.//*[@name="Market_EmployeeTID"]/..//input[@type="text"]    ${市场负责人}
-    Run Keyword If    '${收费责任人}'!='None'    Input Text    xpath=.//*[@name="Finance_EmployeeTID"]/..//input[@type="text"]    ${收费责任人}
-    Run Keyword If    '${内部报单人}'!='None'    Input Text    xpath=.//*[@name="InnerOrder_EmployeeID"]/..//input[@type="text"]    ${内部报单人}
-    Run Keyword If    '${结算方式}'!='None'    Select From List By Label    xpath=.//*[@id='CalculateType']    ${结算方式}
-    Run Keyword If    '${应收金额}'!='None'    Input Text    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]    ${应收金额}
-    Run Keyword If    '${收费方式}'!='None'    Select From List By Label    xpath=.//*[@id='PaymentType']    ${收费方式}
-    Run Keyword If    '${公司帐号}'!='None'    Select From List By Label    xpath=.//*[@id='PaymentAccount']    ${公司帐号}
-    Run Keyword If    '${票据类型}'!='None'    Select From List By Label    xpath=.//*[@id='BillType']    ${票据类型}
-    Run Keyword If    '${(普票)发票抬头}'!='None'    Input Text    xpath=.//*[@id='InvoiceTitle']    ${(普票)发票抬头}
-    Run Keyword If    '${(专票)名称}'!='None'    Input Text    xpath=.//*[@id='BillName']    ${(专票)名称}
-    Run Keyword If    '${(专票)纳税人识别号}'!='None'    Input Text    xpath=.//*[@id='BillIdentifyNumber']    ${(专票)纳税人识别号}
-    Run Keyword If    '${(专票)开户行}'!='None'    Input Text    xpath=.//*[@id='BillBank']    ${(专票)开户行}
-    Run Keyword If    '${(专票)账号}'!='None'    Input Text    xpath=.//*[@id='BillAccountNumber']    ${(专票)账号}
-    Run Keyword If    '${(专票)地址}'!='None'    Input Text    xpath=.//*[@id='BillAddress']    ${(专票)地址}
-    Run Keyword If    '${(专票)电话}'!='None'    Input Text    xpath=.//*[@id='BillPhone']    ${(专票)电话}
-
-将收费信息写入PEP对象
-    [Arguments]    ${PEP}
-    ${市场负责人}    Get Value    xpath=.//*[@name="Market_EmployeeTID"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    市场负责人    ${市场负责人}
-    ${收费责任人}    Get Value    xpath=.//*[@name="Finance_EmployeeTID"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    收费责任人    ${收费责任人}
-    ${内部报单人}    Get Value    xpath=.//*[@name="InnerOrder_EmployeeID"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    内部报单人    ${内部报单人}
-    ${结算方式}    Get Value    xpath=.//*[@id='CalculateType']
-    Set Pep Value    ${PEP}    结算方式    ${结算方式}
-    ${应收金额}    Get Value    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    应收金额    ${应收金额}
-    ${收费方式}    Get Value    xpath=.//*[@id='PaymentType']
-    Set Pep Value    ${PEP}    收费方式    ${收费方式}
-    ${公司帐号}    Get Value    xpath=.//*[@id='PaymentAccount']
-    Set Pep Value    ${PEP}    公司帐号    ${公司帐号}
-    ${票据类型}    Get Value    xpath=.//*[@id='BillType']
-    Set Pep Value    ${PEP}    票据类型    ${票据类型}
-    ${(普票)发票抬头}    Get Value    xpath=.//*[@id='InvoiceTitle']
-    Set Pep Value    ${PEP}    (普票)发票抬头    ${(普票)发票抬头}
-    ${(专票)名称}    Get Value    xpath=.//*[@id='BillName']
-    Set Pep Value    ${PEP}    (专票)名称    ${(专票)名称}
-    ${(专票)纳税人识别号}    Get Value    xpath=.//*[@id='BillIdentifyNumber']
-    Set Pep Value    ${PEP}    (专票)纳税人识别号    ${(专票)纳税人识别号}
-    ${(专票)开户行}    Get Value    xpath=.//*[@id='BillBank']
-    Set Pep Value    ${PEP}    (专票)开户行    ${(专票)开户行}
-    ${(专票)账号}    Get Value    xpath=.//*[@id='BillAccountNumber']
-    Set Pep Value    ${PEP}    (专票)账号    ${(专票)账号}
-    ${(专票)地址}    Get Value    xpath=.//*[@id='BillAddress']
-    Set Pep Value    ${PEP}    (专票)地址    ${(专票)地址}
-    ${(专票)电话}    Get Value    xpath=.//*[@id='BillPhone']
-    Set Pep Value    ${PEP}    (专票)电话    ${(专票)电话}
-
-填写勘查信息
-    [Arguments]    ${是否勘查}=是    ${预收费用}=None    ${资料提供方式}=None    ${看房联系人}=None    ${联系人电话}=None
-    [Documentation]    这个方法只能添加一次看房联系人，如果需要添加多个，请使用“添加看房联系人”方法
-    Select Radio Button    IsLiveSearch    ${是否勘查}
-    Run Keyword If    '${预收费用}'!='None'    Input Text    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]    ${预收费用}
-    Run Keyword If    '${资料提供方式}'!='None'    Select From List By Label    xpath=.//*[@id=id="ReportSupplyType"]/..//input[@type="text"]    ${资料提供方式}
-    Run Keyword If    '${看房联系人}'!='None' and '${联系人电话}'!='None'    添加看房联系人    ${看房联系人}    ${联系人电话}
-
-添加看房联系人
-    [Arguments]    ${看房联系人}    ${联系人电话}
-    Click Element    xpath=.//span[text()="增加联系人"]/ancestor::a
-    等待弹出窗口出现
-    Input Text    xpath=.//*[@id='Contacts']    ${看房联系人}
-    Input Text    xpath=.//*[@id='Phone']    ${联系人电话}
-    Click Element    xpath=.//span[text()="保存"]/ancestor::a
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待提示框出现
-    点击提示框中的确定按钮
-
-将勘查信息写入PEP对象
-    [Arguments]    ${PEP}
-    ${是否勘查}    Get Value    xpath=//input[@name="IsLiveSearch" and @checked="checked"]
-    Set Pep Value    ${PEP}    是否勘查    ${是否勘查}
-    ${预收费用}    Get Value    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    预收费用    ${预收费用}
-    ${资料提供方式}    Get Value    xpath=.//*[@id=id="ReportSupplyType"]/..//input[@type="text"]
-    Set Pep Value    ${PEP}    资料提供方式    ${资料提供方式}
-    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//td[@field="Contacts"]
+遍历快递信息到pep对象
+    [Arguments]    ${row_count}    ${pep}
     : FOR    ${row_num}    IN RANGE    ${row_count}
-    \    ${联系人姓名}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
-    \    ${联系人电话}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
-    \    Set Kanfang Value    ${PEP}    ${联系人姓名}    ${联系人电话}
+    \    ${姓名}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Receiver"]/div
+    \    ${联系方式}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]/div
+    \    ${公司}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Company"]/div
+    \    ${地址}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Address"]/div
+    \    ${邮政编码}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="PostCode"]/div
+    \    Set Kuaidi Value    ${pep}    ${姓名}    ${联系方式}    ${公司}    ${地址}
+    \    ...    ${邮政编码}

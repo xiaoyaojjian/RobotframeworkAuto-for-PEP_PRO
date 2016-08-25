@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-#_*_ coding:utf-8 _*_
+# _*_ coding:utf-8 _*_
+from robot.libraries.BuiltIn import BuiltIn
+
 
 class PepObject:
     def __init__(self):
         self.pep_project = {}
         self.__conf()
+        self.__builtin = BuiltIn()
 
     def get_value(self, name):
         if name in self.pep_project:
@@ -13,8 +16,14 @@ class PepObject:
             return ''  # 如果没有找到这个值，返回空
 
     def set_value(self, name, value):
-        if (value != '' or value is not None) and name in self.__key_set:
+        if (value != '' and value is not None) and name in self.__key_set:
             self.pep_project[name] = value
+            if isinstance(value,(int,str,unicode)):
+                self.__builtin.log(u'将\'' + name + u'\'的值：\'' + value + '\'插入PEP对象', level='INFO')
+            else:
+                self.__builtin.log(u'将\'' + name + u'\'的非字符串的值插入PEP对象', level='INFO')
+        elif name not in self.__key_set:
+            self.__builtin.log(u'字段名：' + name + u' 没有定义,不能存储在PEP对象中！', level='WARN')
 
     def __str__(self):
         return self.get_value(u'流水号')
@@ -37,10 +46,18 @@ class PepObject:
                      u'(专票)纳税人识别号', u'(专票)开户行', u'(专票)账号', u'(专票)地址', u'(专票)电话']
         self.__key_set.update(free_info)
 
-        # 勘查事项
-        live_search_info = [u'是否勘查', u'预收费用', u'资料提供方式', u'看房联系人信息',u'看房联系人', u'联系人电话']
+        # 勘查事项,其中‘看房联系人信息’为一个list
+        live_search_info = [u'是否勘查', u'预收费用', u'资料提供方式', u'看房联系人信息', u'看房联系人', u'联系人电话']
         self.__key_set.update(live_search_info)
 
-        # 收件信息
-        receipt_info = [u'收取方式', u'收件人姓名', u'收件人联系方式', u'收件人公司', u'收件人地址', u'收件人邮政编码']
+        # 收件信息,其中‘快递信息’为一个list
+        receipt_info = [u'收取方式', u'收件人姓名', u'收件人联系方式', u'收件人公司', u'收件人地址', u'收件人邮政编码', u'快递信息']
         self.__key_set.update(receipt_info)
+        
+        # 外业信息
+        waicai_info = [u'查勘人员', u'查勘表', u'加急金额']
+        self.__key_set.update(waicai_info)
+        
+        # 内业信息
+        inwork_info = [u'撰写人员']
+        self.__key_set.update(inwork_info)

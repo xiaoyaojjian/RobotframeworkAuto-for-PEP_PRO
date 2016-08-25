@@ -7,3 +7,157 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 变更审批打开模块公共方法
     打开功能模块    我的项目    变更审批
     变更审批窗口
+
+根据变更审批状态选择查询方式
+    [Arguments]    ${变更审批状态列表值}    ${路径}
+    Run Keyword If    '${变更审批状态列表值}'=='全部'    按变更审批状态    ${变更审批状态列表值}    ${路径}
+    ...    ELSE IF    '${变更审批状态列表值}'=='申请中'    按变更审批状态    ${变更审批状态列表值}    ${路径}
+    ...    ELSE IF    '${变更审批状态列表值}'=='未通过'    按变更审批状态    ${变更审批状态列表值}    ${路径}
+    ...    ELSE IF    '${变更审批状态列表值}'=='已通过'    按变更审批状态    ${变更审批状态列表值}    ${路径}
+    ...    ELSE IF    '${变更审批状态列表值}'=='已撤销'    按变更审批状态    ${变更审批状态列表值}    ${路径}
+
+按变更审批状态
+    [Arguments]    ${变更审批状态列表值}    ${路径}
+    变更审批状态    ${变更审批状态列表值}
+    点击查询按钮
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量
+    ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    查询操作单元结果检测    ${获取报告打印第一页行数}/10    ${变更审批状态列表值}    ${路径}
+
+状态校验数据
+    [Arguments]    ${流水号字段值}    ${状态字段值}
+    log    '吕在清'
+    Run Keyword If    '${状态字段值}'=='申请中'    log    ${流水号字段值}pass
+    ...    ELSE IF    '${状态字段值}'=='已撤销'    log    ${流水号字段值}pass
+    ...    ELSE IF    '${状态字段值}'=='未通过'    log    ${流水号字段值}pass
+    ...    ELSE IF    '${状态字段值}'=='已通过'    log    ${流水号字段值}pass
+    ...    ELSE    log    查询数据为空，请确认数据是否存在
+
+获取状态值
+    [Arguments]    ${row}
+    ${状态字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[11]/div[1]
+    [Return]    ${状态字段值}
+
+报告修改审批弹出框数据一致性校验
+    [Arguments]    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}    ${变更类型}    ${加出份数}
+    ...    ${变更原因}    ${变更备注}
+    点击审核按钮
+    变更审批修改窗口
+    sleep    5
+    Comment    获取报告修改审批字段值
+    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}    ${修改审批变更原因字段值}
+    ...    ${修改审批变更备注字段值}    获取报告修改审批字段值
+    变更审批字段校验    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}
+    ...    ${修改审批变更原因字段值}    ${修改审批变更备注字段值}    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
+    ...    ${变更类型}    ${加出份数}    ${变更原因}    ${变更备注}
+    sleep    1
+    Unselect Frame
+    变更审批窗口
+    sleep    5
+    关闭弹出框
+
+获取变更审批列表字段值
+    ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
+    Comment    :FOR    ${row}    IN RANGE    1    ${获取报告打印第一页行数}+1
+    Comment    \    log    ${row}
+    Comment    \    ${流水号字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectNo']
+    Comment    \    ${报告号字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportNo']
+    Comment    \    ${项目地址字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ResidentialAreaAddress']
+    Comment    \    ${小区名称字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ResidentialAreaName']
+    Comment    \    ${物业类型字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectType']
+    Comment    \    ${项目状态字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportProperty']
+    Comment    \    ${报告类型字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportCategory']
+    Comment    \    ${业务来源字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectSource']
+    Comment    \    ${估价目的字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='BusinessType']
+    Comment    \    ${状态字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='State']
+    Comment    \    ${收费金额字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='price']
+    Comment    \    ${创建时间字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='CreateDate']
+    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}    获取变更审批列表字段值循环    ${获取报告打印第一页行数}
+    [Return]    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
+
+获取报告修改审批字段值
+    ${修改审批流水号字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="ProjectNo"]
+    ${修改审批报告号字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="ReportNo"]
+    ${修改审批项目地址字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="Address"]
+    ${修改审批变更类型字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="ModifyType"]
+    ${修改审批加出份数字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="AdditionCopies"]
+    ${修改审批收费金额字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="Charge"]
+    ${修改审批变更原因字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="ApplyReason"]
+    ${修改审批变更备注字段值}    Get Value    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[@id="Remark"]
+    [Return]    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}
+    ...    ${修改审批变更原因字段值}    ${修改审批变更备注字段值}
+
+变更审批字段校验
+    [Arguments]    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}
+    ...    ${修改审批变更原因字段值}    ${修改审批变更备注字段值}    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
+    ...    ${变更类型}    ${加出份数}    ${变更原因}    ${变更备注}
+    Run Keyword If    '${修改审批流水号字段值}'=='${流水号字段值}' and '${修改审批报告号字段值}'=='${报告号字段值}' and '${修改审批项目地址字段值}'=='${项目地址字段值}' and '${修改审批变更类型字段值}'=='${变更类型}' and '${修改审批加出份数字段值}'=='${加出份数}' and int(${修改审批收费金额字段值})==int(${收费金额字段值}) and '${修改审批变更原因字段值}'=='${变更原因}' and '${修改审批变更备注字段值}'=='${变更备注}'    log    pass
+    ...    ELSE    fail
+
+报告修改审批同意
+    [Arguments]    ${审核意见}    ${是否同意}    ${流水号字段值}    ${变更原因}
+    点击审核按钮
+    Run Keyword And Continue On Failure    select frame    id=xubox_iframe2
+    Wait Until Page Contains    流水号
+    Input Text    id=AuditContext    ${审核意见}
+    同意按钮    ${是否同意}
+    等待提示框出现
+    确定按钮
+    Unselect Frame
+    变更审批窗口
+    正在处理,请稍待...提示
+    Run Keyword If    '${是否同意}'=='同意'    根据选择是否同意进行数据校验    已通过    ${流水号字段值}    ${是否同意}    ${审核意见}
+    ...    ${变更原因}
+    ...    ELSE IF    '${是否同意}'=='不同意'    根据选择是否同意进行数据校验    未通过    ${流水号字段值}    ${是否同意}
+    ...    ${审核意见}    ${变更原因}
+
+根据选择是否同意进行数据校验
+    [Arguments]    ${变更审批状态列表值}    ${输入流水号}    ${是否同意}    ${审核意见}    ${变更原因}
+    Run Keyword And Continue On Failure    Input Text    id=pno    ${输入流水号}
+    Select From List By Label    id=State    ${变更审批状态列表值}
+    点击查询按钮
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量
+    ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    ${第一行}    Set Variable    1
+    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}    获取变更审批列表字段值循环    ${第一行}
+    Run Keyword If    '${输入流水号}'=='${流水号字段值}'    log    变更审核通过
+    ...    ELSE    Fail
+    Click Element    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='ProjectNo']
+    ${申请时间字段值}    ${金额字段值}    ${申请理由字段值}    ${申请人字段值}    ${审核人字段值}    ${审核时间字段值}    ${审核意见字段值}
+    ...    ${审核结果字段值}    获取某条数据的审批情况数据
+    Run Keyword If    '${是否同意}'=='${审核结果字段值}' and int(${收费金额字段值})==int(${金额字段值}) and '${审核意见}'=='${审核意见字段值}' and '${变更原因}'=='${申请理由字段值}' and '${审核人字段值}'=='${USER_NAME}'    log    审批情况通过
+    ...    ELSE    fail
+
+获取变更审批列表字段值循环
+    [Arguments]    ${获取报告打印第一页行数}
+    :FOR    ${row}    IN RANGE    1    ${获取报告打印第一页行数}+1
+    \    log    ${row}
+    \    ${流水号字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectNo']
+    \    ${报告号字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportNo']
+    \    ${项目地址字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ResidentialAreaAddress']
+    \    ${小区名称字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ResidentialAreaName']
+    \    ${物业类型字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectType']
+    \    ${项目状态字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportProperty']
+    \    ${报告类型字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportCategory']
+    \    ${业务来源字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectSource']
+    \    ${估价目的字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='BusinessType']
+    \    ${状态字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='State']
+    \    ${收费金额字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='price']
+    \    ${创建时间字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='CreateDate']
+    [Return]    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
+
+获取某条数据的审批情况数据
+    ${申请时间字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[1]/label
+    ${金额字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[2]/label
+    ${申请理由字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[3]/label
+    ${申请人字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[4]/label
+    ${审核人字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[5/label
+    ${审核时间字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[6]/label
+    ${审核意见字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[7]/label
+    ${审核结果字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[8]/label
+    [Return]    ${申请时间字段值}    ${金额字段值}    ${申请理由字段值}    ${申请人字段值}    ${审核人字段值}    ${审核时间字段值}
+    ...    ${审核意见字段值}    ${审核结果字段值}

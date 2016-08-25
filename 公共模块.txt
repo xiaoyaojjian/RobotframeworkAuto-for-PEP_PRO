@@ -2,6 +2,7 @@
 Library           Selenium2Library
 Library           DateTime
 Library           PepExt.py
+Library           re
 
 *** Variables ***
 ${PEP_URL}        http://inworktest.yunfangdata.com:82/    # 评E评URL地址
@@ -53,7 +54,6 @@ ${PASSWORD}       123456    # 登录密码
     [Arguments]    ${locator}    ${text}
     Clear Element Text    xpath=${locator}
     Input Text    xpath=${locator}    ${text}
-    log    ${text}
 
 点击提示框中的${button_name}按钮
     Click Element    xpath=//div[contains(@class,"messager-window")]//span[text()="${button_name}"]/ancestor::a

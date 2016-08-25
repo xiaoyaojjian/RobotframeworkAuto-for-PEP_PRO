@@ -1,3 +1,55 @@
 *** Settings ***
 Resource          项目受理操作层.txt
 Resource          项目受理校验层.txt
+
+*** Keywords ***
+暂存后进行立项
+    [Arguments]    ${input_pep}
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到暂存项目子模块
+    等待列表创建完毕
+    点击立项按钮
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待加载完毕
+    通过手机号码获取客户信息    ${input_pep}
+    填写项目信息    ${input_pep}
+    填写收费信息    ${input_pep}
+    填写勘查信息    ${input_pep}
+    填写收件信息    ${input_pep}
+    填写备注信息    ${input_pep.get_value(u'立项备注')}
+    ${pep}    Create Pep Object
+    将立项界面的信息写入pep对象    ${pep}
+    进行暂存操作    ${pep}
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    切换到暂存项目子模块
+    输入暂存项目查询条件    ${pep.get_value(u'流水号')}
+    点击查询按钮
+    点击列表中的编辑按钮
+    Unselect Frame
+    Wait Until Page Contains Element    xpath=.//iframe[contains(@id,'create_project_')]
+    Select Frame    xpath=.//iframe[contains(@id,'create_project_')]
+    等待加载完毕
+    验证立项界面的值是否正常    ${pep}
+    进行立项操作    ${pep}
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    切换到已立项子模块
+    输入已立项查询条件    ${pep.get_value(u'流水号')}
+    点击查询按钮
+    点击列表中的查看按钮
+    Unselect Frame
+    Wait Until Page Contains Element    xpath=//iframe[contains(@id,'${pep.get_value(u'流水号')}')]
+    Select Frame    xpath=//iframe[contains(@id,'${pep.get_value(u'流水号')}')]
+    验证立项界面的值是否正常    ${pep}    1
+    [Return]    ${pep}
+
+将立项界面的信息写入pep对象
+    [Arguments]    ${pep}
+    将客户信息写入PEP对象    ${pep}
+    将项目信息写入PEP对象    ${pep}
+    将收费信息写入PEP对象    ${pep}
+    将勘查信息写入PEP对象    ${pep}
+    将收件信息写入PEP对象    ${pep}
+    将其他信息写入pep对象    ${pep}

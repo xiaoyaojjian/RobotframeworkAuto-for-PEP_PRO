@@ -1,0 +1,34 @@
+*** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
+Resource          项目受理业务层.txt
+
+*** Test Cases ***
+进行多次暂存
+    ${pep_input}    Create Pep Object
+    Set Pep Value    ${pep_input}    客户手机    13418024243
+    Set Pep Value    ${pep_input}    项目来源    微信
+    Set Pep Value    ${pep_input}    估价目的    房地产抵押（按揭）
+    Set Pep Value    ${pep_input}    子物业类型    商住
+    Set Pep Value    ${pep_input}    行政区    朝阳区
+    Set Pep Value    ${pep_input}    发送份数    5
+    Set Pep Value    ${pep_input}    小区名    暂存项目立项
+    Set Pep Value    ${pep_input}    小区地址    朝阳门内大街136号
+    Set Pep Value    ${pep_input}    楼栋号    32号楼
+    Set Pep Value    ${pep_input}    单元号    7单元
+    Set Pep Value    ${pep_input}    户号名    506
+    Set Pep Value    ${pep_input}    建筑面积    109.89
+    Set Pep Value    ${pep_input}    土地面积    29.37
+    Set Pep Value    ${pep_input}    建成年代    2003
+    Set Pep Value    ${pep_input}    估价委托方    张小姐
+    Set Pep Value    ${pep_input}    收费责任人    ${USER_NAME}
+    Set Pep Value    ${pep_input}    市场负责人    ${USER_NAME}
+    Set Pep Value    ${pep_input}    内部报单人    ${USER_NAME}
+    Set Pep Value    ${pep_input}    预收费用    250
+    Set Pep Value    ${pep_input}    应收金额    700.00
+    ${time}    获取当前时间
+    Set Pep Value    ${pep_input}    立项备注    该项目为${time}进添加的，这里是立项备注
+    Set Pep Value    ${pep_input}    看房联系人    张三
+    Set Pep Value    ${pep_input}    联系人电话    13456789098
+    Set Pep Value    ${pep_input}    收取方式    快递
+    暂存后进行立项    ${pep_input}

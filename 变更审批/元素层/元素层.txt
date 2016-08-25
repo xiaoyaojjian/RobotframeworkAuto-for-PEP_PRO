@@ -10,3 +10,28 @@ Resource          ../../变更审批/流程层/流程层.txt
 变更审批窗口
     Run Keyword And Continue On Failure    select frame    id=ProjectAllot_ChangeApprove
     Wait Until Page Contains    流水号
+
+变更审批状态
+    [Arguments]    ${变更审批状态列表值}
+    Select From List By Label    id=State    ${变更审批状态列表值}
+
+输入申请时间
+    Input Text    xpath=.//input[@name='createdtime']/ancestor::span[@class="textbox combo datebox"]/input    2016-08-24
+    Input Text    xpath=.//input[@name='createdtime']/ancestor::span[@class="textbox combo datebox2 "]/input    2016-08-24
+
+变更审批修改窗口
+    Run Keyword And Continue On Failure    select frame    id=xubox_iframe1
+    Wait Until Page Contains    流水号
+
+点击审核按钮
+    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td/div[contains(.,'审核')]
+
+关闭弹出框
+    Click Element    xpath=//span[@class='xubox_setwin']/a
+
+同意按钮
+    [Arguments]    ${是否同意}
+    Click Button    xpath=//input[@value='${是否同意}']
+
+正在处理,请稍待...提示
+    Wait Until Page Does Not Contain Element    xpath=//*[@class="datagrid-mask-msg" and contains(@style,"display:block")]    timeout=30s

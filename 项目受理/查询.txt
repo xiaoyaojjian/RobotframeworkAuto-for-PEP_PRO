@@ -15,15 +15,53 @@ Resource          项目受理业务层.txt
     Select Frame    id=create_project_
     等待加载完毕
     ${pep}    Create Pep Object
-    通过手机号码获取客户信息    ${pep}    13418024243
-    log    ${pep.get_value(u'所属机构')}
-    填写项目信息    发送份数=5    小区名=新世界太华公寓
+    ${pep_input}    Create Pep Object
+    Set Pep Value    ${pep_input}    客户手机    13418024243
+    Set Pep Value    ${pep_input}    发送份数    5
+    Set Pep Value    ${pep_input}    小区名    新世界太华公寓
+    Set Pep Value    ${pep_input}    票据类型    增值税专用发票
+    Set Pep Value    ${pep_input}    (专票)名称    名称
+    Set Pep Value    ${pep_input}    (专票)纳税人识别号    识别号
+    Set Pep Value    ${pep_input}    (专票)开户行    开户行
+    Set Pep Value    ${pep_input}    看房联系人    张三
+    Set Pep Value    ${pep_input}    联系人电话    13456789098
+    Set Pep Value    ${pep_input}    收取方式    快递
+    通过手机号码获取客户信息    ${pep_input}
+    填写项目信息    ${pep_input}
+    填写收费信息    ${pep_input}
+    填写勘查信息    ${pep_input}
+    填写收件信息    ${pep_input}
+    将客户信息写入PEP对象    ${pep}
     将项目信息写入PEP对象    ${pep}
-    log    ${pep.get_value(u'所属机构')}
-    log    ${pep.get_value(u'小区名')}
-    Comment    填写收费信息    票据类型=增值税专用发票    (专票)名称=名称    (专票)纳税人识别号=识别号    (专票)开户行=开户行
-    Comment    将收费信息写入PEP对象    ${pep}
-    填写勘查信息    看房联系人=李楠    联系人电话=13489090908
+    将收费信息写入PEP对象    ${pep}
     将勘查信息写入PEP对象    ${pep}
-    log    ${pep.get_value(u'看房联系人信息')}
-    log    ${pep.get_value(u'看房联系人信息')[0][u'姓名']}
+    将收件信息写入PEP对象    ${pep}
+    log    ${pep.pep_project}
+    log    ${pep.get_value(u'快递信息')[0][u'姓名']}
+    进行提取信息操作    560071897718
+    log    ${pep}
+    验证立项界面的值是否正常    ${pep}
+
+查看详细
+    登录
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到已立项子模块
+    等待列表创建完毕
+    输入已立项查询条件    560071897718
+    点击查询按钮
+    等待列表创建完毕
+    点击列表中的查看按钮
+    Unselect Frame
+    Wait Until Page Contains Element    xpath=//iframe[contains(@id,'560071897718')]
+    Select Frame    xpath=//iframe[contains(@id,'560071897718')]
+    ${pep}    Create Pep Object
+    Set Pep Value    ${pep}    流水号    560071897718
+    将客户信息写入PEP对象    ${pep}    1
+    将项目信息写入PEP对象    ${pep}    1
+    将收费信息写入PEP对象    ${pep}    1
+    将勘查信息写入PEP对象    ${pep}    1
+    将收件信息写入PEP对象    ${pep}    1
+    log    ${pep.pep_project}
+    log    ${pep.get_value(u'快递信息')[0][u'姓名']}

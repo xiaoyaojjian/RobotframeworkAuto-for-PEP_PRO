@@ -17,7 +17,7 @@ Resource          公共模块.txt
     ${PEP}    Create Pep Object
     #给pep对象输入值
     Set Pep Value    ${PEP}    流水号    12312
-    Set Pep Value    ${PEP}    小区名    五栋大楼
+    Set Pep Value    ${PEP}    小区名1    五栋大楼
     #获取pep对象里面的某个值
     log    ${PEP}    #直接输出对象时，输出流水号
     log    ${PEP.get_value(u'流水号')}    #指定获取某个值
