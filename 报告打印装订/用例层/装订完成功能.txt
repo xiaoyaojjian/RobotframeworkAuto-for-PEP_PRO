@@ -12,3 +12,4 @@ Resource          ../流程层/流程层.txt
     ...
     ...    编写者：吕梓清
     报告装订打印完成    537469825753    ProjectNo
+    [Teardown]    Close Browser

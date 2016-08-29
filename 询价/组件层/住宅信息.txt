@@ -1,0 +1,70 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../元素层/元素层.txt
+Resource          ../../报告打印装订/组件层/报告装订打印.txt
+
+*** Keywords ***
+询价打开模块公共方法
+    打开功能模块    询价立项管理    询价
+    询价窗口
+
+获取询价列表行数据
+    [Arguments]    ${路径}
+    ${lineNumberP1}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
+    [Return]    ${lineNumberP1}
+
+获取询价列表列数据
+    ${rowNumberP1}    Get Matching Xpath Count    //td[@field="cb"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td
+    [Return]    ${rowNumberP1}
+
+询价查询结果校验
+    [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
+    : FOR    ${row}    IN RANGE    1    ${行数}+1
+    \    log    ${row}
+    \    ${字段值}    Run Keyword If    '${查询类型}'=='小区名称'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='项目地址'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='预估单编号'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='委托人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='权利人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='评估人员'    获取询价列表单元格    ${row}    ${路径}
+    \    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+
+获取询价列表单元格
+    [Arguments]    ${row}    ${路径}
+    log    ${路径}
+    log    ${row}
+    ${字段值}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='${路径}']
+    log    ${字段值}
+    [Return]    ${字段值}
+
+根据询价查询条件选择查询类型
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    Comment    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    输入询价机构    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    输入询价人(客户名称)    ${输入参数}    ${路径}
+    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='预估单编号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='权利人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='评估人员'    条件输入参数    ${输入参数}    ${路径}
+    [Return]    ${输入参数}
+
+输入询价机构
+    [Arguments]    ${输入询价机构}    ${路径}
+    询价机构    ${输入询价机构}    ${路径}
+    [Return]    ${输入询价机构}
+
+输入询价人(客户名称)
+    [Arguments]    ${输入询价人}    ${路径}
+    询价人(客户名称)    ${输入询价人}    ${路径}
+    [Return]    ${输入询价人}

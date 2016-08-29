@@ -6,6 +6,7 @@ Resource          ../元素层/元素层.txt
 输入流水号
     [Arguments]    ${输入流水号}    ${路径}
     流水号    ${输入流水号}    ${路径}
+    [Return]    ${输入流水号}
 
 获取公共列表
     [Arguments]    ${table}    ${table1}    ${table2}    ${查询条件}    ${查询条件名}
@@ -39,7 +40,7 @@ Resource          ../元素层/元素层.txt
     [Return]    ${lineNumberP1}
 
 获取页面显示总数据量
-    ${列表总共数据数}    Get Text    //div[@class="datagrid-pager pagination"]//div[@class='pagination-info']
+    ${列表总共数据数}    Get Text    xpath=//div[@class='pagination-info']
     ${显示第}    Findall    显示(.*)到    ${列表总共数据数}
     ${到第}    Findall    到(.*),共    ${列表总共数据数}
     ${总共多少条}    Findall    共(.*)记录    ${列表总共数据数}
@@ -51,29 +52,31 @@ Resource          ../元素层/元素层.txt
     [Return]    ${rowNumberP1}
 
 查询结果检测
-    [Arguments]    ${行数}    ${列数}    ${查询条件名}    ${查询类型}    ${路径}
+    [Arguments]    ${行数}    ${列数}    ${查询条件名}    ${查询类型}    ${路径}    ${列表路径}
     : FOR    ${row}    IN RANGE    1    ${行数}+1
     \    log    ${row}
     \    ${字段值}    Run Keyword If    '${查询类型}'=='流水号'    获取单元格的值    2    ${row}
-    \    ...    ${路径}
+    \    ...    ${列表路径}
     \    ...    ELSE IF    '${查询类型}'=='报告号'    获取单元格的值    3    ${row}
-    \    ...    ${路径}
+    \    ...    ${列表路径}
     \    ...    ELSE IF    '${查询类型}'=='项目地址'    获取单元格的值    4    ${row}
-    \    ...    ${路径}
+    \    ...    ${列表路径}
     \    ...    ELSE IF    '${查询类型}'=='小区名称'    获取单元格的值    5    ${row}
-    \    ...    ${路径}
-    \    should match    ${字段值}    *${查询条件名}*
+    \    ...    ${列表路径}
+    \    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
 
 根据查询条件选择查询类型
     [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}    ${路径}
-    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${流水号}    ${路径}
+    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${流水号}    ${路径}
     ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${报告号}    ${路径}
     ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${项目地址}    ${路径}
     ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${小区名称}    ${路径}
+    [Return]    ${输入参数}
 
 输入报告号
     [Arguments]    ${输入报告号}    ${路径}
     报告号    ${输入报告号}    ${路径}
+    [Return]    ${输入报告号}
 
 列表循环语句
     [Arguments]    ${num}    ${row}    ${查询条件}    ${table}
@@ -87,26 +90,30 @@ Resource          ../元素层/元素层.txt
     \    Comment    Run Keyword If    ${start}<${temp}<${last}    Continue For Loop    #假如正确，继续循环
 
 获取单元格的值
-    [Arguments]    ${参数}    ${row}    ${路径}
-    ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[${参数}]/div[1]
+    [Arguments]    ${参数}    ${row}    ${列表路径}
+    ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='${列表路径}']/div[1]
     log    ${流水号字段值}
     [Return]    ${流水号字段值}
 
 输入项目地址
     [Arguments]    ${输入项目地址}    ${路径}
     项目地址    ${输入项目地址}    ${路径}
+    [Return]    ${输入项目地址}
 
 输入小区名称
     [Arguments]    ${输入小区名称}    ${路径}
     小区名称    ${输入小区名称}    ${路径}
+    [Return]    ${输入小区名称}
 
 特殊字符校验提示语
-    [Arguments]    ${查询类型}    ${提示语}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    [Arguments]    ${查询类型}    ${提示语}
     log    ${查询类型}
     Run Keyword If    '${查询类型}'=='流水号'    请输入正确流水号    ${提示语}    ${查询类型}
     ...    ELSE IF    '${查询类型}'=='报告号'    请正确输入报告号    ${提示语}    ${查询类型}
     ...    ELSE IF    '${查询类型}'=='项目地址'    请输入正确的地址    ${提示语}    ${查询类型}
     ...    ELSE IF    '${查询类型}'=='小区名称'    请输入正确流水号    ${提示语}    ${查询类型}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    请输入正确询价机构    ${提示语}    ${查询类型}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    请输入正确询价人(客户名称)    ${提示语}    ${查询类型}
 
 请输入正确流水号
     [Arguments]    ${提示语}    ${查询类型}
@@ -124,6 +131,14 @@ Resource          ../元素层/元素层.txt
     [Arguments]    ${提示语}    ${查询类型}
     should be equal    ${提示语}    请输入正确${查询类型}
 
+请输入正确询价机构
+    [Arguments]    ${提示语}    ${查询类型}
+    should be equal    ${提示语}    请输入正确${查询类型}
+
+请输入正确询价人(客户名称)
+    [Arguments]    ${提示语}    ${查询类型}
+    should be equal    ${提示语}    请输入正确${查询类型}
+
 超长流水号字符校验
     [Arguments]    ${n}
     Comment    Should Be Equal    ${n}    int('12')
@@ -131,11 +146,13 @@ Resource          ../元素层/元素层.txt
     ...    ELSE    Fail
 
 超长字符校验
-    [Arguments]    ${查询类型}    ${n}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    [Arguments]    ${查询类型}    ${n}
     Run Keyword If    '${查询类型}'=='流水号'    超长流水号字符校验    ${n}
     ...    ELSE IF    '${查询类型}'=='报告号'    超长报告号字符校验    ${n}
     ...    ELSE IF    '${查询类型}'=='项目地址'    超长项目地址字符校验    ${n}
     ...    ELSE IF    '${查询类型}'=='小区名称'    超长小区名称字符校验    ${n}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    超长询价机构字符校验    ${n}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    超长询价人(客户名称)字符校验    ${n}
 
 超长报告号字符校验
     [Arguments]    ${n}
@@ -155,12 +172,20 @@ Resource          ../元素层/元素层.txt
     Run Keyword If    ${n}==int('60')    log    pass
     ...    ELSE    Fail
 
+超长询价机构字符校验
+    [Arguments]    ${n}
+    Comment    Should Be Equal    ${n}    int('60')
+    Run Keyword If    ${n}==int('150')    log    pass
+    ...    ELSE    Fail
+
 获取输入参数最终值
-    [Arguments]    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}    ${路径}
+    [Arguments]    ${查询类型}    ${路径}
     ${获取输入参数最终值}    Run Keyword If    '${查询类型}'=='流水号'    获取流水号输入最终值    ${路径}
     ...    ELSE IF    '${查询类型}'=='报告号'    获取报告号输入最终值    ${路径}
     ...    ELSE IF    '${查询类型}'=='项目地址'    获取项目地址输入最终值    ${路径}
     ...    ELSE IF    '${查询类型}'=='小区名称'    获取小区名称输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价机构输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价人(客户名称)输入最终值    ${路径}
     [Return]    ${获取输入参数最终值}
 
 获取流水号输入最终值
@@ -179,6 +204,16 @@ Resource          ../元素层/元素层.txt
     [Return]    ${获取输入参数最终值}
 
 获取小区名称输入最终值
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    id=${路径}
+    [Return]    ${获取输入参数最终值}
+
+获取询价机构输入最终值
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    id=${路径}
+    [Return]    ${获取输入参数最终值}
+
+获取询价人(客户名称)输入最终值
     [Arguments]    ${路径}
     ${获取输入参数最终值}    Get Value    id=${路径}
     [Return]    ${获取输入参数最终值}
@@ -235,7 +270,8 @@ Resource          ../元素层/元素层.txt
     : FOR    ${rows}    IN RANGE    1    ${行数}+1
     \    log    ${rows}
     \    log    测试使用1
-    \    ${流水号字段值}    ${字段值}    ${状态字段值}    获取操作框单元格的值    ${rows}    ${路径}
+    \    ${流水号字段值}    ${字段值}    ${状态字段值}    Run Keyword If    ${rows}>=1    获取操作框单元格的值
+    \    ...    ${rows}    ${路径}
     \    log    '吕梓清'
     \    Run Keyword If    '${查询类型}'=='全部'    操作全部状态校验数据    ${流水号字段值}    ${字段值}    ${状态字段值}
     \    ...    ELSE IF    '${查询类型}'=='装订完成'    操作已完成状态校验数据    ${流水号字段值}    ${字段值}
@@ -322,3 +358,9 @@ Resource          ../元素层/元素层.txt
     ${获取操作字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[3]/div[1]
     Run Keyword If    '${获取操作字段值}'=='打开打印' and '${获取资料名称字段值}'=='完整报告${流水号字段值}.pdf'    log    报告装订打印文件存在，成功
     ...    ELSE    fail
+
+超长询价人(客户名称)字符校验
+    [Arguments]    ${n}
+    Comment    Should Be Equal    ${n}    int('60')
+    Run Keyword If    ${n}==int('150')    log    pass
+    ...    ELSE    Fail

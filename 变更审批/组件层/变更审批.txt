@@ -41,22 +41,17 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     [Return]    ${状态字段值}
 
 报告修改审批弹出框数据一致性校验
-    [Arguments]    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}    ${变更类型}    ${加出份数}
-    ...    ${变更原因}    ${变更备注}
-    点击审核按钮
-    变更审批修改窗口
-    sleep    5
-    Comment    获取报告修改审批字段值
-    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}    ${修改审批变更原因字段值}
-    ...    ${修改审批变更备注字段值}    获取报告修改审批字段值
-    变更审批字段校验    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}
-    ...    ${修改审批变更原因字段值}    ${修改审批变更备注字段值}    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
+    [Arguments]    ${变更审批状态列表值}    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}    ${变更类型}
+    ...    ${加出份数}    ${变更原因}    ${变更备注}
+    变更审批状态    ${变更审批状态列表值}
+    点击查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
+    ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${获取报告打印第一页行数}]/td[2]/div[1]
+    Run Keyword If    ${获取报告打印第一页行数}>0 and '${流水号字段值}'!=''    报告变更审批弹出框数据一致性校验核心流程    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
     ...    ${变更类型}    ${加出份数}    ${变更原因}    ${变更备注}
-    sleep    1
-    Unselect Frame
-    变更审批窗口
-    sleep    5
-    关闭弹出框
+    ...    ELSE    log    该查询列表数据为空
+    [Return]    ${获取报告打印第一页行数}    ${流水号字段值}
 
 获取变更审批列表字段值
     ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
@@ -97,21 +92,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ...    ELSE    fail
 
 报告修改审批同意
-    [Arguments]    ${审核意见}    ${是否同意}    ${流水号字段值}    ${变更原因}
-    点击审核按钮
-    Run Keyword And Continue On Failure    select frame    id=xubox_iframe2
-    Wait Until Page Contains    流水号
-    Input Text    id=AuditContext    ${审核意见}
-    同意按钮    ${是否同意}
-    等待提示框出现
-    确定按钮
-    Unselect Frame
-    变更审批窗口
-    正在处理,请稍待...提示
-    Run Keyword If    '${是否同意}'=='同意'    根据选择是否同意进行数据校验    已通过    ${流水号字段值}    ${是否同意}    ${审核意见}
-    ...    ${变更原因}
-    ...    ELSE IF    '${是否同意}'=='不同意'    根据选择是否同意进行数据校验    未通过    ${流水号字段值}    ${是否同意}
-    ...    ${审核意见}    ${变更原因}
+    [Arguments]    ${审核意见}    ${是否同意}    ${流水号字段值}    ${变更原因}    ${获取报告打印第一页行数}    ${流水号字段值1}
+    Run Keyword If    ${获取报告打印第一页行数}>0 and '${流水号字段值1}'!=''    变更审批主流程    ${审核意见}    ${是否同意}    ${流水号字段值}    ${变更原因}
 
 根据选择是否同意进行数据校验
     [Arguments]    ${变更审批状态列表值}    ${输入流水号}    ${是否同意}    ${审核意见}    ${变更原因}
@@ -134,7 +116,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 获取变更审批列表字段值循环
     [Arguments]    ${获取报告打印第一页行数}
-    :FOR    ${row}    IN RANGE    1    ${获取报告打印第一页行数}+1
+    : FOR    ${row}    IN RANGE    1    ${获取报告打印第一页行数}+1
     \    log    ${row}
     \    ${流水号字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ProjectNo']
     \    ${报告号字段值}    get text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='ReportNo']
@@ -155,9 +137,44 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${金额字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[2]/label
     ${申请理由字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[3]/label
     ${申请人字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[4]/label
-    ${审核人字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[5/label
-    ${审核时间字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[6]/label
-    ${审核意见字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[7]/label
-    ${审核结果字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[8]/label
+    ${审核人字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[5]
+    ${审核时间字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[6]
+    ${审核意见字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[7]
+    ${审核结果字段值}    get text    xpath=.//*[@id='TableDetail']/tbody/tr[2]/td[8]
     [Return]    ${申请时间字段值}    ${金额字段值}    ${申请理由字段值}    ${申请人字段值}    ${审核人字段值}    ${审核时间字段值}
     ...    ${审核意见字段值}    ${审核结果字段值}
+
+报告变更审批弹出框数据一致性校验核心流程
+    [Arguments]    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}    ${变更类型}    ${加出份数}
+    ...    ${变更原因}    ${变更备注}
+    点击审核按钮
+    变更审批修改窗口
+    sleep    5
+    Comment    获取报告修改审批字段值
+    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}    ${修改审批变更原因字段值}
+    ...    ${修改审批变更备注字段值}    获取报告修改审批字段值
+    变更审批字段校验    ${修改审批流水号字段值}    ${修改审批报告号字段值}    ${修改审批项目地址字段值}    ${修改审批变更类型字段值}    ${修改审批加出份数字段值}    ${修改审批收费金额字段值}
+    ...    ${修改审批变更原因字段值}    ${修改审批变更备注字段值}    ${流水号字段值}    ${报告号字段值}    ${项目地址字段值}    ${收费金额字段值}
+    ...    ${变更类型}    ${加出份数}    ${变更原因}    ${变更备注}
+    sleep    1
+    Unselect Frame
+    变更审批窗口
+    sleep    5
+    关闭弹出框
+
+变更审批主流程
+    [Arguments]    ${审核意见}    ${是否同意}    ${流水号字段值}    ${变更原因}
+    点击审核按钮
+    Run Keyword And Continue On Failure    select frame    id=xubox_iframe2
+    Wait Until Page Contains    流水号
+    Input Text    id=AuditContext    ${审核意见}
+    同意按钮    ${是否同意}
+    等待提示框出现
+    确定按钮
+    Unselect Frame
+    变更审批窗口
+    正在处理,请稍待...提示
+    Run Keyword If    '${是否同意}'=='同意'    根据选择是否同意进行数据校验    已通过    ${流水号字段值}    ${是否同意}    ${审核意见}
+    ...    ${变更原因}
+    ...    ELSE IF    '${是否同意}'=='不同意'    根据选择是否同意进行数据校验    未通过    ${流水号字段值}    ${是否同意}
+    ...    ${审核意见}    ${变更原因}

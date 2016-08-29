@@ -1,0 +1,64 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../流程层/流程层.txt
+
+*** Keywords ***
+询价窗口
+    Run Keyword And Continue On Failure    select frame    id=InquiryAndProject_Residential
+    Wait Until Page Contains    操作
+
+询价查询按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/..
+
+询价机构
+    [Arguments]    ${输入询价机构}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入询价机构}
+
+询价人(客户名称)
+    [Arguments]    ${输入询价人(客户名称)}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入询价人(客户名称)}
+
+非住宅信息按钮
+    Click Element    xpath=//span[text()="非住宅信息"]/..
+    等待列表创建完毕
+
+条件输入参数
+    [Arguments]    ${输入条件}    ${路径}
+    条件参数    ${输入条件}    ${路径}
+    [Return]    ${输入条件}
+
+条件参数
+    [Arguments]    ${输入流水号}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']    ${输入流水号}
+
+询价获取页面数据总量
+    ${列表总共数据数}    Get Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//div[@class='pagination-info']
+    ${显示第}    Findall    显示(.*)到    ${列表总共数据数}
+    ${到第}    Findall    到(.*),共    ${列表总共数据数}
+    ${总共多少条}    Findall    共(.*)记录    ${列表总共数据数}
+    log    ${总共多少条[0]}
+    [Return]    ${总共多少条[0]}
+
+清空询价输入框内容
+    [Arguments]    ${路径}
+    clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']
+
+获取询价输入参数最终值
+    [Arguments]    ${查询类型}    ${路径}
+    ${获取输入参数最终值}    Run Keyword If    '${查询类型}'=='流水号'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='预估单编号'    获取询价输入最终值    ${路径}
+    [Return]    ${获取输入参数最终值}
+
+获取询价输入最终值
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']
+    [Return]    ${获取输入参数最终值}
+
+预估单信息按钮
+    Click Element    xpath=//span[text()="预估单信息"]/..
+    等待列表创建完毕
