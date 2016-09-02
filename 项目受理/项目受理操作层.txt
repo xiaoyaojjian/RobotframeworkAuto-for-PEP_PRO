@@ -538,3 +538,26 @@ Resource          ../公共模块.txt
     Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    0
     Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    0
     Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    0
+
+清空已立项查询条件
+    [Arguments]    ${流水号}=None    ${报告编号}=None    ${项目地址}=None    ${小区名称}=None    ${估价目的}=None    ${项目类型}=None
+    ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
+    ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    0
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportCategory']    0
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    0
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    0
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName']
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//input[@name="CreatedDateFrom"]/../input[@type="text"]    ${受理开始时间}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//input[@name="CreatedDateTo"]/../input[@type="text"]    ${受理结束时间}
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='CustomerName']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//input[@name="MobileNumber"]/../input[@type="text"]
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='Phone']
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteResource']    0
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='FinanceEmployeeName']
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteWaiCai']    0

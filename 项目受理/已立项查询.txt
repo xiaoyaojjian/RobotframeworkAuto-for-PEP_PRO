@@ -1,0 +1,33 @@
+*** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
+Resource          项目受理业务层.txt
+
+*** Test Cases ***
+有效查询
+    Run Keyword By Testdata Return Keyvalue    已立项有效查询用例数据    0    已立项有效查询    流水号    报告编号    项目地址
+    ...    小区名称    估价目的    报告类型    业务来源    物业类型    受理人
+    ...    受理开始时间    受理结束时间    估价委托方    客户姓名    客户手机    看房联系人电话
+    ...    资料是否齐全    收费责任人    外业是否完成
+
+无效查询
+    Run Keyword By Testdata Return Keyvalue    已立项无效查询用例数据    0    已立项无效查询    流水号    报告编号    项目地址
+    ...    小区名称    估价目的    报告类型    业务来源    物业类型    受理人
+    ...    受理开始时间    受理结束时间    估价委托方    客户姓名    客户手机    看房联系人电话
+    ...    资料是否齐全    收费责任人    外业是否完成
+
+查询条件错误提示
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到已立项子模块
+    等待列表创建完毕
+    Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    1234567890123456789
+    ${流水号}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']
+    Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012345    没有做字符长度校验，报告号超出15位
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo' and contains(@class,"validatebox-invalid")]    报告号没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address' and contains(@class,"validatebox-invalid")]    项目地址没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName' and contains(@class,"validatebox-invalid")]    小区名字没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate' and contains(@class,"validatebox-invalid")]    估价委托方没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName' and contains(@class,"validatebox-invalid")]    受理人没有特殊字符校验
+    Unselect Frame

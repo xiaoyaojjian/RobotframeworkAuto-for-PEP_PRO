@@ -311,3 +311,41 @@ Resource          ../询价/组件层/住宅信息.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${表格列数}    0
     清空暂存项目查询条件
     Unselect Frame
+
+已立项有效查询
+    [Arguments]    ${流水号}=None    ${报告编号}=None    ${项目地址}=None    ${小区名称}=None    ${估价目的}=None    ${报告类型}=None
+    ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
+    ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到已立项子模块
+    等待列表创建完毕
+    输入已立项查询条件    ${流水号}    ${报告编号}    ${项目地址}    ${小区名称}    ${估价目的}    ${报告类型}
+    ...    ${业务来源}    ${物业类型}    ${受理人}    ${受理开始时间}    ${受理结束时间}    ${估价委托方}
+    ...    ${客户姓名}    ${客户手机}    ${看房联系人电话}    ${资料是否齐全}    ${收费责任人}    ${外业是否完成}
+    点击查询按钮
+    等待列表创建完毕
+    验证已立项查询数据    流水号=${流水号}    报告号=${报告编号}    项目地址=${项目地址}    小区名称=${小区名称}    报告类型=${报告类型}    物业类型=${物业类型}
+    ...    估价目的=${估价目的}    业务来源=${业务来源}    资料齐全=${资料是否齐全}    客户姓名=${客户姓名}    受理人=${受理人}    估价委托方=${估价委托方}
+    清空已立项查询条件
+    Unselect Frame
+
+已立项无效查询
+    [Arguments]    ${流水号}=None    ${报告编号}=None    ${项目地址}=None    ${小区名称}=None    ${估价目的}=None    ${报告类型}=None
+    ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
+    ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到已立项子模块
+    等待列表创建完毕
+    输入已立项查询条件    ${流水号}    ${报告编号}    ${项目地址}    ${小区名称}    ${估价目的}    ${报告类型}
+    ...    ${业务来源}    ${物业类型}    ${受理人}    ${受理开始时间}    ${受理结束时间}    ${估价委托方}
+    ...    ${客户姓名}    ${客户手机}    ${看房联系人电话}    ${资料是否齐全}    ${收费责任人}    ${外业是否完成}
+    点击查询按钮
+    等待列表创建完毕
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="bscode"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${表格列数}    0
+    清空已立项查询条件
+    Unselect Frame

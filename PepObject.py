@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# _*_ coding:utf-8 _*_
+# encoding: utf-8
+# !/usr/bin/env python
 from robot.libraries.BuiltIn import BuiltIn
 
 
@@ -25,20 +25,39 @@ class PepObject:
         elif name not in self.__key_set:
             self.__builtin.log(u'字段名：' + name + u' 没有定义,不能存储在PEP对象中！', level='WARN')
 
-    def __str__(self):
-        return self.get_value(u'流水号')
+    # def __str__(self):
+    #    return self.get_value(u'流水号')
 
     def __conf(self):
         self.__key_set = set([u'流水号', u'报告号'])
 
         # 客户信息
-        customer_info = [u'客户手机', u'固定电话', u'客户姓名', u'所属机构', u'分支机构', u'客户QQ']
+        customer_info = [u'客户手机', u'固定电话', u'客户姓名', u'所属机构', u'分支机构', u'客户QQ',u'机构全称']
         self.__key_set.update(customer_info)
+		
+        # 估值信息
+        Valuation_info = [u'所在楼层',u'总楼层',u'朝向',u'户型',u'房屋类型',u'装修情况',u'特殊因素',
+						u'询价来源',u'市场人员',u'备注',u'询价地址',u'修正单价',u'抵押单价',u'抵押总价',u'市场单价',u'市场总价',u'系统价格单价',u'系统价格总价',u'抵押价值区间单价最小',u'抵押价值区间单价最大',u'抵押价值区间总价最小',u'抵押价值区间总价最大',u'价格差异说明',u'物业类型',u'项目分类',u'估价委托人',u'估价目的',u'价值时点',
+						u'评估方法',u'评估模板',u'评估单价(元)',u'评估总价(万元)',u'总价大写'
+		]
+        self.__key_set.update(Valuation_info)
+		
+        # 项目来源
+        #Project_Source = [u'所属机构',u'分支机构',u'客户姓名',u'客户手机',u'机构全称']
+		#self.__key_set.update(Project_Source)
+		
+		#项目负责人
+        Project_leader = [u'询价人员',u'估价师',u'证书名称',u'证书证号',u'建筑结构',u'使用权来源',u'权属性质',
+						u'土地用途',u'使用期限',u'地号',u'图号',u'土地摊分面积',u'房屋朝向',u'上落设施',u'其他权限情况',u'特殊事项说明',u'特殊事项说明'
+		
+		]
+        self.__key_set.update(Project_leader)
+		
 
         # 项目信息
-        project_info = [u'项目来源', u'项目类型', u'项目分类', u'估价目的', u'物业类型', u'子物业类型', u'报告类型', u'发送份数', u'城市', u'行政区', u'小区名',
+        project_info = [u'项目来源', u'项目类型', u'项目分类', u'估价目的', u'物业类型', u'子物业类型', u'报告类型', u'发送份数', u'城市', u'行政区', u'小区名',u'小区名称',
                         u'小区地址', u'楼栋号', u'单元号', u'户号名', u'项目地址', u'建筑面积', u'土地面积', u'询值单价', u'询值总价', u'建成年代', u'紧急程度',
-                        u'贷款机构', u'贷款支行', u'期贷信息', u'估价委托方', u'所属部门', u'立项备注', u'线上信息']
+                        u'贷款机构', u'贷款支行', u'期贷信息', u'估价委托方', u'所属部门', u'立项备注', u'线上信息', u'询价添加人']
         self.__key_set.update(project_info)
 
         # 收费信息
