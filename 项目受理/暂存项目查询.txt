@@ -1,0 +1,29 @@
+*** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
+Resource          项目受理业务层.txt
+
+*** Test Cases ***
+有效查询
+    Run Keyword By Testdata Return Keyvalue    暂存项目有效查询用例数据    0    暂存项目有效查询    流水号    项目地址    小区名称
+    ...    估价委托方    项目分类    物业类型    估价目的    业务来源    开始时间
+    ...    结束时间
+
+无效查询
+    Run Keyword By Testdata Return Keyvalue    暂存项目无效查询用例数据    0    暂存项目无效查询    流水号    项目地址    小区名称
+    ...    估价委托方    项目分类    物业类型    估价目的    业务来源    开始时间
+    ...    结束时间
+
+查询条件错误提示
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到暂存项目子模块
+    等待列表创建完毕
+    Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']    1234567890123456
+    ${流水号}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']
+    Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012    没有做字符长度校验，流水号超出12位
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo' and contains(@class,"validatebox-invalid")]    流水号没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address' and contains(@class,"validatebox-invalid")]    项目地址没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName' and contains(@class,"validatebox-invalid")]    小区名字没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate' and contains(@class,"validatebox-invalid")]    估价委托方没有特殊字符校验

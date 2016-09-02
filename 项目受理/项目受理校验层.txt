@@ -11,7 +11,8 @@ Resource          ../公共模块.txt
 验证暂存项目查询数据
     [Arguments]    ${流水号}=None    ${项目地址}=None    ${小区名称}=None    ${项目分类}=None    ${物业类型}=None    ${估价目的}=None
     ...    ${报告类型}=None    ${业务来源}=None    ${客户姓名}=None    ${估价委托方}=None    ${暂存时间}=None
-    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
+    Should Not Be Equal    ${表格列数}    0
     Run Keyword If    '${流水号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div[contains(text(),'${流水号}')]
     Run Keyword If    '${项目地址}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ResidentialAreaAddress"]/div[contains(text(),'${项目地址}')]
     Run Keyword If    '${小区名称}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ResidentialAreaName"]/div[contains(text(),'${小区名称}')]
@@ -28,7 +29,8 @@ Resource          ../公共模块.txt
     [Arguments]    ${交易编号}=None    ${是否受理}=None    ${项目来源}=None    ${是否终止}=None    ${业务类型}=None    ${紧急程度}=None
     ...    ${小区名}=None    ${小区地址}=None    ${流水号}=None    ${报告号}=None    ${贷款类型}=None    ${物业类型}=None
     ...    ${创建时间}=None
-    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="bscode"]/div
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="bscode"]/div
+    Should Not Be Equal    ${表格列数}    0
     Run Keyword If    '${交易编号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="bscode"]/div[contains(text(),'${交易编号}')]
     Run Keyword If    '${是否受理}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="IsAcceptstr"]/div[contains(text(),'${是否受理}')]
     Run Keyword If    '${项目来源}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="DataSource"]/div[contains(text(),'${项目来源}')]
@@ -44,15 +46,15 @@ Resource          ../公共模块.txt
     Run Keyword If    '${创建时间}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="CreatDate"]/div[contains(text(),'${创建时间}')]
 
 验证立项界面的值是否正常
-    [Arguments]    ${pep}    ${是否查看详情}=0
-    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Wait Until Page Contains    ${pep.get_value(u'客户手机')}    30s
+    [Arguments]    ${pep}    ${是否查看详情}=0    ${是否询价跳转}=0
+    Comment    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Wait Until Page Contains    ${pep.get_value(u'客户手机')}    30s
     Run Keyword If    '${是否查看详情}'!='1'    等待加载完毕
     验证客户信息是否正常    ${pep}    ${是否查看详情}
-    验证项目信息是否正常    ${pep}    ${是否查看详情}
-    验证收费信息是否正常    ${pep}    ${是否查看详情}
-    验证勘查信息是否正常    ${pep}    ${是否查看详情}
-    验证快递信息是否正常    ${pep}    ${是否查看详情}
-    验证其他信息是否正常    ${pep}    ${是否查看详情}
+    验证项目信息是否正常    ${pep}    ${是否查看详情}    ${是否询价跳转}
+    Run Keyword If    ${是否询价跳转}==0    验证收费信息是否正常    ${pep}    ${是否查看详情}    ${是否询价跳转}
+    Run Keyword If    ${是否询价跳转}==0    验证勘查信息是否正常    ${pep}    ${是否查看详情}    ${是否询价跳转}
+    Run Keyword If    ${是否询价跳转}==0    验证快递信息是否正常    ${pep}    ${是否查看详情}
+    Run Keyword If    ${是否询价跳转}==0    验证其他信息是否正常    ${pep}    ${是否查看详情}
 
 验证快递信息是否正常
     [Arguments]    ${pep}    ${is_get_text}=0
@@ -60,19 +62,24 @@ Resource          ../公共模块.txt
     ${收取方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReceiptWay']
     ...    ELSE    Get Text    xpath=.//*[@id='ReceiptWay']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'收取方式')}    ${收取方式}    收取方式的值不匹配
-    ${row_count}    Get Matching Xpath Count    //*[@id="divReceipt"]//div[@class="datagrid-body"]//td[@field="Receiver"]/div
+    ${row_count}    Get Matching Xpath Count    //*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index]/td[@field="Receiver"]/div
     Run Keyword And Continue On Failure    Should Be Equal    '${pep.get_value(u'快递信息').__len__()}'    '${row_count}'
     : FOR    ${row_num}    IN RANGE    ${row_count}
-    \    ${姓名}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Receiver"]/div
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'姓名']}    ${姓名}    收件人姓名的值不匹配
-    \    ${联系方式}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]/div
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'联系方式']}    ${联系方式}    收件人联系方式不匹配
-    \    ${公司}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Company"]/div
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'公司']}    ${公司}    收件人公司名称不匹配
-    \    ${地址}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Address"]/div
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'地址']}    ${地址}    收件地址不匹配
-    \    ${邮政编码}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="PostCode"]/div
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'邮政编码']}    ${邮政编码}    邮政编码不匹配
+    \    ${姓名}    Run Keyword If    '${收取方式}'!='未确认'    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Receiver"]/div
+    \    Run Keyword And Continue On Failure    Run Keyword If    '${收取方式}'!='未确认'    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'姓名']}    ${姓名}
+    \    ...    收件人姓名的值不匹配
+    \    ${联系方式}    Run Keyword If    '${收取方式}'!='未确认'    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]/div
+    \    Run Keyword And Continue On Failure    Run Keyword If    '${收取方式}'!='未确认'    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'联系方式']}    ${联系方式}
+    \    ...    收件人联系方式不匹配
+    \    ${公司}    Run Keyword If    '${收取方式}'!='未确认'    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Company"]/div
+    \    Run Keyword And Continue On Failure    Run Keyword If    '${收取方式}'!='未确认'    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'公司']}    ${公司}
+    \    ...    收件人公司名称不匹配
+    \    ${地址}    Run Keyword If    '${收取方式}'!='未确认'    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Address"]/div
+    \    Run Keyword And Continue On Failure    Run Keyword If    '${收取方式}'!='未确认'    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'地址']}    ${地址}
+    \    ...    收件地址不匹配
+    \    ${邮政编码}    Run Keyword If    '${收取方式}'!='未确认'    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="PostCode"]/div
+    \    Run Keyword And Continue On Failure    Run Keyword If    '${收取方式}'!='未确认'    Should Be Equal    ${pep.get_value(u'快递信息')[${row_num}][u'邮政编码']}    ${邮政编码}
+    \    ...    邮政编码不匹配
 
 验证客户信息是否正常
     [Arguments]    ${pep}    ${is_get_text}=0
@@ -97,29 +104,29 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'客户QQ')}    ${客户QQ}    客户QQ不匹配
 
 验证项目信息是否正常
-    [Arguments]    ${pep}    ${is_get_text}=0
+    [Arguments]    ${pep}    ${is_get_text}=0    ${is_xunjia}=0
     #验证项目信息的值是否正常
     ${项目来源}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ProjectSource']
     ...    ELSE    Get Text    xpath=.//*[@id='ProjectSource']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'项目来源')}    ${项目来源}    项目来源不匹配
     ${项目类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ItemType']
     ...    ELSE    Get Text    xpath=.//*[@id='ItemType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'项目类型')}    ${项目类型}    项目类型不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'项目类型')}    ${项目类型}    项目类型不匹配
     ${项目分类}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReportType']
     ...    ELSE    Get Text    xpath=.//*[@id='ReportType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'项目分类')}    ${项目分类}    项目分类不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'项目分类')}    ${项目分类}    项目分类不匹配
     ${估价目的}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BusinessType']
     ...    ELSE    Get Text    xpath=.//*[@id='BusinessType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'估价目的')}    ${估价目的}    估价目的不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'估价目的')}    ${估价目的}    估价目的不匹配
     ${物业类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ProjectType']
     ...    ELSE    Get Text    xpath=.//*[@id='ProjectType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'物业类型')}    ${物业类型}    物业类型不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'物业类型')}    ${物业类型}    物业类型不匹配
     ${子物业类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name='ChildProjectType']/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id='ChildPropertyType']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'子物业类型')}    ${子物业类型}    子物业类型不匹配
     ${报告类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReportCategory']
     ...    ELSE    Get Text    xpath=.//*[@id='ReportCategory']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'报告类型')}    ${报告类型}    报告类型不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'报告类型')}    ${报告类型}    报告类型不匹配
     ${发送份数}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='SendCount']/..//span/input[1]
     ...    ELSE    Get Text    xpath=.//*[@id='SendCount']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'发送份数')}    ${发送份数}    发送份数不匹配
@@ -146,25 +153,35 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'户号名')}    ${户号名}    户号名不匹配
     ${项目地址}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ResidentialAreaAddress']
     ...    ELSE    Get Text    xpath=.//*[@id='ResidentialAreaAddress']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'项目地址')}    ${项目地址}    项目地址不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'项目地址')}    ${项目地址}    项目地址不匹配
     ${建筑面积}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="BuildingArea"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="BuildingArea"]
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'建筑面积')}    ${建筑面积}    建筑面积不匹配
+    ${建筑面积_pep}    Convert To Number    ${pep.get_value(u'建筑面积')}    3
+    ${建筑面积}    Convert To Number    ${建筑面积}    3
+    Run Keyword And Continue On Failure    Should Be Equal    ${建筑面积_pep}    ${建筑面积}    建筑面积不匹配
     ${土地面积}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="LandArea"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="LandArea"]
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'土地面积')}    ${土地面积}    土地面积不匹配
+    ${土地面积}    Convert To Number    ${土地面积}    3
+    ${土地面积1}    Run Keyword If    ${is_xunjia}==0    Convert To Number    ${pep.get_value(u'土地面积')}    3
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${土地面积1}    ${土地面积}    土地面积不匹配
     ${询值单价}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InquiryPrice"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="InquiryPrice"]
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'询值单价')}    ${询值单价}    询值单价不匹配
+    ${询值单价}    Convert To Number    ${询值单价}    3
+    ${询值单价_pep}    Run Keyword If    '${pep.get_value(u'询值单价')}'==''    Set Variable    ${pep.get_value(u'询值单价')}
+    ...    ELSE    Convert To Number    ${pep.get_value(u'询值单价')}    3
+    Run Keyword And Continue On Failure    Should Be Equal    ${询值单价_pep}    ${询值单价}    询值单价不匹配
     ${询值总价}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InquiryResult"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="InquiryResult"]
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'询值总价')}    ${询值总价}    询值总价不匹配
+    ${询值总价}    Convert To Number    ${询值总价}    3
+    ${询值总价_pep}    Run Keyword If    '${pep.get_value(u'询值单价')}'==''    Set Variable    ${pep.get_value(u'询值总价')}
+    ...    ELSE    Convert To Number    ${pep.get_value(u'询值总价')}    3
+    Run Keyword And Continue On Failure    Should Be Equal    ${询值总价_pep}    ${询值总价}    询值总价不匹配
     ${建成年代}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="BuildedYear"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="BuildedYear"]
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'建成年代')}    ${建成年代}    建成年代不匹配
     ${紧急程度}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PriorityLevel']
     ...    ELSE    Get Text    xpath=.//*[@id='PriorityLevel']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'紧急程度')}    ${紧急程度}    紧急程度不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'紧急程度')}    ${紧急程度}    紧急程度不匹配
     ${贷款机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='LendersCompany']
     ...    ELSE    Get Text    xpath=.//*[@id='LendersCompany']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'贷款机构')}    ${贷款机构}    贷款机构不匹配
@@ -181,10 +198,10 @@ Resource          ../公共模块.txt
     ...    ELSE    Get Text    xpath=.//*[@id='CrmDepartmentName']
     ${所属部门}    Run Keyword If    ${is_get_text}==0    Get Text    xpath=.//*[@id='Department']/option[@value='${所属部门}']
     ...    ELSE    Set Variable    ${所属部门}
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'所属部门')}    ${所属部门}    所属部门不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'所属部门')}    ${所属部门}    所属部门不匹配
 
 验证收费信息是否正常
-    [Arguments]    ${pep}    ${is_get_text}=0
+    [Arguments]    ${pep}    ${is_get_text}=0    ${is_xunjia}=0
     #验证收费信息的值是否正常
     ${市场负责人}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="Market_EmployeeTID"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="Market_EmployeeName"]
@@ -197,19 +214,21 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'内部报单人')}    ${内部报单人}    内部报单人不匹配
     ${结算方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='CalculateType']
     ...    ELSE    Get Text    xpath=.//*[@id='CalculateType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'结算方式')}    ${结算方式}    结算方式不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'结算方式')}    ${结算方式}    结算方式不匹配
     ${应收金额}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="AdjustFee"]
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'应收金额')}    ${应收金额}    应收金额不匹配
+    ${应收金额}    Convert To Number    ${应收金额}    3
+    ${应收金额1}    Convert To Number    ${pep.get_value(u'应收金额')}    3
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${应收金额1}    ${应收金额}    应收金额不匹配
     ${收费方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PaymentType']
     ...    ELSE    Get Text    xpath=.//*[@id='PaymentType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'收费方式')}    ${收费方式}    收费方式不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'收费方式')}    ${收费方式}    收费方式不匹配
     ${公司帐号}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PaymentAccount']
     ...    ELSE    Get Text    xpath=.//*[@id='PaymentAccount']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'公司帐号')}    ${公司帐号}    公司账号不匹配
     ${票据类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillType']
     ...    ELSE    Get Text    xpath=.//*[@id='BillType']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'票据类型')}    ${票据类型}    票据类型不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'票据类型')}    ${票据类型}    票据类型不匹配
     ${(普票)发票抬头}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='InvoiceTitle']
     ...    ELSE    Get Text    xpath=.//*[@id='InvoiceTitle']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'(普票)发票抬头')}    ${(普票)发票抬头}    (普票)发票抬头不匹配
@@ -233,24 +252,27 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'(专票)电话')}    ${(专票)电话}    (专票)电话不匹配
 
 验证勘查信息是否正常
-    [Arguments]    ${pep}    ${is_get_text}=0
+    [Arguments]    ${pep}    ${is_get_text}=0    ${is_xunjia}=0
     #验证勘查信息的值是否正常
     ${是否勘查}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=//input[@name="IsLiveSearch" and @checked="checked"]
     ...    ELSE    Get Text    xpath=.//*[@id='IsLiveSearch']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'是否勘查')}    ${是否勘查}    是否勘查状态不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'是否勘查')}    ${是否勘查}    是否勘查状态不匹配
     ${预收费用}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="LiveSearchCharge"]
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'预收费用')}    ${预收费用}    预收费用不匹配
+    ${预收费用}    Convert To Number    ${预收费用}    3
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_get_text}==0    Should Be Equal    ${pep.get_value(u'预收费用')}    ${预收费用}    预收费用不匹配
     ${资料提供方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="ReportSupplyType"]
     ...    ELSE    Get Text    xpath=.//*[@id="ReportSupplyType"]
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'资料提供方式')}    ${资料提供方式}    资料提供方式不匹配
-    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//td[@field="Contacts"]
+    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//tr[@datagrid-row-index]/td[@field="Contacts"]
     Run Keyword And Continue On Failure    Should Be Equal    '${pep.get_value(u'看房联系人信息').__len__()}'    '${row_count}'
     : FOR    ${row_num}    IN RANGE    ${row_count}
-    \    ${联系人姓名}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'看房联系人信息')[${row_num}][u'姓名']}    ${联系人姓名}    看房联系人姓名不匹配
-    \    ${联系人电话}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
-    \    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'看房联系人信息')[${row_num}][u'手机']}    ${联系人电话}    看房联系人电话不匹配
+    \    ${联系人姓名}    Run Keyword If    ${row_count}!=0    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
+    \    Run Keyword And Continue On Failure    Run Keyword If    ${row_count}!=0    Should Be Equal    ${pep.get_value(u'看房联系人信息')[${row_num}][u'姓名']}    ${联系人姓名}
+    \    ...    看房联系人姓名不匹配
+    \    ${联系人电话}    Run Keyword If    ${row_count}!=0    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
+    \    Run Keyword And Continue On Failure    Run Keyword If    ${row_count}!=0    Should Be Equal    ${pep.get_value(u'看房联系人信息')[${row_num}][u'手机']}    ${联系人电话}
+    \    ...    看房联系人电话不匹配
 
 验证其他信息是否正常
     [Arguments]    ${pep}    ${is_get_text}=0
@@ -264,9 +286,11 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Run Keyword If    ${线上备注}!=None    Should Be Equal    ${pep.get_value(u'线上备注')}    ${线上备注}    线上备注不匹配
 
 验证已立项查询数据
-    [Arguments]    ${流水号}=None    ${项目地址}=None    ${小区名称}=None    ${项目分类}=None    ${物业类型}=None    ${估价目的}=None
-    ...    ${报告类型}=None    ${业务来源}=None    ${客户姓名}=None    ${估价委托方}=None    ${暂存时间}=None
-    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div
+    [Arguments]    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None    ${项目分类}=None    ${物业类型}=None
+    ...    ${估价目的}=None    ${报告类型}=None    ${业务来源}=None    ${资料齐全}=None    ${客户姓名}=None    ${受理人}=None
+    ...    ${受理时间}=None    ${旧流水号}=None    ${旧报告号}=None    ${估价委托方}=None    ${状态}=None    ${项目状态}=None
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
+    Should Not Be Equal    ${表格列数}    0
     Run Keyword If    '${流水号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div[contains(text(),'${流水号}')]
     Run Keyword If    '${报告号}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ReportNo"]/div[contains(text(),'${报告号}')]
     Run Keyword If    '${项目地址}'!='None'    验证字段的记录数是否一致    ${表格列数}    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ResidentialAreaAddress"]/div[contains(text(),'${项目地址}')]

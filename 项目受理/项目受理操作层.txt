@@ -20,7 +20,7 @@ Resource          ../公共模块.txt
     [Arguments]    ${pep}
     [Documentation]    这个方法只能添加一次快递收件人信息，如果需要添加多个，请使用“添加快递收件人信息”方法
     ${原有收取方式}    Get Value    xpath=.//*[@id='ReceiptWay']
-    Run Keyword If    '${pep.get_value(u'收取方式')}'!='${原有收取方式}'    Select From List By Label    xpath=.//*[@id='ReceiptWay']    ${pep.get_value(u'收取方式')}
+    Run Keyword If    '${pep.get_value(u'收取方式')}'!='${原有收取方式}' and '${pep.get_value(u'收取方式')}'!=''    Select From List By Label    xpath=.//*[@id='ReceiptWay']    ${pep.get_value(u'收取方式')}
     Run Keyword If    '${pep.get_value(u'收取方式')}'=='快递' and '${pep.get_value(u'姓名')}'!='' and '${pep.get_value(u'联系方式')}'!=''    添加快递收件人信息    ${pep.get_value(u'姓名')}    ${pep.get_value(u'联系方式')}    ${pep.get_value(u'邮政编码')}    ${pep.get_value(u'公司名称')}
     ...    ${pep.get_value(u'快递地址')}
     等待加载完毕
@@ -42,6 +42,15 @@ Resource          ../公共模块.txt
     Run Keyword If    '${pep.get_value(u'(专票)账号')}'!=''    Input Text    xpath=.//*[@id='BillAccountNumber']    ${pep.get_value(u'(专票)账号')}
     Run Keyword If    '${pep.get_value(u'(专票)地址')}'!=''    Input Text    xpath=.//*[@id='BillAddress']    ${pep.get_value(u'(专票)地址')}
     Run Keyword If    '${pep.get_value(u'(专票)电话')}'!=''    Input Text    xpath=.//*[@id='BillPhone']    ${pep.get_value(u'(专票)电话')}
+
+填写立项界面的信息
+    [Arguments]    ${input_pep}
+    通过手机号码获取客户信息    ${input_pep}
+    填写项目信息    ${input_pep}
+    填写收费信息    ${input_pep}
+    填写勘查信息    ${input_pep}
+    填写收件信息    ${input_pep}
+    填写备注信息    ${input_pep.get_value(u'立项备注')}
 
 填写项目信息
     [Arguments]    ${pep}
@@ -91,18 +100,20 @@ Resource          ../公共模块.txt
     ${预收费用}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="LiveSearchCharge"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="LiveSearchCharge"]
     ${预收费用}=    Set Variable If    '${预收费用}'==''    0.00    ${预收费用}
+    Comment    ${预收费用}=    Convert To Number    ${预收费用}    3
     Set Pep Value    ${pep}    预收费用    ${预收费用}
     ${资料提供方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="ReportSupplyType"]
     ...    ELSE    Get Text    xpath=.//*[@id="ReportSupplyType"]
     Set Pep Value    ${pep}    资料提供方式    ${资料提供方式}
-    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//td[@field="Contacts"]
+    ${row_count}    Get Matching Xpath Count    //div[@class="datagrid-body"]//tr[@datagrid-row-index]/td[@field="Contacts"]
     : FOR    ${row_num}    IN RANGE    ${row_count}
-    \    ${联系人姓名}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
-    \    ${联系人电话}    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
-    \    Set Kanfang Value    ${pep}    ${联系人姓名}    ${联系人电话}
+    \    ${联系人姓名}    Run Keyword If    '${row_count}'!='0'    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Contacts"]
+    \    ${联系人电话}    Run Keyword If    '${row_count}'!='0'    Get Text    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Phone"]
+    \    Run Keyword If    '${row_count}'!='0'    Set Kanfang Value    ${pep}    ${联系人姓名}    ${联系人电话}
 
 将客户信息写入PEP对象
-    [Arguments]    ${pep}    ${is_get_text}=0
+    [Arguments]    ${pep}    ${is_get_text}=0    ${is_xunjia}=0    # ${pep} :pep对象；${is_get_text}：是否获取查看详情页面；${is_xunjia}：是否获取询价页面的元素
+    [Documentation]    可以获取询价界面、立项界面、项目详情里的客户信息，并写入pep对象中
     ${手机号码}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='MobileNumber']
     ...    ELSE    Get Text    xpath=.//*[@id='MobileNumber']
     Set Pep Value    ${pep}    客户手机    ${手机号码}
@@ -112,11 +123,13 @@ Resource          ../公共模块.txt
     ${客户姓名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="CustomerName"]
     Set Pep Value    ${pep}    客户姓名    ${客户姓名}
-    ${所属机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
-    ...    ELSE    Get Text    xpath=.//*[@id="CustomerType"]
+    ${所属机构}    Run Keyword If    ${is_get_text}==0 and ${is_xunjia}==0    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
+    ...    ELSE IF    ${is_get_text}==1 and ${is_xunjia}==0    Get Text    xpath=.//*[@id="CustomerType"]
+    ...    ELSE IF    ${is_get_text}==0 and ${is_xunjia}==1    Get Value    xpath=.//*[@id="Bank"]/..//input[@type="text"]
     Set Pep Value    ${pep}    所属机构    ${所属机构}
-    ${分支机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="organichildid"]/..//input[@type="text"]
-    ...    ELSE    Get Text    xpath=.//*[@id="CustomerTypeChild"]
+    ${分支机构}    Run Keyword If    ${is_get_text}==0 and ${is_xunjia}==0    Get Value    xpath=.//*[@id="organichildid"]/..//input[@type="text"]
+    ...    ELSE IF    ${is_get_text}==1 and ${is_xunjia}==0    Get Text    xpath=.//*[@id="CustomerTypeChild"]
+    ...    ELSE IF    ${is_get_text}==0 and ${is_xunjia}==1    Get Value    xpath=.//*[@id="BankChild"]/..//input[@type="text"]
     Set Pep Value    ${pep}    分支机构    ${分支机构}
     ${客户QQ}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="QQ"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="QQ"]
@@ -127,7 +140,7 @@ Resource          ../公共模块.txt
     ${收取方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ReceiptWay']
     ...    ELSE    Get Text    xpath=.//*[@id='ReceiptWay']
     Set Pep Value    ${pep}    收取方式    ${收取方式}
-    ${row_count}    Get Matching Xpath Count    //*[@id="divReceipt"]//div[@class="datagrid-body"]//td[@field="Receiver"]/div
+    ${row_count}    Get Matching Xpath Count    //*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index]/td[@field="Receiver"]/div
     Run Keyword If    '${row_count}'!='0'    遍历快递信息到pep对象    ${row_count}    ${pep}
 
 将收费信息写入pep对象
@@ -146,6 +159,7 @@ Resource          ../公共模块.txt
     Set Pep Value    ${pep}    结算方式    ${结算方式}
     ${应收金额}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="AdjustFee"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="AdjustFee"]
+    Comment    ${应收金额}    Convert To Number    ${应收金额}    3
     Set Pep Value    ${pep}    应收金额    ${应收金额}
     ${收费方式}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='PaymentType']
     ...    ELSE    Get Text    xpath=.//*[@id='PaymentType']
@@ -177,6 +191,15 @@ Resource          ../公共模块.txt
     ${(专票)电话}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='BillPhone']
     ...    ELSE    Get Text    xpath=.//*[@id='BillPhone']
     Set Pep Value    ${pep}    (专票)电话    ${(专票)电话}
+
+将立项界面的信息写入pep对象
+    [Arguments]    ${pep}    ${is_get_text}=0
+    将客户信息写入PEP对象    ${pep}    ${is_get_text}
+    将项目信息写入PEP对象    ${pep}    ${is_get_text}
+    将收费信息写入PEP对象    ${pep}    ${is_get_text}
+    将勘查信息写入PEP对象    ${pep}    ${is_get_text}
+    将收件信息写入PEP对象    ${pep}    ${is_get_text}
+    将其他信息写入pep对象    ${pep}    ${is_get_text}
 
 将项目信息写入pep对象
     [Arguments]    ${pep}    ${is_get_text}=0
@@ -212,6 +235,7 @@ Resource          ../公共模块.txt
     Set Pep Value    ${pep}    行政区    ${行政区}
     ${小区名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ResidentialAreaName']
     ...    ELSE    Get Text    xpath=.//*[@id='ResidentialAreaName']
+    Set Pep Value    ${pep}    小区名称    ${小区名}
     Set Pep Value    ${pep}    小区名    ${小区名}
     ${小区地址}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ResidentialAddress']
     ...    ELSE    Get Text    xpath=.//*[@id='ResidentialAddress']
@@ -230,15 +254,19 @@ Resource          ../公共模块.txt
     Set Pep Value    ${pep}    项目地址    ${项目地址}
     ${建筑面积}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="BuildingArea"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="BuildingArea"]
+    Comment    ${建筑面积}    Convert To Number    ${建筑面积}    3
     Set Pep Value    ${pep}    建筑面积    ${建筑面积}
     ${土地面积}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="LandArea"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="LandArea"]
+    Comment    ${土地面积}    Convert To Number    ${土地面积}    3
     Set Pep Value    ${pep}    土地面积    ${土地面积}
     ${询值单价}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InquiryPrice"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="InquiryPrice"]
+    Comment    ${询值单价}    Convert To Number    ${询值单价}    3
     Set Pep Value    ${pep}    询值单价    ${询值单价}
     ${询值总价}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="InquiryResult"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="InquiryResult"]
+    Comment    ${询值总价}    Convert To Number    ${询值总价}    3
     Set Pep Value    ${pep}    询值总价    ${询值总价}
     ${建成年代}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@name="BuildedYear"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="BuildedYear"]
@@ -275,7 +303,7 @@ Resource          ../公共模块.txt
     Input Text    xpath=.//*[@id='Address']    ${快递地址}
     Click Element    xpath=.//span[text()="保存"]/ancestor::a
     Unselect Frame
-    Select Frame    id=create_project_
+    Select Frame    xpath=//iframe[contains(@id,"create_project_")]
     等待提示框出现
     点击提示框中的确定按钮
 
@@ -287,16 +315,9 @@ Resource          ../公共模块.txt
     Input Text    xpath=.//*[@id='Phone']    ${联系人电话}
     Click Element    xpath=.//span[text()="保存"]/ancestor::a
     Unselect Frame
-    Select Frame    id=create_project_
+    Select Frame    xpath=//iframe[contains(@id,"create_project_")]
     等待提示框出现
     点击提示框中的确定按钮
-
-点击列表中的${buttun_name}按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
-
-点击查询按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/ancestor::a
-    等待列表创建完毕
 
 点击立项按钮
     Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="立项"]/ancestor::a
@@ -424,16 +445,19 @@ Resource          ../公共模块.txt
     Unselect Frame
     Select Frame    id=create_project_
     等待加载完毕
+    Unselect Frame
+    Select Frame    id=create_project_
 
 进行暂存操作
     [Arguments]    ${pep}
     点击立项页面中的暂存按钮
     等待提示框出现
     ${是否暂存成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'暂存成功')]
-    Run Keyword If    '${是否暂存成功}'=='0'    FAIL    msg='暂存失败'
-    ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'暂存成功')]
-    ${流水号}    Findall    :(.*)    ${msg}
-    Set Pep Value    ${pep}    流水号    ${流水号[0]}
+    ${是否操作成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'保存成功')]
+    Run Keyword If    '${是否暂存成功}'=='0' and '${是否操作成功}'=='0'    FAIL    msg='暂存失败'
+    ${msg}    Run Keyword If    '${是否暂存成功}'=='1'    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
+    ${流水号}    Run Keyword If    '${是否暂存成功}'=='1'    Findall    :(.*)    ${msg}
+    Run Keyword If    '${是否暂存成功}'=='1'    Set Pep Value    ${pep}    流水号    ${流水号[0]}
     点击提示框中的确定按钮
     Unselect Frame
 
@@ -477,7 +501,7 @@ Resource          ../公共模块.txt
 通过手机号码获取客户信息
     [Arguments]    ${pep}
     Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Input Text    xpath=.//*[@id='MobileNumber']    ${pep.get_value(u'客户手机')}
-    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Click Element    xpath=.//*[@id='customer_search']    #点击查询按钮
+    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Click Element    xpath=//span[text()='查询']/..    #点击查询按钮
     等待加载完毕
 
 遍历快递信息到pep对象
@@ -490,3 +514,27 @@ Resource          ../公共模块.txt
     \    ${邮政编码}    Get Text    xpath=//*[@id="divReceipt"]//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="PostCode"]/div
     \    Set Kuaidi Value    ${pep}    ${姓名}    ${联系方式}    ${公司}    ${地址}
     \    ...    ${邮政编码}
+
+清空线上业务查询条件
+    [Documentation]    根据需要填写线上业务的查询条件
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='bscode']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='projectno']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='community']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='houseAddr']
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineSource']    0
+    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineIsaccept']    未受理
+    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineIsCancel']    未终止
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='delegateType']    0
+
+清空暂存项目查询条件
+    [Documentation]    根据需要填写线上业务的查询条件
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']
+    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatedDate']
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatedDateTo']
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportType']    0
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    0
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    0
+    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    0

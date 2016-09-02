@@ -11,7 +11,7 @@ Resource          ../流程层/流程层.txt
     Run Keyword And Continue On Failure    select frame    id=ProjectAllot_PrintSewing
     Wait Until Page Contains    流水号
 
-点击查询按钮
+变更点击查询按钮
     Comment    click Element    id=BtnSearch
     click Element    xpath=//span[text()="查询"]/..
 

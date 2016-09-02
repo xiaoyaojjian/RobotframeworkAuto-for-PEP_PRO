@@ -8,6 +8,7 @@ Resource          ../../公共模块.txt
 Resource          ../元素层/元素层.txt
 Resource          ../流程层/流程层.txt
 Resource          ../../变更审批/元素层/元素层.txt
+Resource          ../../项目受理/项目受理操作层.txt
 
 *** Keywords ***
 询价正确数据查询
@@ -81,3 +82,44 @@ Resource          ../../变更审批/元素层/元素层.txt
     ${n}    Get List Count    ${获取输入参数最终值}
     超长字符校验    ${查询类型}    ${n}
     清空询价输入框内容    ${路径}
+
+添加询价流程
+    [Arguments]    ${客户手机}    ${城市}    ${行政区}    ${小区名称}    ${小区地址}    ${楼栋号}
+    ...    ${单元号}    ${户号名}    ${建筑面积}    ${所在楼层}    ${总楼层}    ${朝向}
+    ...    ${建成年代}    ${户型}    ${房屋类型}    ${装修情况}    ${特殊因素}    ${询价来源}
+    ...    ${备注}    ${修正单价}    ${抵押单价}    ${抵押总价}    ${市场单价}    ${市场总价}
+    添加询价按钮
+    Unselect Frame
+    添加询价窗口
+    展开显示框按钮
+    ${pep_input}    住宅询价参数    ${客户手机}    ${城市}    ${行政区}    ${小区名称}    ${小区地址}
+    ...    ${楼栋号}    ${单元号}    ${户号名}    ${建筑面积}    ${所在楼层}    ${总楼层}
+    ...    ${朝向}    ${建成年代}    ${户型}    ${房屋类型}    ${装修情况}    ${特殊因素}
+    ...    ${询价来源}    ${备注}    ${修正单价}    ${抵押单价}    ${抵押总价}    ${市场单价}
+    ...    ${市场总价}
+    通过手机号码获取客户信息    ${pep_input}
+    将客户信息写入PEP对象    ${pep_input}    is_xunjia=1
+    估值信息参数    ${pep_input}
+    询价按钮
+    ${price_range}    获取询价系统价格    ${pep_input}
+    添加系统价格校验    ${price_range}
+    Comment    获取添加询价所有数据校验    ${pep_input}
+    [Return]    ${price_range}
+
+询价查看信息校验
+    [Arguments]    ${pep_input}
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="查看"]
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="询价查看"]
+    获取添加询价所有数据校验    ${pep_input}
+
+询价编辑
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="编辑"]
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="询价编辑"]

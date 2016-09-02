@@ -62,3 +62,43 @@ Resource          ../流程层/流程层.txt
 预估单信息按钮
     Click Element    xpath=//span[text()="预估单信息"]/..
     等待列表创建完毕
+
+添加询价按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="添加询价"]/..
+
+添加询价窗口
+    Run Keyword And Continue On Failure    select frame    id=add_inquiry_house
+    Wait Until Page Contains    客户信息
+
+展开显示框按钮
+    Click Element    xpath=.//a[@class='panel-tool-collapse panel-tool-expand']
+
+询价按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="询价"]/..
+    等待加载完毕
+
+转立项按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="转立项"]/..
+    等待加载完毕
+
+报盘案例按钮
+    Click Element    xpath=.//*[@id='tabs']//*/span[text()='报盘案例']
+
+成交案例按钮
+    Click Element    xpath=.//*[@id='tabs']//*/span[text()='成交案例']
+
+报告案例按钮
+    Click Element    xpath=.//*[@id='tabs']//*/span[text()='报告案例']
+
+旧报告系统记录
+    Click Element    xpath=.//*[@id='tabs']//*/span[text()='旧系统报告记录']
+
+旧系统询价记录
+    Click Element    xpath=.//*[@id='tabs']//*/span[text()='旧系统询价记录']
+
+不限按钮
+    sleep    2
+    Click Element    xpath=.//*[@id='SearchArea']//*/a[text()='不限']
+
+询价保存按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="保存"]/..

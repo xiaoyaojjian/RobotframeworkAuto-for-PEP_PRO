@@ -3,6 +3,8 @@ Library           Selenium2Library
 Library           DateTime
 Library           PepExt.py
 Library           re
+Library           Collections
+Library           TestDataLib.py
 
 *** Variables ***
 ${PEP_URL}        http://inworktest.yunfangdata.com:82/    # 评E评URL地址
@@ -70,3 +72,34 @@ ${PASSWORD}       123456    # 登录密码
 页数
     [Arguments]    ${总共多少条[0]}    ${列表数目显示模式}
     ${页数}    Evaluate    ${总共多少条[0]}/${列表数目显示模式}
+
+点击查询按钮
+    [Documentation]    点击查询按钮操作，用于带有tab的模块（可能会存在多个查询按钮的情况），如内业分配、外业分配，该方法只点击当前可以看见的查询按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/ancestor::a
+    等待列表创建完毕
+
+点击查询按钮_不带约束
+    [Documentation]    点击查询条件，只有是按钮名称是查询的都能点，该方法适用于一个页面没有多个查询按钮的情况。
+    Click Element    xpath=.//span[text()="查询"]/ancestor::a
+    等待列表创建完毕
+
+点击列表中的${buttun_name}按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
+
+初始化一个pep对象
+    [Arguments]    ${dict}
+    ${pep}    Create Pep Object    #创建一个pep对象
+    ${keys}    Get Dictionary Keys    ${dict}    #获取所有key
+    ${values}    Get Dictionary Values    ${dict}    #获取所有value
+    @{user_list}    Create List    收费责任人    市场负责人    内部报单人    查勘人员    查勘人员
+    : FOR    ${key}    ${value}    IN ZIP    ${keys}    ${values}
+    \    ${count}    Get Match Count    ${user_list}    ${key}
+    \    ${value}    Set Variable if    ${count}!=0    ${USER_NAME}    ${value}
+    \    Set Pep Value    ${pep}    ${key}    ${value}
+    [Return]    ${pep}
+
+往输入框输入特殊字符并验证它是否出现警告
+    [Arguments]    ${input_xpath}    ${match_xpath}    ${error_msg}=None    #传入输入框的xpath路径和警告的输入框样式
+    Input Text    xpath=${input_xpath}    @!#
+    ${count}    Get Matching Xpath Count    ${match_xpath}
+    Run Keyword And Continue On Failure    Should Be Equal    ${count}    1    ${error_msg}

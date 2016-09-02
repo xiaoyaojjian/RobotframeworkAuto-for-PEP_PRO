@@ -3,13 +3,10 @@ Resource          公共模块.txt
 
 *** Test Cases ***
 测试
-    登录
-    打开功能模块    我的项目    内业分配
-    打开功能模块    我的项目    项目审核
-    打开功能模块    财务管理    收费确认
-    关闭功能模块    项目审核
-    关闭功能模块    收费确认
-    关闭功能模块    内业分配
+    &{abc}    Create Dictionary    报告号=b报告号23    流水号=流水号121    小区名=小区名称
+    ${pep}    初始化一个pep对象    ${abc}
+    log    ${pep.get_value(u'流水号')}
+    log    ${pep.get_value(u'小区名')}
     [Teardown]    Close Browser
 
 创建PEP对象

@@ -57,6 +57,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ...    ELSE IF    '${查询类型}'=='委托人'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='权利人'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='评估人员'    条件输入参数    ${输入参数}    ${路径}
+    询价编辑
     [Return]    ${输入参数}
 
 输入询价机构
@@ -68,3 +69,211 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     [Arguments]    ${输入询价人}    ${路径}
     询价人(客户名称)    ${输入询价人}    ${路径}
     [Return]    ${输入询价人}
+
+估值信息参数
+    [Arguments]    ${pep}
+    Run Keyword If    '${pep.get_value(u'城市')}'!=''    Select From List By Label    id=CityName    ${pep.get_value(u'城市')}
+    Run Keyword If    '${pep.get_value(u'行政区')}'!=''    Input Text    id=DistrictName    ${pep.get_value(u'行政区')}
+    Run Keyword If    '${pep.get_value(u'小区名')}'!=''    Input Text    id=ResidentialAreaName    ${pep.get_value(u'小区名')}
+    Run Keyword If    '${pep.get_value(u'小区地址')}'!=''    Input Text    id=ResidentialAddress    ${pep.get_value(u'小区地址')}
+    Run Keyword If    '${pep.get_value(u'楼栋号')}'!=''    Input Text    xpath=//*[@id='BuildingName']//..//input[@type="text"]    ${pep.get_value(u'楼栋号')}
+    Run Keyword If    '${pep.get_value(u'单元号')}'!=''    Input Text    xpath=//*[@id='UnitName']//..//input[@type="text"]    ${pep.get_value(u'单元号')}
+    Run Keyword If    '${pep.get_value(u'户号名')}'!=''    Input Text    xpath=//*[@id='HouseNum']//..//input[@type="text"]    ${pep.get_value(u'户号名')}
+    Run Keyword If    '${pep.get_value(u'建筑面积')}'!=''    Input Text    xpath=//*[@id='BuildingArea']/../span/input[@type="text"]    ${pep.get_value(u'建筑面积')}
+    Run Keyword If    '${pep.get_value(u'所在楼层')}'!=''    Input Text    xpath=//*[@id='Floor']//../span/input[@type="text"]    ${pep.get_value(u'所在楼层')}
+    Run Keyword If    '${pep.get_value(u'总楼层')}'!=''    Input Text    xpath=//*[@id='MaxFloor']//../span/input[@type="text"]    ${pep.get_value(u'总楼层')}
+    Run Keyword If    '${pep.get_value(u'朝向')}'!=''    Input Text    xpath=//*[@id='Toword']//..//input[@type="text"]    ${pep.get_value(u'朝向')}
+    Run Keyword If    '${pep.get_value(u'建成年代')}'!=''    Input Text    xpath=//*[@id='BuildedYear']//../span/input[@type="text"]    ${pep.get_value(u'建成年代')}
+    Run Keyword If    '${pep.get_value(u'户型')}'!=''    Input Text    xpath=//*[@id='HouseType']//..//input[@type="text"]    ${pep.get_value(u'户型')}
+    Run Keyword If    '${pep.get_value(u'房屋类型')}'!=''    Input Text    xpath=//*[@id='PropertyType']//..//input[@type="text"]    ${pep.get_value(u'房屋类型')}
+    Run Keyword If    '${pep.get_value(u'装修情况')}'!=''    Input Text    xpath=//*[@id='Decoration']//..//input[@type="text"]    ${pep.get_value(u'装修情况')}
+    Run Keyword If    '${pep.get_value(u'特殊因素')}'!=''    Input Text    xpath=//*[@id='SpecialInfo']//..//input[@type="text"]    ${pep.get_value(u'特殊因素')}
+    Run Keyword If    '${pep.get_value(u'询价来源')}'!=''    Input Text    xpath=//*[@id='InquirySource']//..//input[@type="text"]    ${pep.get_value(u'询价来源')}
+    Run Keyword If    '${pep.get_value(u'备注')}'!=''    Input Text    id=Remark    ${pep.get_value(u'备注')}
+    Run Keyword If    '${pep.get_value(u'修正单价')}'!=''    Input Text    xpath=//*[@id='FeedbackPrice']/../span/input[@type="text"]    ${pep.get_value(u'修正单价')}
+    Run Keyword If    '${pep.get_value(u'抵押单价')}'!=''    Input Text    xpath=//*[@id='InquiryPrice']/../span/input[@type="text"]    ${pep.get_value(u'抵押单价')}
+    Run Keyword If    '${pep.get_value(u'市场单价')}'!=''    Input Text    xpath=//*[@id='ShiChangPrice']/../span/input[@type="text"]    ${pep.get_value(u'市场单价')}
+    Comment    Run Keyword If    '${pep.get_value(u'抵押总价')}'!=''    Input Text    xpath=//*[@id='InquiryResult']/../span/input[@type="text"]    ${pep.get_value(u'抵押总价')}
+    Comment    Run Keyword If    '${pep.get_value(u'市场总价')}'!=''    Input Text    xpath=//*[@id='ShiChangTotal']/../span/input[@type="text"]    ${pep.get_value(u'市场总价')}
+
+获取询价系统价格
+    [Arguments]    ${pep_input}
+    ${系统价格单价}    Get Value    xpath=.//*[@id='areaprice']
+    ${系统价格总价}    Get Value    xpath=.//*[@id='areapricetotal']
+    ${抵押价值区间单价最小}    Get Value    xpath=.//*[@id='pricemin']
+    ${抵押价值区间单价最大}    Get Value    xpath=.//*[@id='pricemax']
+    ${抵押价值区间总价最小}    Get Value    xpath=.//*[@id='totalpricemin']
+    ${抵押价值区间总价最大}    Get Value    xpath=.//*[@id='totalpricemax']
+    ${价格差异说明}    Get Text    xpath=.//*[@id='PriceInfo']
+    Comment    ${price_range}    Create Pep Object
+    Set Pep Value    ${pep_input}    系统价格单价    ${系统价格单价}
+    Set Pep Value    ${pep_input}    系统价格总价    ${系统价格总价}
+    Set Pep Value    ${pep_input}    抵押价值区间单价最小    ${抵押价值区间单价最小}
+    Set Pep Value    ${pep_input}    抵押价值区间单价最大    ${抵押价值区间单价最大}
+    Set Pep Value    ${pep_input}    抵押价值区间总价最小    ${抵押价值区间总价最小}
+    Set Pep Value    ${pep_input}    抵押价值区间总价最大    ${抵押价值区间总价最大}
+    Set Pep Value    ${pep_input}    价格差异说明    ${价格差异说明}
+    Set Pep Value    ${pep_input}    期贷信息    ${抵押价值区间总价最小}-${抵押价值区间总价最大}
+    [Return]    ${pep_input}
+
+住宅询价参数
+    [Arguments]    ${客户手机}    ${城市}    ${行政区}    ${小区名称}    ${小区地址}    ${楼栋号}
+    ...    ${单元号}    ${户号名}    ${建筑面积}    ${所在楼层}    ${总楼层}    ${朝向}
+    ...    ${建成年代}    ${户型}    ${房屋类型}    ${装修情况}    ${特殊因素}    ${询价来源}
+    ...    ${备注}    ${修正单价}    ${抵押单价}    ${抵押总价}    ${市场单价}    ${市场总价}
+    ${pep_input}    Create Pep Object
+    Set Pep Value    ${pep_input}    客户手机    ${客户手机}
+    Set Pep Value    ${pep_input}    城市    ${城市}
+    Set Pep Value    ${pep_input}    行政区    ${行政区}
+    Set Pep Value    ${pep_input}    小区名    ${小区名称}
+    Set Pep Value    ${pep_input}    小区地址    ${小区地址}
+    Set Pep Value    ${pep_input}    楼栋号    ${楼栋号}
+    Set Pep Value    ${pep_input}    单元号    ${单元号}
+    Set Pep Value    ${pep_input}    户号名    ${户号名}
+    Set Pep Value    ${pep_input}    建筑面积    ${建筑面积}
+    Set Pep Value    ${pep_input}    所在楼层    ${所在楼层}
+    Set Pep Value    ${pep_input}    总楼层    ${总楼层}
+    Set Pep Value    ${pep_input}    朝向    ${朝向}
+    Set Pep Value    ${pep_input}    建成年代    ${建成年代}
+    Set Pep Value    ${pep_input}    户型    ${户型}
+    Set Pep Value    ${pep_input}    房屋类型    ${房屋类型}
+    Set Pep Value    ${pep_input}    装修情况    ${装修情况}
+    Set Pep Value    ${pep_input}    特殊因素    ${特殊因素}
+    Set Pep Value    ${pep_input}    备注    ${备注}
+    Set Pep Value    ${pep_input}    询价来源    ${询价来源}
+    Set Pep Value    ${pep_input}    项目来源    ${询价来源}
+    Set Pep Value    ${pep_input}    修正单价    ${修正单价}
+    Set Pep Value    ${pep_input}    抵押单价    ${抵押单价}
+    Set Pep Value    ${pep_input}    询值单价    ${抵押单价}
+    Set Pep Value    ${pep_input}    抵押总价    ${抵押总价}
+    Set Pep Value    ${pep_input}    询值总价    ${抵押总价}
+    Set Pep Value    ${pep_input}    市场单价    ${市场单价}
+    Set Pep Value    ${pep_input}    市场总价    ${市场总价}
+    [Return]    ${pep_input}
+
+添加系统价格校验
+    [Arguments]    ${price_range}
+    Run Keyword If    '${price_range.get_value(u'系统价格单价')}'!='' and '${price_range.get_value(u'系统价格总价')}'!='' and '${price_range.get_value(u'抵押价值区间单价最小')}'!='' and '${price_range.get_value(u'抵押价值区间单价最大')}'!='' and '${price_range.get_value(u'抵押价值区间总价最小')}'!='' and '${price_range.get_value(u'抵押价值区间总价最大')}'!='' and '${price_range.get_value(u'价格差异说明')}'!=''    log    住宅询价PASS
+    ...    ELSE    fail
+
+获取添加询价所有数据校验
+    [Arguments]    ${pep_input}
+    ${系统价格单价}    Get Value    xpath=.//*[@id='areaprice']
+    ${系统价格总价}    Get Value    xpath=.//*[@id='areapricetotal']
+    ${抵押价值区间单价最小}    Get Value    xpath=.//*[@id='pricemin']
+    ${抵押价值区间单价最大}    Get Value    xpath=.//*[@id='pricemax']
+    ${抵押价值区间总价最小}    Get Value    xpath=.//*[@id='totalpricemin']
+    ${抵押价值区间总价最大}    Get Value    xpath=.//*[@id='totalpricemax']
+    ${价格差异说明}    Get Text    xpath=.//*[@id='PriceInfo']
+    ${客户手机}    Get Value    xpath=.//*[@id='MobileNumber']
+    ${固定电话}    Get Value    xpath=.//*[@id='Telephone']/..//input[@type="text"]
+    ${客户姓名}    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
+    ${所属机构}    Get Value    xpath=.//*[@id="Bank"]/../span/input[@type="text"]
+    ${分支机构}    Get Value    xpath=.//*[@id="BankChild"]/../span/input[@type="text"]
+    ${客户QQ}    Get Value    xpath=.//*[@id="QQ"]/..//input[@type="text"]
+    ${城市}    Get Value    id=CityName
+    ${行政区}    Get Value    id=DistrictName
+    ${小区名称}    Get Value    id=ResidentialAreaName
+    ${小区地址}    Get Value    id=ResidentialAddress
+    ${楼栋号}    Get Value    xpath=//*[@id='BuildingName']//..//input[@type="text"]
+    ${单元号}    Get Value    xpath=//*[@id='UnitName']//..//input[@type="text"]
+    ${户号名}    Get Value    xpath=//*[@id='HouseNum']//..//input[@type="text"]
+    ${建筑面积}    Get Value    xpath=//*[@id='BuildingArea']/../span/input[@type="text"]
+    ${所在楼层}    Get Value    xpath=//*[@id='Floor']//../span/input[@type="text"]
+    ${总楼层}    Get Value    xpath=//*[@id='MaxFloor']//../span/input[@type="text"]
+    ${朝向}    Get Value    xpath=//*[@id='Toword']//..//input[@type="text"]
+    ${建成年代}    Get Value    xpath=//*[@id='BuildedYear']//../span/input[@type="text"]
+    ${户型}    Get Value    xpath=//*[@id='HouseType']//..//input[@type="text"]
+    ${房屋类型}    Get Value    xpath=//*[@id='PropertyType']//..//input[@type="text"]
+    ${装修情况}    Get Value    xpath=//*[@id='Decoration']//..//input[@type="text"]
+    ${特殊因素}    Get Value    xpath=//*[@id='SpecialInfo']//..//input[@type="text"]
+    ${备注}    Get Value    id=Remark
+    ${询价来源}    Get Value    xpath=//*[@id='InquirySource']//..//input[@type="text"]
+    ${抵押单价}    Get Value    xpath=//*[@id='InquiryPrice']/../span/input[@name='InquiryPrice']
+    ${抵押总价}    Get Value    xpath=//*[@id='InquiryResult']/../span/input[@name='InquiryResult']
+    ${市场单价}    Get Value    xpath=//*[@id='ShiChangPrice']/../span/input[@type="text"]
+    ${市场总价}    Get Value    xpath=//*[@id='ShiChangPrice']/../span/input[@name='ShiChangPrice']
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'客户手机')}    ${客户手机}    客户手机不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'固定电话')}    ${固定电话}    固定电话不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'客户姓名')}    ${客户姓名}    客户姓名不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'所属机构')}    ${所属机构}    所属机构不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'客户QQ')}    ${客户QQ}    客户QQ不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'城市')}    ${城市}    城市不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'行政区')}    ${行政区}    行政区不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'小区名称')}    '${小区名称}'    小区名称不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'小区地址')}    ${小区地址}    小区地址不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'楼栋号')}    ${楼栋号}    楼栋号不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'单元号')}    ${单元号}    单元号不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'户号名')}    ${户号名}    户号名不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'建筑面积')}    ${建筑面积}    建筑面积不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'所在楼层')}    ${所在楼层}    所在楼层不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'总楼层')}    ${总楼层}    总楼层不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'朝向')}    ${朝向}    朝向不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'建成年代')}    ${建成年代}    建成年代不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'询值单价')}    ${抵押单价}    抵押单价不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'询值总价')}    ${抵押总价}    抵押总价不匹配
+
+询价完成到住宅信息校验
+    [Arguments]    ${pep_info}
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    获取询价列表行所有数据    ${pep_info}
+
+获取询价列表行所有数据
+    [Arguments]    ${pep_info}
+    ${小区名称}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='ResidentialAreaName']
+    ${项目地址}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='Address']
+    ${询值价格}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='temp1']
+    Comment    ${询值单价}    Findall    询值单价:(.*)\(    ${询值价格}
+    Comment    ${询值总价}    Findall    询值总价:(.*)\(    ${询值价格}
+    ${市场价格}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='temp2']
+    Comment    ${市场总价}    Findall    市场总价:(.*)\(    ${市场价格}
+    Comment    ${询值总价}    Findall    询值总价:(.*)\(    ${市场价格}
+    ${建筑面积}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='BuildingArea']
+    ${询价机构}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='CustomerTypeName']
+    ${询价人}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='CustomerName']
+    ${询价添加人}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='CreatorName']
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_info.get_value(u'小区名')}    ${小区名称}    小区名称不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_info.get_value(u'建筑面积')}    ${建筑面积}    建筑面积不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_info.get_value(u'所属机构')}    ${询价机构}    询价机构不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_info.get_value(u'客户姓名')}    ${询价人}    询价人不匹配
+
+报盘案例校验
+    报盘案例按钮
+    不限按钮
+    等待加载完毕
+    案例校验
+
+案例校验
+    ${获取案例来源}    Get Text    xpath=.//td[@field="CaseFrom"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
+    Run Keyword If    '${获取案例来源}'!=''    log    案例成功
+    ...    ELSE    fail
+
+成交案例校验
+    成交案例按钮
+    不限按钮
+    等待加载完毕
+    案例校验
+
+报告案例校验
+    报告案例按钮
+    不限按钮
+    报告案例独立校验
+
+旧系统报告记录校验
+    旧系统询价记录
+    ${获取旧系统记录数据}    Get Text    xpath=.//tr[@class='gradeA odd']/ancestor::table[@class="tablestriped"]/tbody/tr[@class='gradeA odd']/td[1]
+    Run Keyword If    '${获取旧系统记录数据}'!=''    log    案例成功
+    ...    ELSE    fail
+
+报告案例独立校验
+    ${获取案例来源}    Get Text    xpath=.//td[@field="CaseTime"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
+    Run Keyword If    '${获取案例来源}'!=''    log    案例成功
+    ...    ELSE    fail
+
+旧系统询价记录校验
+    旧系统询价记录
+    ${获取旧系统记录数据}    Get Text    xpath=.//tr[@class='gradeA odd']/ancestor::table[@class="tablestriped"]/tbody/tr[@class='gradeA odd']/td[1]
+    Run Keyword If    '${获取旧系统记录数据}'!=''    log    案例成功
+    ...    ELSE    fail

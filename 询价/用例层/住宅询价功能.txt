@@ -1,10 +1,96 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../../报告打印装订/流程层/流程层.txt
+Resource          ../流程层/流程层.txt
+Resource          ../元素层/元素层.txt
+Resource          ../组件层/住宅信息.txt
+Resource          ../组件层/非住宅信息.txt
+Resource          ../组件层/预估单信息.txt
+Resource          ../../项目受理/项目受理业务层.txt
+
 *** Test Cases ***
 添加询价
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
+    ...    五栋大楼E座    默认单元    609    100.00    3    12
+    ...    东南    90    三居室    成套住宅    简单装修    送露台
+    ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.00    350.00    400000.00
+    ...    4000.00
+    [Teardown]    Close Browser
 
 查看
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
+    ...    五栋大楼E座    默认单元    609    100.00    3    12
+    ...    东南    90    三居室    成套住宅    简单装修    送露台
+    ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.00    350.00    400000.00
+    ...    4000.00
+    询价完成到住宅信息校验    ${price_range}
+    询价查看信息校验    ${price_range}
+    [Teardown]    Close Browser
 
 编辑
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
+    ...    五栋大楼E座    默认单元    609    100.00    3    12
+    ...    东南    90    三居室    成套住宅    简单装修    送露台
+    ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.00    350.00    400000.00
+    ...    4000.00
+    询价编辑
 
 转立项
+    [Documentation]    该用例含有
+    ...    1、添加询价——询价——转立项——进行数据对比
+    ...    2、添加询价——询价——保存——询价查询——转立项——进行数据对比
+    ...
+    ...
+    ...    编写人：吕梓清
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
+    ...    五栋大楼E座    默认单元    609    100.0    3    12
+    ...    东南    90    三居室    成套住宅    简单装修    送露台
+    ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.0    350.0    400000
+    ...    4000
+    转立项按钮
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="立项"]
+    等待加载完毕
+    验证立项界面的值是否正常    ${price_range}    是否询价跳转=1
+    Comment    询价完成返回询价页面后点击转立项
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    ${price_range1}    添加询价流程    13480195935    北京市    海淀区    曙光花园水云天    曙光花园水云天
+    ...    1    1    1    100.0    3    12
+    ...    东南    90    三居室    成套住宅    简单装修    送露台
+    ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.0    350.0    400000
+    ...    4000
+    询价保存按钮
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    询价查询按钮
+    等待列表创建完毕
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="转立项"]
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="create_project_"]
+    等待加载完毕
+    验证立项界面的值是否正常    ${price_range1}    是否询价跳转=1
+    [Teardown]    Close Browser
 
 案例信息
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
+    ...    五栋大楼E座    默认单元    609    100.00    3    12
+    ...    东南    90    三居室    成套住宅    简单装修    送露台
+    ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.00    350.00    400000.00
+    ...    4000.00
+    报盘案例校验
+    成交案例校验
+    报告案例校验
+    旧系统报告记录校验
