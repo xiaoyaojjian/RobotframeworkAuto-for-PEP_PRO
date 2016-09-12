@@ -1,8 +1,47 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../../报告打印装订/流程层/流程层.txt
+Resource          ../流程层/流程层.txt
+Resource          ../元素层/元素层.txt
+Resource          ../组件层/住宅信息.txt
+Resource          ../组件层/非住宅信息.txt
+Resource          ../组件层/预估单信息.txt
+Resource          ../../项目受理/项目受理业务层.txt
+
 *** Test Cases ***
 添加非住宅询价
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加非住宅询价流程    13215135631    北京市    丰台区    马场小区    成套商业
+    ...    QQ    简单装修    南北    100    2    12
+    ...    90    是打发士大夫    19000    40000    2000    4000
+    非询价保存按钮
+    等待提示框出现
+    确定按钮
+    询价完成到非住宅信息校验    ${price_range}
+    [Teardown]    Close Browser
 
 查看
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 回复
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 转立项
+    [Setup]    登录
+    询价打开模块公共方法
+    ${price_range}    添加非住宅询价流程    13215135631    北京市    丰台区    马场小区    成套商业
+    ...    QQ    简单装修    南北    100    2    12
+    ...    90    是打发士大夫    19000    40000    2000    4000
+    非询价转立项按钮
+    等待提示框出现
+    确定按钮
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="立项"]
+    等待加载完毕
+    验证立项界面的值是否正常    ${price_range}    是否询价跳转=1
+    [Teardown]    Close Browser

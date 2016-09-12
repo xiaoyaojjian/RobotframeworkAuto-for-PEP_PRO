@@ -21,6 +21,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
     : FOR    ${row}    IN RANGE    1    ${行数}+1
     \    log    ${row}
+    \    log    ${查询类型}
     \    ${字段值}    Run Keyword If    '${查询类型}'=='小区名称'    获取询价列表单元格    ${row}    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='项目地址'    获取询价列表单元格    ${row}    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价列表单元格    ${row}    ${路径}
@@ -29,7 +30,12 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     \    ...    ELSE IF    '${查询类型}'=='委托人'    获取询价列表单元格    ${row}    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='权利人'    获取询价列表单元格    ${row}    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='评估人员'    获取询价列表单元格    ${row}    ${路径}
-    \    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+    \    ...    ELSE IF    '${查询类型}'=='所属机构'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='状态'    获取询价列表单元格    ${row}    ${路径}
+    \    Run Keyword If    '${查询条件名}'=='已立项'    Should Match Regexp    ${字段值}    (.*)是(.*)
+    \    ...    ELSE IF    '${查询条件名}'=='未立项'    Should Match Regexp    ${字段值}    (.*)否(.*)
+    \    ...    ELSE    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+    \    Comment    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
 
 获取询价列表单元格
     [Arguments]    ${row}    ${路径}
@@ -55,9 +61,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='预估单编号'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='委托人'    条件输入参数    ${输入参数}    ${路径}
-    ...    ELSE IF    '${查询类型}'=='权利人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人估价人'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='评估人员'    条件输入参数    ${输入参数}    ${路径}
-    询价编辑
+    ...    ELSE IF    '${查询类型}'=='所属机构'    下拉选项框条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='状态'    下拉选项框条件输入参数    ${输入参数}    ${路径}
     [Return]    ${输入参数}
 
 输入询价机构
@@ -189,6 +196,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${特殊因素}    Get Value    xpath=//*[@id='SpecialInfo']//..//input[@type="text"]
     ${备注}    Get Value    id=Remark
     ${询价来源}    Get Value    xpath=//*[@id='InquirySource']//..//input[@type="text"]
+    ${修正单价}    Get Value    xpath=//*[@id='FeedbackPrice']/../span/input[@type="text"]
     ${抵押单价}    Get Value    xpath=//*[@id='InquiryPrice']/../span/input[@name='InquiryPrice']
     ${抵押总价}    Get Value    xpath=//*[@id='InquiryResult']/../span/input[@name='InquiryResult']
     ${市场单价}    Get Value    xpath=//*[@id='ShiChangPrice']/../span/input[@type="text"]
@@ -200,7 +208,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'客户QQ')}    ${客户QQ}    客户QQ不匹配
     Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'城市')}    ${城市}    城市不匹配
     Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'行政区')}    ${行政区}    行政区不匹配
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'小区名称')}    '${小区名称}'    小区名称不匹配
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'小区名')}    ${小区名称}    小区名称不匹配
     Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'小区地址')}    ${小区地址}    小区地址不匹配
     Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'楼栋号')}    ${楼栋号}    楼栋号不匹配
     Run Keyword And Continue On Failure    Should Be Equal    ${pep_input.get_value(u'单元号')}    ${单元号}    单元号不匹配
@@ -215,9 +223,12 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 询价完成到住宅信息校验
     [Arguments]    ${pep_info}
+    询价保存按钮
     Unselect Frame
     Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
     询价窗口
+    询价查询按钮
+    等待列表创建完毕
     获取询价列表行所有数据    ${pep_info}
 
 获取询价列表行所有数据
@@ -246,34 +257,81 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     案例校验
 
 案例校验
-    ${获取案例来源}    Get Text    xpath=.//td[@field="CaseFrom"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
-    Run Keyword If    '${获取案例来源}'!=''    log    案例成功
+    ${获取案例来源[1]}    Get Text    xpath=//td[@field="CaseFrom"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
+    Run Keyword If    '${获取案例来源[1]}'!=''    log    案例成功
     ...    ELSE    fail
 
 成交案例校验
     成交案例按钮
     不限按钮
     等待加载完毕
-    案例校验
+    成交案例案例独立校验
 
 报告案例校验
     报告案例按钮
     不限按钮
+    等待加载完毕
     报告案例独立校验
 
 旧系统报告记录校验
-    旧系统询价记录
-    ${获取旧系统记录数据}    Get Text    xpath=.//tr[@class='gradeA odd']/ancestor::table[@class="tablestriped"]/tbody/tr[@class='gradeA odd']/td[1]
+    旧报告系统记录
+    select frame    id=frame_oldReport
+    Wait Until Element Is Visible    xpath=//*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
+    等待列表创建完毕
+    ${获取旧系统记录数据}    Get Text    //*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
     Run Keyword If    '${获取旧系统记录数据}'!=''    log    案例成功
     ...    ELSE    fail
+    Unselect Frame
+    添加询价窗口
 
 报告案例独立校验
-    ${获取案例来源}    Get Text    xpath=.//td[@field="CaseTime"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
+    ${获取案例来源}    Get Text    xpath=//*[@id="datagrid-row-r11-2-0"]/td[3]
     Run Keyword If    '${获取案例来源}'!=''    log    案例成功
     ...    ELSE    fail
 
 旧系统询价记录校验
     旧系统询价记录
-    ${获取旧系统记录数据}    Get Text    xpath=.//tr[@class='gradeA odd']/ancestor::table[@class="tablestriped"]/tbody/tr[@class='gradeA odd']/td[1]
+    select frame    id=frame_oldInquiry
+    Wait Until Element Is Visible    xpath=//*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
+    ${获取旧系统记录数据}    get text    xpath=//*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
     Run Keyword If    '${获取旧系统记录数据}'!=''    log    案例成功
     ...    ELSE    fail
+
+成交案例案例独立校验
+    ${获取案例来源}    Get Text    xpath=//*[@id="datagrid-row-r9-2-0"]/td[1]
+    Run Keyword If    '${获取案例来源}'!=''    log    案例成功
+    ...    ELSE    fail
+
+询价输入参数修改
+
+非住宅估值信息参数
+    [Arguments]    ${pep}
+    Comment    Run Keyword If    '${pep.get_value(u'城市')}'!=''    Select From List By Label    id=CityName    ${pep.get_value(u'城市')}
+    log    ${pep.get_value(u'询值单价最小')}
+    log    ${pep.get_value(u'询值单价最大')}
+    Run Keyword If    '${pep.get_value(u'行政区')}'!=''    Input Text    id=DistrictName    ${pep.get_value(u'行政区')}
+    Run Keyword If    '${pep.get_value(u'小区名')}'!=''    Input Text    id=ResidentialAreaName    ${pep.get_value(u'小区名')}
+    Run Keyword If    '${pep.get_value(u'小区地址')}'!=''    Input Text    id=ResidentialAddress    ${pep.get_value(u'小区地址')}
+    Run Keyword If    '${pep.get_value(u'楼栋号')}'!=''    Input Text    xpath=//*[@id='BuildingName']//..//input[@type="text"]    ${pep.get_value(u'楼栋号')}
+    Run Keyword If    '${pep.get_value(u'单元号')}'!=''    Input Text    xpath=//*[@id='UnitName']//..//input[@type="text"]    ${pep.get_value(u'单元号')}
+    Run Keyword If    '${pep.get_value(u'户号名')}'!=''    Input Text    xpath=//*[@id='HouseNum']//..//input[@type="text"]    ${pep.get_value(u'户号名')}
+    Run Keyword If    '${pep.get_value(u'建筑面积')}'!=''    Input Text    xpath=//*[@id='BuildingArea']/../span/input[@type="text"]    ${pep.get_value(u'建筑面积')}
+    Run Keyword If    '${pep.get_value(u'所在楼层')}'!=''    Input Text    xpath=//*[@id='Floor']//../span/input[@type="text"]    ${pep.get_value(u'所在楼层')}
+    Run Keyword If    '${pep.get_value(u'总楼层')}'!=''    Input Text    xpath=//*[@id='MaxFloor']//../span/input[@type="text"]    ${pep.get_value(u'总楼层')}
+    Run Keyword If    '${pep.get_value(u'朝向')}'!=''    Input Text    xpath=//*[@id='Toword']//..//input[@type="text"]    ${pep.get_value(u'朝向')}
+    Run Keyword If    '${pep.get_value(u'建成年代')}'!=''    Input Text    xpath=//*[@id='BuildedYear']//../span/input[@type="text"]    ${pep.get_value(u'建成年代')}
+    Run Keyword If    '${pep.get_value(u'户型')}'!=''    Input Text    xpath=//*[@id='HouseType']//..//input[@type="text"]    ${pep.get_value(u'户型')}
+    Run Keyword If    '${pep.get_value(u'房屋类型')}'!=''    Input Text    xpath=//*[@id='PropertyType']//..//input[@type="text"]    ${pep.get_value(u'房屋类型')}
+    Run Keyword If    '${pep.get_value(u'装修情况')}'!=''    Input Text    xpath=//*[@id='Decoration']//..//input[@type="text"]    ${pep.get_value(u'装修情况')}
+    Run Keyword If    '${pep.get_value(u'特殊因素')}'!=''    Input Text    xpath=//*[@id='SpecialInfo']//..//input[@type="text"]    ${pep.get_value(u'特殊因素')}
+    Run Keyword If    '${pep.get_value(u'询价来源')}'!=''    Input Text    xpath=//*[@id='InquirySource']//..//input[@type="text"]    ${pep.get_value(u'询价来源')}
+    Run Keyword If    '${pep.get_value(u'备注')}'!=''    Input Text    id=Remark    ${pep.get_value(u'备注')}
+    Run Keyword If    '${pep.get_value(u'修正单价')}'!=''    Input Text    xpath=//*[@id='FeedbackPrice']/../span/input[@type="text"]    ${pep.get_value(u'修正单价')}
+    Run Keyword If    '${pep.get_value(u'抵押单价')}'!=''    Input Text    xpath=//*[@id='InquiryPrice']/../span/input[@type="text"]    ${pep.get_value(u'抵押单价')}
+    Run Keyword If    '${pep.get_value(u'市场单价')}'!=''    Input Text    xpath=//*[@id='ShiChangPrice']/../span/input[@type="text"]    ${pep.get_value(u'市场单价')}
+    Run Keyword If    '${pep.get_value(u'询值单价最小')}'!=''    Input Text    xpath=.//*[@id='InquiryPrice']/../span[1]/input[@type='text']    ${pep.get_value(u'询值单价最小')}
+    Run Keyword If    '${pep.get_value(u'询值单价最大')}'!=''    Input Text    xpath=.//*[@id='InquiryPriceUp']/../span[2]/input[@type='text']    ${pep.get_value(u'询值单价最大')}
+    Run Keyword If    '${pep.get_value(u'询值总价最小')}'!=''    Input Text    xpath=.//*[@id='InquiryResult']/../span[1]/input[@type='text']    ${pep.get_value(u'询值总价最小')}
+    Run Keyword If    '${pep.get_value(u'询值总价最大')}'!=''    Input Text    xpath=.//*[@id='InquiryResult']/../span[2]/input[@type='text']    ${pep.get_value(u'询值总价最大')}
+    Comment    Run Keyword If    '${pep.get_value(u'抵押总价')}'!=''    Input Text    xpath=//*[@id='InquiryResult']/../span/input[@type="text"]    ${pep.get_value(u'抵押总价')}
+    Comment    Run Keyword If    '${pep.get_value(u'市场总价')}'!=''    Input Text    xpath=//*[@id='ShiChangTotal']/../span/input[@type="text"]    ${pep.get_value(u'市场总价')}

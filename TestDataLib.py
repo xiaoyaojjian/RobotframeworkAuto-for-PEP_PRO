@@ -76,7 +76,7 @@ class TestDataLib:
         data = self._get_test_data(caseName, dataNameList)
 
         # 随机获取一条记录
-        if getValueType == -1:
+        if int(getValueType) == -1:
             args = {}
             i = random.choice(data)
             for j in range(len(dataNameList)):
@@ -84,10 +84,10 @@ class TestDataLib:
             return bi.run_keyword_and_continue_on_failure(keywordName, args)
 
         # 如果是0或大于表格的数量，则取数据的最大值
-        if getValueType == 0 or getValueType > len(data):
+        if int(getValueType) == 0 or int(getValueType) > len(data):
             get_row_count = len(data)
         else:
-            get_row_count = getValueType
+            get_row_count = int(getValueType)
         for i in random.sample(data, get_row_count):
             args = {}
             for j in range(len(dataNameList)):

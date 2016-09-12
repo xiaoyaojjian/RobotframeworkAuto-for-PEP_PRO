@@ -33,7 +33,7 @@ Resource          ../流程层/流程层.txt
     ...    ${empty}    ${empty}
     超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643    ${empty}
     ...    ${empty}    ${empty}
-    [Teardown]
+    [Teardown]    Close Browser
 
 报告号查询
     [Documentation]    该用例含有
@@ -124,3 +124,4 @@ Resource          ../流程层/流程层.txt
     ${已完成数据总量}    装订状态查询    装订完成    IsPrintComplete
     ${未完成数据总量}    装订状态查询    装订未完成    IsPrintComplete
     ${全部数据总量}    装订状态查询    全部    IsPrintComplete
+    [Teardown]    Close Browser

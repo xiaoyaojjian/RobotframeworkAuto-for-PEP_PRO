@@ -36,6 +36,7 @@ Resource          ../元素层/元素层.txt
     \    ...    ${table}
 
 获取报告装订打印查询数据行数
+    Comment    ${lineNumberP1}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
     ${lineNumberP1}    Get Matching Xpath Count    //td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
     [Return]    ${lineNumberP1}
 

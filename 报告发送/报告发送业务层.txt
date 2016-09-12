@@ -1,0 +1,3 @@
+*** Settings ***
+Resource          报告发送操作层.txt
+Resource          报告发送校验层.txt

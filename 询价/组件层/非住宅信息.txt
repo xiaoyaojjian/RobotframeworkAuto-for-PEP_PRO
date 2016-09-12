@@ -1,0 +1,111 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../元素层/元素层.txt
+Resource          ../../报告打印装订/组件层/报告装订打印.txt
+
+*** Keywords ***
+非住宅询价参数
+    [Arguments]    ${客户手机}    ${城市}    ${行政区}    ${项目推广名}    ${房屋类型}    ${询价来源}
+    ...    ${装修情况}    ${朝向}    ${建筑面积}    ${所在楼层}    ${总楼层}    ${建成年代}
+    ...    ${备注}    ${询值单价最小}    ${询值单价最大}    ${询值总价最小}    ${询值总价最大}
+    ${pep_input}    Create Pep Object
+    Set Pep Value    ${pep_input}    客户手机    ${客户手机}
+    Set Pep Value    ${pep_input}    城市    ${城市}
+    Set Pep Value    ${pep_input}    行政区    ${行政区}
+    Set Pep Value    ${pep_input}    项目推广名    ${项目推广名}
+    Set Pep Value    ${pep_input}    小区名    ${项目推广名}
+    Set Pep Value    ${pep_input}    房屋类型    ${房屋类型}
+    Set Pep Value    ${pep_input}    建筑面积    ${建筑面积}
+    Set Pep Value    ${pep_input}    所在楼层    ${所在楼层}
+    Set Pep Value    ${pep_input}    总楼层    ${总楼层}
+    Set Pep Value    ${pep_input}    朝向    ${朝向}
+    Set Pep Value    ${pep_input}    建成年代    ${建成年代}
+    Set Pep Value    ${pep_input}    装修情况    ${装修情况}
+    Set Pep Value    ${pep_input}    备注    ${备注}
+    Set Pep Value    ${pep_input}    询价来源    ${询价来源}
+    Set Pep Value    ${pep_input}    项目来源    ${询价来源}
+    Set Pep Value    ${pep_input}    询值单价最小    ${询值单价最小}
+    Set Pep Value    ${pep_input}    询值单价    ${询值单价最小}
+    Set Pep Value    ${pep_input}    询值单价最大    ${询值单价最大}
+    Set Pep Value    ${pep_input}    询值总价最小    ${询值总价最小}
+    Set Pep Value    ${pep_input}    询值总价    ${询值总价最小}
+    Set Pep Value    ${pep_input}    询值总价最大    ${询值总价最大}
+    [Return]    ${pep_input}
+
+添加非住宅询价流程
+    [Arguments]    ${客户手机}    ${城市}    ${行政区}    ${项目推广名}    ${房屋类型}    ${询价来源}
+    ...    ${装修情况}    ${朝向}    ${建筑面积}    ${所在楼层}    ${总楼层}    ${建成年代}
+    ...    ${备注}    ${询值单价最小}    ${询值单价最大}    ${询值总价最小}    ${询值总价最大}
+    非住宅信息按钮
+    添加询价按钮
+    Unselect Frame
+    添加非询价窗口
+    ${price_range}    非住宅询价参数    ${客户手机}    ${城市}    ${行政区}    ${项目推广名}    ${房屋类型}
+    ...    ${询价来源}    ${装修情况}    ${朝向}    ${建筑面积}    ${所在楼层}    ${总楼层}
+    ...    ${建成年代}    ${备注}    ${询值单价最小}    ${询值单价最大}    ${询值总价最小}    ${询值总价最大}
+    通过手机号码获取客户信息    ${price_range}
+    将客户信息写入PEP对象    ${price_range}    is_xunjia=0    is_fei_get_text=1
+    非住宅估值信息参数    ${price_range}
+    Comment    sleep    3
+    Comment    非询价保存数据校验
+    [Return]    ${price_range}
+
+非询价保存数据校验
+    获取非询价估价信息
+
+获取非询价估价信息
+    ${城市}    Get Text    xpath=.//*[@id='CityName']/../span[1]
+    ${行政区}    Get Value    id=DistrictName
+    ${小区名}    Get Text    id=ResidentialAreaName
+    ${小区地址}    Get Value    id=ResidentialAddress
+    Comment    ${楼栋号}    Get Value    xpath=//*[@id='BuildingName']//..//input[@type="text"]
+    Comment    ${单元号}    Get Value    xpath=//*[@id='UnitName']//..//input[@type="text"]
+    Comment    ${户号名}    Get Value    xpath=//*[@id='HouseNum']//..//input[@type="text"]
+    Comment    ${建筑面积}    Get Value    xpath=//*[@id='BuildingArea']/../span/input[@type="text"]
+    Comment    ${所在楼层}    Get Value    xpath=//*[@id='Floor']//../span/input[@type="text"]
+    Comment    ${总楼层}    Get Value    xpath=//*[@id='MaxFloor']//../span/input[@type="text"]
+    Comment    ${朝向}    Get Value    xpath=//*[@id='Toword']//..//input[@type="text"]
+    Comment    ${建成年代}    Get Value    xpath=//*[@id='BuildedYear']//../span/input[@type="text"]
+    Comment    ${户型}    Get Value    xpath=//*[@id='HouseType']//..//input[@type="text"]
+    Comment    ${房屋类型}    Get Value    xpath=//*[@id='PropertyType']//..//input[@type="text"]
+    Comment    ${装修情况}    Get Value    xpath=//*[@id='Decoration']//..//input[@type="text"]
+    Comment    ${特殊因素}    Get Value    xpath=//*[@id='SpecialInfo']//..//input[@type="text"]
+    Comment    ${询价来源}    Get Value    xpath=//*[@id='InquirySource']//..//input[@type="text"]
+    Comment    ${备注}    Get Value    id=Remark
+    Comment    ${询值单价最小}    Get Value    xpath=.//*[@id='InquiryPrice']/../span[1]/input[@type='text']
+    Comment    ${询值单价最大}    Get Value    xpath=.//*[@id='InquiryPriceUp']/../span[2]/input[@type='text']
+    Comment    ${询值总价最小}    Get Value    xpath=.//*[@id='InquiryResult']/../span[1]/input[@type='text']
+    Comment    ${询值总价最大}    Get Value    xpath=.//*[@id='InquiryResult']/../span[2]/input[@type='text']
+
+询价完成到非住宅信息校验
+    [Arguments]    ${pep_info}
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    询价查询按钮
+    等待列表创建完毕
+    ${fei_xunjia_info}    获取非住宅询价列表第一行数据
+    Run Keyword If    '${pep_info.get_value(u'项目来源')}'=='${fei_xunjia_info.get_value(u'询价来源')}' and '${pep_info.get_value(u'所属机构')}'=='${fei_xunjia_info.get_value(u'询价机构')}'    log    pass
+    ...    ELSE    Fail
+
+获取非住宅询价列表第一行数据
+    ${地址}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='Address']
+    ${询值总价(万元)}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='temp3']
+    ${询值单价(元/m²)}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='temp4']
+    ${询价机构}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='CustomerTypeName']
+    ${询价人}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='CustomerName']
+    ${询价时间}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='InquiryTime']
+    ${询价添加人}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='CreatorName']
+    ${询价来源}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='InquirySource']
+    ${立项}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='IsToTask']
+    ${fei_xunjia_info}    Create Pep Object
+    Set Pep Value    ${fei_xunjia_info}    项目地址    ${地址}
+    Set Pep Value    ${fei_xunjia_info}    询值总价(万元)    ${询值总价(万元)}
+    Set Pep Value    ${fei_xunjia_info}    询值单价(元/m²)    ${询值单价(元/m²)}
+    Set Pep Value    ${fei_xunjia_info}    询价机构    ${询价机构}
+    Set Pep Value    ${fei_xunjia_info}    询价人    ${询价人}
+    Set Pep Value    ${fei_xunjia_info}    询价时间    ${询价时间}
+    Set Pep Value    ${fei_xunjia_info}    询价添加人    ${询价添加人}
+    Set Pep Value    ${fei_xunjia_info}    询价来源    ${询价来源}
+    Set Pep Value    ${fei_xunjia_info}    立项    ${立项}
+    [Return]    ${fei_xunjia_info}

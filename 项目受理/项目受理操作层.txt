@@ -112,7 +112,7 @@ Resource          ../公共模块.txt
     \    Run Keyword If    '${row_count}'!='0'    Set Kanfang Value    ${pep}    ${联系人姓名}    ${联系人电话}
 
 将客户信息写入PEP对象
-    [Arguments]    ${pep}    ${is_get_text}=0    ${is_xunjia}=0    # ${pep} :pep对象；${is_get_text}：是否获取查看详情页面；${is_xunjia}：是否获取询价页面的元素
+    [Arguments]    ${pep}    ${is_get_text}=0    ${is_xunjia}=0    ${is_fei_get_text}=1    # ${pep} :pep对象；${is_get_text}：是否获取查看详情页面；${is_xunjia}：是否获取询价页面的元素
     [Documentation]    可以获取询价界面、立项界面、项目详情里的客户信息，并写入pep对象中
     ${手机号码}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='MobileNumber']
     ...    ELSE    Get Text    xpath=.//*[@id='MobileNumber']
@@ -121,6 +121,7 @@ Resource          ../公共模块.txt
     ...    ELSE    Get Text    xpath=.//*[@id='Telephone']
     Set Pep Value    ${pep}    固定电话    ${固定电话}
     ${客户姓名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
+    ...    ELSE IF    ${is_fei_get_text}=1    Get Value    xpath=.//*[@id="customerid"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="CustomerName"]
     Set Pep Value    ${pep}    客户姓名    ${客户姓名}
     ${所属机构}    Run Keyword If    ${is_get_text}==0 and ${is_xunjia}==0    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
@@ -333,58 +334,94 @@ Resource          ../公共模块.txt
     ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
     ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
     Run Keyword If    '${流水号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']    ${流水号}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']
     Run Keyword If    '${报告编号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    ${报告编号}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']
     Run Keyword If    '${项目地址}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    ${项目地址}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']
     Run Keyword If    '${小区名称}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    ${小区名称}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']
     Run Keyword If    '${估价目的}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    ${估价目的}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    0
     Run Keyword If    '${项目类型}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportCategory']    ${项目类型}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportCategory']    0
     Run Keyword If    '${业务来源}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    ${业务来源}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    0
     Run Keyword If    '${物业类型}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    ${物业类型}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    0
     Run Keyword If    '${受理人}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName']    ${受理人}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName']
     Run Keyword If    '${受理开始时间}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//input[@name="CreatedDateFrom"]/../input[@type="text"]    ${受理开始时间}
     Run Keyword If    '${受理结束时间}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//input[@name="CreatedDateTo"]/../input[@type="text"]    ${受理结束时间}
     Run Keyword If    '${估价委托方}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    ${估价委托方}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']
     Run Keyword If    '${客户姓名}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CustomerName']    ${客户姓名}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='CustomerName']
     Run Keyword If    '${客户手机}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//input[@name="MobileNumber"]/../input[@type="text"]    ${客户手机}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//input[@name="MobileNumber"]/../input[@type="text"]
     Run Keyword If    '${看房联系人电话}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Phone']    ${看房联系人电话}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='Phone']
     Run Keyword If    '${资料是否齐全}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteResource']    ${资料是否齐全}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteResource']    0
     Run Keyword If    '${收费责任人}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='FinanceEmployeeName']    ${收费责任人}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='FinanceEmployeeName']
     Run Keyword If    '${外业是否完成}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteWaiCai']    ${外业是否完成}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteWaiCai']    0
 
 输入提取信息查询条件
     [Arguments]    ${流水号}=None    ${报告号}=None    ${小区名称}=None    ${项目地址}=None
     Run Keyword If    '${流水号}'!='None'    文本框清空并输入    .//*[@id='ProjectNo']    ${流水号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ProjectNo']
     Run Keyword If    '${报告号}'!='None'    文本框清空并输入    .//*[@id='ReportNo']    ${报告号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ReportNo']
     Run Keyword If    '${小区名称}'!='None'    文本框清空并输入    .//*[@id='AreaName']    ${小区名称}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='AreaName']
     Run Keyword If    '${项目地址}'!='None'    文本框清空并输入    .//*[@id='Address']    ${项目地址}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='Address']
 
 输入暂存项目查询条件
     [Arguments]    ${流水号}=None    ${项目地址}=None    ${小区名称}=None    ${估价委托方}=None    ${项目分类}=None    ${物业类型}=None
     ...    ${估价目的}=None    ${业务来源}=None    ${开始时间}=None    ${结束时间}=None
     [Documentation]    根据需要填写线上业务的查询条件
     Run Keyword If    '${流水号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']    ${流水号}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']
     Run Keyword If    '${项目地址}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    ${项目地址}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']
     Run Keyword If    '${小区名称}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    ${小区名称}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']
     Run Keyword If    '${估价委托方}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    ${估价委托方}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']
     Run Keyword If    '${开始时间}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatedDate']    ${开始时间}
     Run Keyword If    '${结束时间}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatedDateTo']    ${结束时间}
     Run Keyword If    '${项目分类}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportType']    ${项目分类}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportType']    0
     Run Keyword If    '${物业类型}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    ${物业类型}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectType']    0
     Run Keyword If    '${估价目的}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    ${估价目的}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='BusinessType']    0
     Run Keyword If    '${业务来源}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    ${业务来源}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectSource']    0
 
 输入线上业务查询条件
     [Arguments]    ${交易编号}=None    ${项目流水号}=None    ${小区名称}=None    ${物业地址}=None    ${项目来源}=None    ${是否已受理}=None
     ...    ${是否已终止}=None    ${业务类型}=None
     [Documentation]    根据需要填写线上业务的查询条件
     Run Keyword If    '${交易编号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='bscode']    ${交易编号}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='bscode']
     Run Keyword If    '${项目流水号}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='projectno']    ${项目流水号}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='projectno']
     Run Keyword If    '${小区名称}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='community']    ${小区名称}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='community']
     Run Keyword If    '${物业地址}'!='None'    文本框清空并输入    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='houseAddr']    ${物业地址}
+    ...    ELSE    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='houseAddr']
     Run Keyword If    '${项目来源}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineSource']    ${项目来源}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineSource']    0
     Run Keyword If    '${是否已受理}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineIsaccept']    ${是否已受理}
+    ...    ELSE    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineIsaccept']    未受理
     Run Keyword If    '${是否已终止}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineIsCancel']    ${是否已终止}
+    ...    ELSE    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='onlineIsCancel']    未终止
     Run Keyword If    '${业务类型}'!='None'    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='delegateType']    ${业务类型}
+    ...    ELSE    Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='delegateType']    0
 
 进行业务不受理操作
     [Documentation]    点击线上业务列表上的【受理】按钮，页面跳转到“立项添加”页面，需要重新选择frame进行立项操作
@@ -422,7 +459,7 @@ Resource          ../公共模块.txt
     Set Pep Value    ${pep}    加急金额    ${加急金额}
     Click Element    xpath=//span[text()='确定']/ancestor::a
     Unselect Frame
-    Select Frame    id=create_project_
+    Select Frame    //iframe[contains(@id,"create_project_")]
     等待提示框出现
     ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
     Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'

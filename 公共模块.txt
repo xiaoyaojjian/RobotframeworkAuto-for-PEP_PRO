@@ -103,3 +103,8 @@ ${PASSWORD}       123456    # 登录密码
     Input Text    xpath=${input_xpath}    @!#
     ${count}    Get Matching Xpath Count    ${match_xpath}
     Run Keyword And Continue On Failure    Should Be Equal    ${count}    1    ${error_msg}
+
+验证xpath路径匹配的数量
+    [Arguments]    ${xpath}    ${match_count}    ${msg}=该xpath的路径匹配的数量不一致
+    ${count}    Get Matching Xpath Count    ${xpath}
+    Run Keyword And Continue On Failure    Should Be Equal    ${count}    ${match_count}    msg=${msg}

@@ -11,3 +11,4 @@ Resource          ../流程层/流程层.txt
     ...
     ...    编写人：吕梓清
     报告打开打印
+    [Teardown]    Close Browser

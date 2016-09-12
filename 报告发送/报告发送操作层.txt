@@ -1,0 +1,33 @@
+*** Settings ***
+Resource          ../公共模块.txt
+
+*** Keywords ***
+输入报告发送查询条件
+    [Arguments]    ${发送状态}=None    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None
+    Run Keyword If    '${发送状态}'!='None'    Select From List By Label    xpath=.//*[@id='IsSend']    ${发送状态}
+    ...    ELSE    Select From List By Label    xpath=.//*[@id='IsSend']    未发送
+    Run Keyword If    '${流水号}'!='None'    Input Text    xpath=.//*[@id='ProjectNo']    ${流水号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ProjectNo']
+    Run Keyword If    '${报告号}'!='None'    Input Text    xpath=.//*[@id='ReportNo']    ${报告号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ReportNo']
+    Run Keyword If    '${项目地址}'!='None'    Input Text    xpath=.//*[@id='Address']    ${项目地址}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='Address']
+    Run Keyword If    '${小区名称}'!='None'    Input Text    xpath=.//*[@id='AreaName']    ${小区名称}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='AreaName']
+
+清空报告发送查询条件
+    [Arguments]    ${发送状态}=None    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None
+    Select From List By Label    xpath=.//*[@id='IsSend']    未发送
+    Clear Element Text    xpath=.//*[@id='ProjectNo']    #${流水号}
+    Clear Element Text    xpath=.//*[@id='ReportNo']    #${报告号}
+    Clear Element Text    xpath=.//*[@id='Address']    #${项目地址}
+    Clear Element Text    xpath=.//*[@id='AreaName']    #${小区名称}
+
+输入发送历史查询条件
+    [Arguments]    ${快递公司}=None    ${快递单号}=None    ${接收地址}=None
+    Run Keyword If    '${快递公司}'!='None'    Input Text    xpath=.//input[@id='express']    ${快递公司}
+    ...    ELSE    Clear Element Text    xpath=.//input[@id='express']
+    Run Keyword If    '${快递单号}'!='None'    Input Text    xpath=.//*[@id='expressno']    ${快递单号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='expressno']
+    Run Keyword If    '${接收地址}'!='None'    Input Text    xpath=.//*[@id='expressaddress']    ${接收地址}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='expressaddress']

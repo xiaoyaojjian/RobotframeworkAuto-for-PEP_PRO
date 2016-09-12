@@ -1,14 +1,39 @@
+*** Settings ***
+Resource          ../../公共模块.txt
+Resource          ../../报告打印装订/流程层/流程层.txt
+
 *** Test Cases ***
 新建预估单
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 查看
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 打印
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 编辑
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 转立项
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 询价
+    [Setup]
+    登录
+    [Teardown]    Close Browser
 
 保存
+    [Setup]
+    登录
+    [Teardown]    Close Browser
