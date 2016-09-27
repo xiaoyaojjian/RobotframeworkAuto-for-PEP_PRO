@@ -1,0 +1,12 @@
+*** Settings ***
+Resource          ../公共模块.txt
+Resource          操作层.txt
+Resource          审核验证.txt
+Resource          业务层.txt
+
+*** Test Cases ***
+审核流程
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    等待列表创建完毕
+    项目审核流程    545048072856    低级错误    界面需要优化，不符合用户需求

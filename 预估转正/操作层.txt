@@ -1,0 +1,36 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Keywords ***
+转正
+    [Arguments]    ${row}=1
+    Comment    Click Element    .//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
+
+选择报告撰写人和收费信息
+    Clear Element Text    xpath=.//*[@id='people']/..//span/input[1]
+    Input Text    xpath=.//*[@id='people']/..//span/input[1]    李楠
+    Clear Element Text    xpath=.//*[@id='price']/..//span/input[1]
+    Input Text    xpath=.//*[@id='price']/..//span/input[1]    200
+
+点击提交
+    Click Element    xpath=html/body/div[1]/table/tbody/tr[6]/td/input
+
+点击查看数据
+    [Arguments]    ${row}=1
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[1]
+
+检测是否已经转正
+    [Arguments]    ${row}=1
+    ${检测是否已经转正}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="IsPositive"]/div
+    log    ${检测是否已经转正}
+    Comment    Set Global Variable    ${检测是否已经转正}
+    Comment    ${status}    Run Keyword And Return Status    Wait Until Element Is Not Visible    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
+    Comment    Run Keyword If    ${status}==True    log    转正成功
+    ...    ELSE    Fatal Error    转正失败
+    [Return]    ${检测是否已经转正}
+
+判断转正是否成功
+    [Arguments]    ${检测是否已经转正}
+    Run Keyword If    '${检测是否已经转正}'=='是'    log    pass
+    ...    ELSE    fail

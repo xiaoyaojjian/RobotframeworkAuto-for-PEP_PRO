@@ -6,18 +6,7 @@ Resource          ../询价/组件层/住宅信息.txt
 *** Keywords ***
 提取任务进行立项操作
     ${流水号}    根据查询条件随机获取一个项目流水号
-    输入已立项查询条件    ${流水号}
-    点击查询按钮
-    等待列表创建完毕
-    点击列表中的查看按钮
-    Unselect Frame
-    Wait Until Page Contains Element    xpath=//iframe[contains(@id,'${流水号}')]
-    Select Frame    xpath=//iframe[contains(@id,'${流水号}')]
-    ${pep}    Create Pep Object
-    Set Pep Value    ${pep}    流水号    ${流水号}
-    将立项界面的信息写入pep对象    ${pep}    1
-    Unselect Frame
-    关闭功能模块    项目详细-${流水号}
+    ${pep}    查询项目详情并获取一个pep对象    ${流水号}
     打开功能模块    询价立项管理    项目受理
     Select Frame    id=InquiryAndProject_ProjectAccept
     点击立项按钮
@@ -133,6 +122,7 @@ Resource          ../询价/组件层/住宅信息.txt
     切换到已立项子模块
     输入已立项查询条件    ${pep.get_value(u'流水号')}
     点击查询按钮
+    等待加载完毕
     等待列表创建完毕
     点击列表中的查看按钮
     Unselect Frame
@@ -165,6 +155,7 @@ Resource          ../询价/组件层/住宅信息.txt
     ${row_count}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/..    #获取当前页的总行数
     ${row}    Evaluate    random.randint(1,${row_count})    modules=random    #获取一个随机页数
     ${流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[${row}]/td[@field="ProjectNo"]/div
+    Unselect Frame
     [Return]    ${流水号}
 
 立项并继续操作
@@ -351,3 +342,37 @@ Resource          ../询价/组件层/住宅信息.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${表格列数}    0
     Comment    清空已立项查询条件
     Unselect Frame
+
+查询项目详情并获取一个pep对象
+    [Arguments]    ${流水号}
+    打开功能模块    询价立项管理    项目受理
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    等待列表创建完毕
+    切换到已立项子模块
+    等待列表创建完毕
+    输入已立项查询条件    ${流水号}
+    点击查询按钮
+    等待列表创建完毕
+    点击列表中的查看按钮
+    Unselect Frame
+    Wait Until Page Contains Element    xpath=//iframe[contains(@id,'${流水号}')]
+    Select Frame    xpath=//iframe[contains(@id,'${流水号}')]
+    ${pep}    Create Pep Object
+    Set Pep Value    ${pep}    流水号    ${流水号}
+    将立项界面的信息写入pep对象    ${pep}    1
+    Unselect Frame
+    关闭功能模块    项目详细-${流水号}
+    [Return]    ${pep}
+
+查看线上业务详情并获取一个pep对象
+    [Arguments]    ${交易编号}=None    ${项目流水号}=None    ${小区名称}=None    ${物业地址}=None    ${项目来源}=None    ${是否已受理}=None
+    ...    ${是否已终止}=None    ${业务类型}=None
+    线上业务有效查询    ${交易编号}    ${项目流水号}    ${小区名称}    ${物业地址}    ${项目来源}    ${是否已受理}
+    ...    ${是否已终止}    ${业务类型}
+    Select Frame    id=InquiryAndProject_ProjectAccept
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="查看"]    #点击查看按钮
+    Unselect Frame
+    Select Frame    id=View_OnlineBusiness
+    ${pep}    Create Pep Object
+    将线上业务的信息写入pep对象    ${pep}
+    [Return]    ${pep}

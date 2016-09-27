@@ -1,0 +1,48 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Keywords ***
+审核流水号
+    [Arguments]    ${流水号}
+    Run Keyword And Continue On Failure    Input Text    xpath=//*[@id="ProjectNo"]    ${流水号}
+
+项目查询
+    Run Keyword And Continue On Failure    click Element    xpath=//*[@id="toolbarNo"]/div/table/tbody/tr/td[11]/a
+
+项目审核项目地址
+    [Arguments]    ${项目地址}
+    Run Keyword And Continue On Failure    Input text    xpath=//*[@id="ProAddress"]    ${项目地址}
+
+清空项目审核项目地址
+    Clear Element Text    xpath=//*[@id="ProAddress"]
+
+项目审核小区名称
+    [Arguments]    ${项目审核小区名称}
+    Run Keyword And Continue On Failure    Input text    xpath=//*[@id="xqName"]    ${项目审核小区名称}
+
+清空项目审核小区名称
+    clear Element Text    xpath=//*[@id="xqName"]
+
+项目审核中
+    click Element    xpath=//*[@id="tabs"]/div[1]/div[3]/ul/li[2]/a
+
+项目审核完
+    click Element    xpath=//*[@id="tabs"]/div[1]/div[3]/ul/li[3]/a
+
+审核接收
+    Click Element    xpath=//*[@id="datagrid-row-r6-1-0"]/td/div/a[1]
+
+审核报告窗口
+    select frame    id=audit_report
+
+添加错误记录
+    click Element    xpath=//span[text()="添加错误记录"]/ancestor::a
+
+操作成功提示语
+    Set Selenium Speed    1s
+    ${mes}    confirm action
+    log    ${mes}
+    Comment    Should Be Equal    ${mes}    操作成功
+    Choose Ok On Next Confirmation
+    Comment    sleep    5
+    Set Selenium Speed    0.5s

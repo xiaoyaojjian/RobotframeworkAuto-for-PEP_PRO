@@ -1,0 +1,28 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Keywords ***
+点击转发按钮
+    [Arguments]    ${row}=1
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[1]
+
+选择审核人
+    Select From List By Label    id=user    李楠
+
+点击提交
+    Click Element    //span[text()='提交']/..
+
+验证审核人是否正确
+    [Arguments]    ${获取审核人信息}
+    Run Keyword If    '${获取审核人信息}'=='李楠'    log    pass
+    ...    ELSE    Fail
+
+获取审核人信息
+    [Arguments]    ${row}=1
+    ${获取审核人信息}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TaskRunUser"]/div
+    log    ${获取审核人信息}
+    [Return]    ${获取审核人信息}
+
+点击退回任务
+    [Arguments]    ${row}=1
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]

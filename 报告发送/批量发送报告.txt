@@ -1,1 +1,16 @@
+*** Settings ***
+Resource          报告发送业务层.txt
+
 *** Test Cases ***
+批量发送报告-快递
+    批量发送报告流程    快递
+
+不选内容进行批量发送
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    Click Element    xpath=//span[text()="批量发送报告"]/ancestor::a    #点击批量发送按钮
+    等待提示框出现
+    ${提示内容}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]/div[contains(@class,"messager-body")]/div[2]
+    Should Be Equal    ${提示内容}    请至少选择1项！
+    点击提示框中的确定按钮

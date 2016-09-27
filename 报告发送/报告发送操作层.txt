@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../公共模块.txt
+Resource          报告发送校验层.txt
 
 *** Keywords ***
 输入报告发送查询条件
@@ -15,14 +16,6 @@ Resource          ../公共模块.txt
     Run Keyword If    '${小区名称}'!='None'    Input Text    xpath=.//*[@id='AreaName']    ${小区名称}
     ...    ELSE    Clear Element Text    xpath=.//*[@id='AreaName']
 
-清空报告发送查询条件
-    [Arguments]    ${发送状态}=None    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None
-    Select From List By Label    xpath=.//*[@id='IsSend']    未发送
-    Clear Element Text    xpath=.//*[@id='ProjectNo']    #${流水号}
-    Clear Element Text    xpath=.//*[@id='ReportNo']    #${报告号}
-    Clear Element Text    xpath=.//*[@id='Address']    #${项目地址}
-    Clear Element Text    xpath=.//*[@id='AreaName']    #${小区名称}
-
 输入发送历史查询条件
     [Arguments]    ${快递公司}=None    ${快递单号}=None    ${接收地址}=None
     Run Keyword If    '${快递公司}'!='None'    Input Text    xpath=.//input[@id='express']    ${快递公司}
@@ -31,3 +24,197 @@ Resource          ../公共模块.txt
     ...    ELSE    Clear Element Text    xpath=.//*[@id='expressno']
     Run Keyword If    '${接收地址}'!='None'    Input Text    xpath=.//*[@id='expressaddress']    ${接收地址}
     ...    ELSE    Clear Element Text    xpath=.//*[@id='expressaddress']
+
+发送报告操作
+    [Arguments]    ${pep}    ${发送份数}    ${发送方式}=快递    ${快递公司}=顺丰
+    点击列表中的发送报告按钮
+    等待弹出窗口出现
+    等待列表创建完毕
+    验证收件地址列表是否正常    ${pep}    快递
+    Run Keyword If    '${pep.get_value(u'快递信息').__len__()}'!='0'    验证界面是否自动填充收件人信息    ${pep}
+    Select From List By Label    xpath=.//*[@id='sendtype']    ${发送方式}
+    ${快递单号}    获取当前时间
+    Run Keyword If    '${发送方式}'=='快递'    文本框清空并输入    .//*[@id='expressno' and not(@disabled)]    ${快递单号}
+    Run Keyword If    '${发送方式}'=='快递'    Select From List By Label    xpath=.//*[@id='express']    ${快递公司}
+    Run Keyword If    '${pep.get_value(u'快递信息').__len__()}'=='0' and '${发送方式}'=='快递'    填报告发送写收件信息    ${发送份数}    章先生    13800138000    内蒙古自治区呼伦贝尔市莫力达瓦达斡尔族自治旗杜拉尔鄂温克民族乡尼西空海拉松村××号
+    Run Keyword If    '${发送方式}'!='快递'    文本框清空并输入    .//*[@id='recivername']    取件人
+    Run Keyword If    '${发送方式}'!='快递'    文本框清空并输入    .//*[@id='recivermobile']    13988889999
+    Run Keyword If    '${发送方式}'!='快递'    文本框清空并输入    .//*[@id='sendpiece']    ${发送份数}
+    将发送信息写入pep对象    ${pep}
+    Click Element    xpath=.//*[@id='sumbut']    #点击提交按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_Send
+    等待提示框出现
+    点击提示框中的确定按钮
+
+填报告发送写收件信息
+    [Arguments]    ${发送分数}=None    ${接收人}=None    ${接收电话}=None    ${接收地址}=None    ${备注}=None
+    Run Keyword If    '${发送分数}'!='None'    文本框清空并输入    .//*[@id='sendpiece']    ${发送分数}
+    Run Keyword If    '${接收人}'!='None'    文本框清空并输入    .//*[@id='receiver']    ${接收人}
+    Run Keyword If    '${接收电话}'!='None'    文本框清空并输入    .//*[@id='recivermobile']    ${接收电话}
+    Run Keyword If    '${接收地址}'!='None'    文本框清空并输入    .//*[@id='sendaddress']    ${接收地址}
+    Run Keyword If    '${备注}'!='None'    文本框清空并输入    .//*[@id='remark']    ${备注}
+
+获取已发送份数到pep对象
+    [Arguments]    ${pep}
+    ${已发送份数}    Get Text    xpath=.//*[@class="datagrid-btable"]//td[@field="SentCount"]/div
+    Set Pep Value    ${pep}    已发送份数    ${已发送份数}
+
+将发送信息写入pep对象
+    [Arguments]    ${pep}
+    ${发送方式}    Get Value    xpath=.//*[@id='sendtype']
+    Set Pep Value    ${pep}    发送方式    ${发送方式}
+    ${sendpiece_visable}    Get Matching Xpath Count    .//*[@id='sendpiece']
+    ${发送分数}    Run Keyword If    ${sendpiece_visable}==1    Get Value    xpath=.//*[@id='sendpiece']
+    ...    ELSE    Set Variable    ${pep.get_value(u'发送份数')}
+    Set Pep Value    ${pep}    已发送份数    ${发送分数}
+    ${接收人}    Run Keyword If    '${发送方式}'=='快递'    Get Value    xpath=.//*[@id='receiver']
+    ...    ELSE    Set Variable    ${EMPTY}
+    Set Pep Value    ${pep}    接收人    ${接收人}
+    ${接收电话}    Get Value    xpath=.//*[@id='recivermobile']
+    Set Pep Value    ${pep}    接收电话    ${接收电话}
+    ${接收地址}    Run Keyword If    '${发送方式}'=='快递'    Get Value    xpath=.//*[@id='sendaddress']
+    ...    ELSE    Set Variable    ${EMPTY}
+    Set Pep Value    ${pep}    接收地址    ${接收地址}
+    ${备注}    Run Keyword If    '${发送方式}'=='快递'    Get Value    xpath=.//*[@id='remark']
+    ...    ELSE    Set Variable    ${EMPTY}
+    Set Pep Value    ${pep}    发送报告备注    ${备注}
+    ${取件人}    Run Keyword If    '${发送方式}'!='快递'    Get Value    xpath=.//*[@id='recivername']
+    ...    ELSE    Set Variable    ${EMPTY}
+    Set Pep Value    ${pep}    取件人    ${取件人}
+    ${快递单号}    Run Keyword If    '${发送方式}'=='快递'    Get Value    xpath=.//*[@id='expressno' and not(@disabled)]
+    ...    ELSE    Set Variable    ${EMPTY}
+    Set Pep Value    ${pep}    快递单号    ${快递单号}
+    ${快递公司}    Run Keyword If    '${发送方式}'=='快递'    Get Value    xpath=.//*[@id='express']
+    ...    ELSE    Set Variable    ${EMPTY}
+    Set Pep Value    ${pep}    快递公司    ${快递公司}
+
+根据查询条件随机获取一个报告发送流水号
+    [Arguments]    ${发送状态}=None    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None    ${最低未发送份数}=1
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    ${发送状态}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    点击查询按钮    0
+    等待列表创建完毕
+    ${page_count_msg}    Get Text    xpath=//div[contains(@class,"datagrid-pager")]//td[8]/span    #获取列表总页数
+    ${page_count}    Findall    共(.*)页    ${page_count_msg}    #获取列表总页数
+    ${page}    Evaluate    random.randint(1,${page_count[0]})    modules=random    #获取一个随机页数
+    Input Text    xpath=//div[contains(@class,"datagrid-pager")]//input[@class="pagination-num"]    ${page}
+    Press Key    xpath=//div[contains(@class,"datagrid-pager")]//input[@class="pagination-num"]    \\13
+    等待列表创建完毕
+    ${row_count}    Get Matching Xpath Count    //*[@class="datagrid-btable"]//td[@field="ProjectNo"]/..    #获取当前页的总行数
+    ${row}    Evaluate    random.randint(1,${row_count})    modules=random    #获取一个随机页数
+    ${流水号_out}    Get Text    xpath=//*[@class="datagrid-btable"]//tr[${row}]/td[@field="ProjectNo"]/div
+    ${需发送份数}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[${row}]/td[@field="SendCount"]/div
+    ${已发送份数}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[${row}]/td[@field="SentCount"]/div
+    ${未发送份数}    Evaluate    ${需发送份数}-${已发送份数}
+    Unselect Frame
+    ${流水号_out}    Run Keyword If    ${未发送份数}<${最低未发送份数}    根据查询条件随机获取一个报告发送流水号    ${发送状态}    ${流水号}    ${报告号}
+    ...    ${项目地址}    ${小区名称}    ${最低未发送份数}
+    ...    ELSE    Set Variable    ${流水号_out}
+    [Return]    ${流水号_out}
+
+批量发送报告操作
+    [Arguments]    ${pep_list}    ${发送方式}=快递    ${快递公司}=顺丰
+    Click Element    xpath=//span[text()="批量发送报告"]/ancestor::a    #点击批量发送按钮
+    Unselect Frame
+    Select Frame    id=Project_BatchSendReport    #跳转到批量发送页面
+    等待列表创建完毕
+    Select From List By Label    xpath=.//*[@id='sendtype']    ${发送方式}
+    ${快递单号}    获取当前时间
+    Run Keyword If    '${发送方式}'=='快递'    文本框清空并输入    .//*[@id='expressno' and not(@disabled)]    ${快递单号}
+    Run Keyword If    '${发送方式}'=='快递'    Select From List By Label    xpath=.//*[@id='express']    ${快递公司}
+    Run Keyword If    '${发送方式}'=='快递'    填报告发送写收件信息    None    章先生    13800138000    内蒙古自治区呼伦贝尔市莫力达瓦达斡尔族自治旗杜拉尔鄂温克民族乡尼西空海拉松村××号
+    Run Keyword If    '${发送方式}'!='快递'    文本框清空并输入    .//*[@id='recivername']    取件人
+    Run Keyword If    '${发送方式}'!='快递'    文本框清空并输入    .//*[@id='recivermobile']    13988889999
+    : FOR    ${pep}    IN ZIP    ${pep_list}
+    \    将发送信息写入pep对象    ${pep}
+    Click Element    xpath=.//*[@id='sumbut']    #点击提交按钮
+    Unselect Frame
+    等待提示框出现
+    点击提示框中的Ok按钮
+
+将报告发送列表送指定行的数据写入pep对象
+    [Arguments]    ${pep}    ${row_num}
+    ${流水号}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index='${row_num}']/td[@field="ProjectNo"]/div
+    Set Pep Value    ${pep}    流水号    ${流水号}
+    ${报告号}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ReportNo"]/div
+    Set Pep Value    ${pep}    报告号    ${报告号}
+    ${项目地址}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ResidentialAreaAddress"]/div
+    Set Pep Value    ${pep}    项目地址    ${项目地址}
+    ${小区名称}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ResidentialAreaName"]/div
+    Set Pep Value    ${pep}    小区名称    ${小区名称}
+    ${需发送份数}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="SendCount"]/div
+    Set Pep Value    ${pep}    发送份数    ${需发送份数}
+    ${已发送份数}    Get Text    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="SentCount"]/div
+    Set Pep Value    ${pep}    已发送份数    ${已发送份数}
+
+分批发送报告操作
+    [Arguments]    ${pep}
+    点击列表中的分批发送报告按钮
+    Unselect Frame
+    Select Frame    id=Project_SendBatchReport
+    等待列表创建完毕
+    验证收件地址列表是否正常    ${pep}    快递
+    Run Keyword If    '${pep.get_value(u'快递信息').__len__()}'!='0'    验证界面是否自动填充收件人信息    ${pep}
+    Select From List By Label    xpath=.//*[@id='sendtype']    自取
+    文本框清空并输入    .//*[@id='recivername']    取件人
+    文本框清空并输入    .//*[@id='recivermobile']    13988889999
+    文本框清空并输入    .//*[@id='sendpiece']    1    #发送一份
+    将发送信息写入pep对象    ${pep}
+    Click Element    xpath=.//*[@id='sumbut']    #点击添加按钮
+    Select From List By Label    xpath=.//*[@id='sendtype']    快递
+    ${快递单号}    获取当前时间
+    文本框清空并输入    .//*[@id='expressno' and not(@disabled)]    ${快递单号}
+    Select From List By Index    xpath=.//*[@id='express']    1
+    填报告发送写收件信息    None    章先生    13800138000    内蒙古自治区呼伦贝尔市莫力达瓦达斡尔族自治旗杜拉尔鄂温克民族乡尼西空海拉松村××号    快递单号为：${快递单号}
+    ${pep1}    Create Pep Object
+    将发送信息写入pep对象    ${pep1}
+    Click Element    xpath=.//*[@id='sumbut']    #点击添加按钮
+    Click Element    xpath=//span[text()="提交"]/ancestor::a    #点击提交按钮
+    Unselect Frame
+    等待提示框出现
+    点击提示框中的Ok按钮
+    ${pep_list}    Create List    ${pep}    ${pep1}
+    [Return]    ${pep_list}
+
+查询并验证报告发送历史记录
+    [Arguments]    ${pep_list}    ${流水号}
+    输入报告发送查询条件    已发送    ${流水号}
+    点击查询按钮    0
+    Select Checkbox    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]/td[@field="cb"]//input    #选中第一条记录
+    等待列表创建完毕
+    ${index}    Set Variable    0
+    : FOR    ${pep}    IN ZIP    ${pep_list}
+    \    验证报告发送历史列表指定行数据    ${pep}    ${index}
+    \    ${index}    Evaluate    ${index}+1
+
+报告回收操作
+    [Arguments]    ${pep}
+    点击列表中的收回按钮
+    等待弹出窗口出现
+    文本框清空并输入    .//*[@id='reclaimpiece']    0
+    Click Element    xpath=//span[text()="保存"]/ancestor::a    #点击保存按钮
+    等待提示框出现
+    Element Text Should Be    xpath=//div[contains(@class,"messager-body")]/div[2]    回收份数只能为大于零的整数
+    点击提示框中的确定按钮
+    ${数量}    Evaluate    int(${pep.get_value(u'发送份数')})+1
+    文本框清空并输入    .//*[@id='reclaimpiece']    ${数量}
+    Click Element    xpath=//span[text()="保存"]/ancestor::a    #点击保存按钮
+    等待提示框出现
+    Element Text Should Be    xpath=//div[contains(@class,"messager-body")]/div[2]    报告已完全回收，或回收份数大于发送份数！
+    点击提示框中的确定按钮
+    文本框清空并输入    .//*[@id='reclaimpiece']    ${pep.get_value(u'发送份数')}
+    文本框清空并输入    .//*[@id='reclaimer']    张回收
+    ${当前时间}    获取当前时间    %Y-%m-%d %H:%M:%S:%f
+    文本框清空并输入    .//*[@id='remark']    在${当前时间}时，张回收进行报告回收操作，回收了${pep.get_value(u'发送份数')}份报告
+    Click Element    xpath=//span[text()="保存"]/ancestor::a    #点击保存按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_Send
+    等待提示框出现
+    Element Text Should Be    xpath=//div[contains(@class,"messager-body")]/div[2]    回收成功！
+    点击提示框中的确定按钮
+    Set Pep Value    ${pep}    回收份数    ${pep.get_value(u'发送份数')}
+    Set Pep Value    ${pep}    回收人    张回收
+    Set Pep Value    ${pep}    回收备注    在${当前时间}时，张回收进行报告回收操作，回收了${pep.get_value(u'发送份数')}份报告

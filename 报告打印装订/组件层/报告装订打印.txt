@@ -1,6 +1,8 @@
 *** Settings ***
 Resource          ../../公共模块.txt
 Resource          ../元素层/元素层.txt
+Resource          ../../外业分配/元素/元素层.txt
+Resource          ../../外业分配/验证/验证层.txt
 
 *** Keywords ***
 输入流水号
@@ -255,9 +257,16 @@ Resource          ../元素层/元素层.txt
 
 获取操作框单元格的值
     [Arguments]    ${row}    ${路径}
-    ${操作字段值}    Get Text    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]
+    ${操作字段值}    Run Keyword If    '${路径}'=='PriorityLevel'    获取紧急程度状态值    ${row}
+    ...    ELSE IF    '${路径}'=='IsPrintComplete'    获取打印状态值    ${row}
+    ...    ELSE IF    '${路径}'=='ProjectType'    获取物业类型状态值    ${row}
+    Comment    ${操作字段值}    Get Text    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]
+    Comment    ${操作字段值}    Get Text    xpath=//td[@field="PriorityLevel"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[9]/div[1]
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
-    ${状态字段值}    Run Keyword If    '${路径}'=='State'    获取状态值    ${row}
+    Comment    ${状态字段值}    Run Keyword If    '${路径}'=='State'    获取状态值    ${row}
+    ${状态字段值}    Run Keyword If    '${路径}'=='PriorityLevel'    获取紧急程度状态值    ${row}
+    ...    ELSE IF    '${路径}'=='State'    获取状态值    ${row}
+    ...    ELSE IF    '${路径}'=='ProjectType'    获取物业类型状态值    ${row}
     Comment    ${状态字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[11]/div[1]
     Comment    log    ${操作字段值}
     Comment    log    ${流水号字段值}
@@ -281,6 +290,23 @@ Resource          ../元素层/元素层.txt
     \    ...    ELSE IF    '${查询类型}'=='未通过'    状态校验数据    ${流水号字段值}    ${状态字段值}
     \    ...    ELSE IF    '${查询类型}'=='已通过'    状态校验数据    ${流水号字段值}    ${状态字段值}
     \    ...    ELSE IF    '${查询类型}'=='已撤销'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'==''    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='普通'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='紧急'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='加急'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='成套住宅'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='别墅'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='储备地'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='城镇土地'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='农村集体土地'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='在建工程'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='酒店、度假村'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='工业房地产'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='综合房地产'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='大型商业'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='大型办公'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='住宅（拆迁）'    状态校验数据    ${流水号字段值}    ${状态字段值}
+    \    ...    ELSE IF    '${查询类型}'=='非住宅（拆迁）'    状态校验数据    ${流水号字段值}    ${状态字段值}
     \    Comment    ${流水号字段值}    ${字段值}    Run Keyword If    '${查询类型}'=='全部'    获取操作框单元格的值
     \    ...    ${rows}
     \    ...    ELSE IF    '${查询类型}'=='装订完成'    获取操作框单元格的值    ${rows}
@@ -353,7 +379,7 @@ Resource          ../元素层/元素层.txt
     ${row}    Evaluate    random.randint(1,${行数}+1)    random
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
     Click Element    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
-    sleep    5
+    sleep    10
     ${获取资料类型字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[1]/div[1]
     ${获取资料名称字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[2]/div[1]
     ${获取操作字段值}    Get Text    xpath=//td[@field="ResourceName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td[3]/div[1]

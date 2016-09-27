@@ -1,0 +1,57 @@
+*** Settings ***
+Resource          ../公共模块.txt
+Resource          ../询价/流程层/流程层.txt
+Resource          ../询价/元素层/元素层.txt
+Resource          ../外业分配/内业分配业务层.txt
+Resource          ../审核调度/操作层.txt
+Resource          操作层.txt
+Resource          验证层.txt
+Resource          业务层.txt
+
+*** Test Cases ***
+查询分配
+    [Setup]    登录
+    打开功能模块    我的项目    内业分配
+    Select Frame    id=ProjectAllot_ReportAssign
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    562623135314
+    Comment    等待列表创建完毕
+    Comment    单个分配按钮
+    Comment    分配按钮
+    ${流水号}    内业查询流水号
+    等待弹出窗口出现
+    内业分配用户
+    点击提交
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_ReportAssign
+    切换到已分配子模块
+    Comment    ${流水号}    获取流水号
+    判断是否分配成功    ${流水号}
+
+多条任务分配
+    [Setup]    登录
+    打开功能模块    我的项目    内业分配
+    Select Frame    id=ProjectAllot_ReportAssign
+    等待列表创建完毕
+    点击查询按钮
+    询价获取页面数据总量
+    随机选择多条数据    4    6
+    分配按钮
+    等待弹出窗口出现
+    内业分配用户
+    点击提交
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_ReportAssign
+    切换到已分配子模块
+
+挂起
+    [Setup]    登录
+    打开功能模块    我的项目    内业分配
+    Select Frame    id=ProjectAllot_ReportAssign
+    等待列表创建完毕
+    挂起
+    挂起原因
+    点击保存

@@ -1,4 +1,27 @@
+*** Settings ***
+Resource          报告发送业务层.txt
+
 *** Test Cases ***
 有效查询
+    Run Keyword By Testdata Return Keyvalue    报告发送有效查询用例数据    0    报告发送列表有效查询    发送状态    流水号    报告号
+    ...    项目地址    小区名称
 
 无效查询
+    Run Keyword By Testdata Return Keyvalue    报告发送无效查询用例数据    0    报告发送列表无效查询    发送状态    流水号    报告号
+    ...    项目地址    小区名称
+
+查询条件错误提示
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    Press Key    xpath=.//*[@id='ReportNo']    1234567890123456789
+    ${报告号}    Get Value    xpath=//*[@id='ReportNo']
+    Run Keyword And Continue On Failure    Should Be Equal    ${报告号}    123456789012345    没有做字符长度校验，报告号超出15位
+    Press Key    xpath=.//*[@id='ProjectNo']    1234567890123456789
+    ${流水号}    Get Value    xpath=//*[@id='ProjectNo']
+    Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012    没有做字符长度校验，流水号超出12位
+    往输入框输入特殊字符并验证它是否出现警告    //*[@id='ReportNo']    //*[@id='ReportNo' and contains(@class,"validatebox-invalid")]    报告号没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    //*[@id='ProjectNo']    //*[@id='ProjectNo' and contains(@class,"validatebox-invalid")]    流水号没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    //*[@id='AreaName']    //*[@id='AreaName' and contains(@class,"validatebox-invalid")]    小区名字没有特殊字符校验
+    往输入框输入特殊字符并验证它是否出现警告    //*[@id='Address']    //*[@id='Address' and contains(@class,"validatebox-invalid")]    项目地址 没有特殊字符校验
+    Unselect Frame

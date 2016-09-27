@@ -1,0 +1,147 @@
+*** Settings ***
+Resource          ../公共模块.txt
+Resource          ../询价/流程层/流程层.txt
+Resource          ../询价/元素层/元素层.txt
+Resource          内业分配业务层.txt
+
+*** Test Cases ***
+单个分配
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    473345151004
+    查询流水号
+    Comment    等待列表创建完毕
+    Comment    单个分配按钮
+    Comment    分配按钮
+    等待弹出窗口出现
+    选择外采用户
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    [Teardown]    Close Browser
+
+多条数据分配
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    等待列表创建完毕
+    点击查询按钮
+    询价获取页面数据总量
+    随机勾选列表数据    4    6
+    分配按钮
+    等待弹出窗口出现
+    选择外采用户
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAssign
+    等待列表创建完毕
+    切换到已分配子模块
+    [Teardown]    Close Browser
+
+回收
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    491658961126
+    Comment    单个分配按钮
+    Comment    分配按钮
+    查询流水号
+    等待弹出窗口出现
+    选择外采用户
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    Comment    等待列表创建完毕
+    Comment    ${总数据量}    正确数据查询    流水号    ProjectNo    ProjectNo    547676399078
+    等待列表创建完毕
+    回收按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    切换到未分配子模块
+    [Teardown]    Close Browser
+
+重新分配
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    560788093309
+    Comment    单个分配按钮
+    Comment    分配按钮
+    查询流水号
+    等待弹出窗口出现
+    选择外采用户
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    等待列表创建完毕
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    等待列表创建完毕
+    重新分配
+    等待弹出窗口出现
+    选择外采用户
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    [Teardown]    Close Browser
+
+允许删除app
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    Comment    ${总数据量}    正确数据查询    流水号    ProjectNo    ProjectNo    529573468607
+    等待列表创建完毕
+    点击查询按钮
+    询价获取页面数据总量
+    查询流水号
+    Comment    Click Element    xpath=//td[@field="OuterTaskId"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[3]/td[@field="cb"]/div/input
+    Comment    等待列表创建完毕
+    Comment    单个分配按钮
+    Comment    分配按钮
+    等待弹出窗口出现
+    选择外采用户
+    选择外采分配pad端
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAssign
+    等待列表创建完毕
+    切换到已分配子模块
+    Sleep    5
+    删除app
+    等待提示框出现
+    点击提示框中的确定按钮
+
+外采分配
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    554050152502
+    Comment    等待列表创建完毕
+    Comment    单个分配按钮
+    Comment    分配按钮
+    查询流水号
+    等待弹出窗口出现
+    选择外采用户
+    选择外采分配pad端
+    确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    [Teardown]    Close Browser

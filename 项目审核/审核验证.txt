@@ -1,0 +1,7 @@
+*** Keywords ***
+项目审核（已）按流水号查询校验
+    [Arguments]    ${项目审核流水号}    ${流水号}
+    run keyword if    ${项目审核流水号}==${流水号}    Capture Page Screenshot    项目审核按流水号查询获取数据成功.png
+    ...    ELSE    Capture Page Screenshot    项目审核按流水号查询获取数据失败.png
+    run keyword if    ${项目审核流水号}==${流水号}    log    pass
+    ...    ELSE    Fail

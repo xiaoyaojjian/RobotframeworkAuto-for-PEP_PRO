@@ -109,7 +109,7 @@ Resource          ../流程层/流程层.txt
     [Arguments]    ${输入条件}    ${路径}
     log    ${输入条件}
     log    ${路径}
-    条件参数    ${输入条件}    ${路径}
+    下拉选项框条件参数    ${输入条件}    ${路径}
     [Return]    ${输入条件}
 
 清空下拉选项框输入框内容
@@ -125,3 +125,30 @@ Resource          ../流程层/流程层.txt
 
 非询价转立项按钮
     Click Element    xpath=.//*[@id='BtnLixiang']/span
+
+回复内容
+    [Arguments]    ${回复内容}
+    Input Text    id=OnlineMessage    ${回复内容}
+
+点击回复按钮
+    Click Element    id=BtnReturnMessage
+
+下拉选项框条件参数
+    [Arguments]    ${输入流水号}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']/../span/input    ${输入流水号}
+
+点击新建预估单
+    Click Element    id=AddPredictPrice
+
+新建预估单窗口
+    Run Keyword And Continue On Failure    select frame    id=AddPredictPrice
+
+预估单询价按钮
+    Click Element    id=BtnSearch
+    等待加载完毕
+
+生成预估单按钮
+    Click Element    id=Generate
+
+预估单保存按钮
+    Click Element    id=BtnSave

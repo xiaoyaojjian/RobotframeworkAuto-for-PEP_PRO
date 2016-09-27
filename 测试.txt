@@ -1,13 +1,15 @@
 *** Settings ***
+Default Tags      test
 Resource          公共模块.txt
 
 *** Test Cases ***
 测试
-    &{abc}    Create Dictionary    报告号=b报告号23    流水号=流水号121    小区名=小区名称
-    ${pep}    初始化一个pep对象    ${abc}
-    log    ${pep.get_value(u'流水号')}
-    log    ${pep.get_value(u'小区名')}
-    [Teardown]    Close Browser
+    ${text}    Set Variable    中指评估系统(13811446949)
+    log    ${text}
+    ${看房联系人_list}    Split    [(]|[)]    ${text}
+    ${看房联系人_list}    Evaluate    re.findall('(.*)[(]([0-9]*)[)]','${text}')    re
+    ${看房联系人_list}    Findall    (.*)[(](.*)[)]    ${text}
+    log    ${看房联系人_list[0][1]}
 
 创建PEP对象
     #创建pep对象

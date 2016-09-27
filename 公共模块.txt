@@ -4,7 +4,6 @@ Library           DateTime
 Library           PepExt.py
 Library           re
 Library           Collections
-Library           TestDataLib.py
 
 *** Variables ***
 ${PEP_URL}        http://inworktest.yunfangdata.com:82/    # 评E评URL地址
@@ -74,17 +73,19 @@ ${PASSWORD}       123456    # 登录密码
     ${页数}    Evaluate    ${总共多少条[0]}/${列表数目显示模式}
 
 点击查询按钮
-    [Documentation]    点击查询按钮操作，用于带有tab的模块（可能会存在多个查询按钮的情况），如内业分配、外业分配，该方法只点击当前可以看见的查询按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/ancestor::a
-    等待列表创建完毕
-
-点击查询按钮_不带约束
-    [Documentation]    点击查询条件，只有是按钮名称是查询的都能点，该方法适用于一个页面没有多个查询按钮的情况。
-    Click Element    xpath=.//span[text()="查询"]/ancestor::a
+    [Arguments]    ${is_panel}=1    #是否是tab下的查询按钮
+    [Documentation]    点击查询按钮操作，用于带有tab的模块（可能会存在多个查询按钮的情况），
+    ...    如内业分配、外业分配，该方法只点击当前可以看见的查询按钮
+    ...
+    ...    如果参数is_panle不为1时，可以应用在一个页面没有多个查询按钮的情况。
+    Run Keyword If    ${is_panel}==1    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/ancestor::a
+    ...    ELSE    Click Element    xpath=.//span[text()="查询"]/ancestor::a
     等待列表创建完毕
 
 点击列表中的${buttun_name}按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
+    ${is_panel}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
+    Run Keyword If    ${is_panel} != 0    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
+    ...    ELSE    Click Element    xpath=.//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]
 
 初始化一个pep对象
     [Arguments]    ${dict}
@@ -108,3 +109,8 @@ ${PASSWORD}       123456    # 登录密码
     [Arguments]    ${xpath}    ${match_count}    ${msg}=该xpath的路径匹配的数量不一致
     ${count}    Get Matching Xpath Count    ${xpath}
     Run Keyword And Continue On Failure    Should Be Equal    ${count}    ${match_count}    msg=${msg}
+
+关闭浏览器_TestTeardown
+    [Documentation]    当测试失败时，进行截图并关闭浏览器，该关键字只能用于Test Teardown，用到其他地方会报异常
+    Run Keyword If Test Failed    Capture Page Screenshot
+    Close Browser

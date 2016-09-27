@@ -1,0 +1,23 @@
+*** Settings ***
+Resource          ../公共模块.txt
+
+*** Keywords ***
+输入项目收费查询条件
+    [Arguments]    ${流水号}=None    ${报告号}=None    ${小区名称}=None    ${项目地址}=None    ${票据号}=None    ${收费责任人}=None
+    ...    ${最小实收金额}=None    ${最大实收金额}=None
+    Run Keyword If    '${流水号}'!='None'    Input Text    xpath=.//*[@id='ProjectNo']    ${流水号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ProjectNo']
+    Run Keyword If    '${报告号}'!='None'    Input Text    xpath=.//*[@id='ReportNo']    ${报告号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ReportNo']
+    Run Keyword If    '${小区名称}'!='None'    Input Text    xpath=.//*[@id='AreaName']    ${小区名称}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='AreaName']
+    Run Keyword If    '${项目地址}'!='None'    Input Text    xpath=.//*[@id='ProjectAddress']    ${项目地址}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ProjectAddress']
+    Run Keyword If    '${票据号}'!='None'    Input Text    xpath=.//*[@id='OrderNo']    ${票据号}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='OrderNo']
+    Run Keyword If    '${收费责任人}'!='None'    Input Text    xpath=.//*[@id='FinanceEmployeeName']    ${收费责任人}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='FinanceEmployeeName']
+    Run Keyword If    '${最小实收金额}'!='None'    Input Text    xpath=.//*[@id='ActualFeeFrom']    ${最小实收金额}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ActualFeeFrom']
+    Run Keyword If    '${最大实收金额}'!='None'    Input Text    xpath=.//*[@id='ActualFeeTo']    ${最大实收金额}
+    ...    ELSE    Clear Element Text    xpath=.//*[@id='ActualFeeTo']

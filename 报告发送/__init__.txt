@@ -1,0 +1,4 @@
+*** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
+Resource          ../公共模块.txt

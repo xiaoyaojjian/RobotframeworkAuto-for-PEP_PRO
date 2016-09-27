@@ -5,6 +5,7 @@ Resource          ../组件层/报告装订打印.txt
 Resource          ../../公共模块.txt
 Resource          ../元素层/元素层.txt
 Resource          ../../变更审批/元素层/元素层.txt
+Resource          ../../内业分配/内业分配业务层.txt
 
 *** Keywords ***
 正确数据查询

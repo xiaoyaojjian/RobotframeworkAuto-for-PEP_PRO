@@ -162,3 +162,16 @@ Resource          ../../项目受理/项目受理操作层.txt
     等待列表创建完毕
     ${新总数}    询价获取页面数据总量
     Should Be Equal    ${新总数}    ${总数据量}
+
+非询价查看信息校验
+    [Arguments]    ${fei_xunjia_info}    ${pep_input}
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    询价查询按钮
+    等待列表创建完毕
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="查看"]
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="询价查看"]
+    sleep    5
+    获取添加非询价所有数据校验    ${pep_input}    ${fei_xunjia_info}

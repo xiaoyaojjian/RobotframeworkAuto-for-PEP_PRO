@@ -1,0 +1,76 @@
+*** Settings ***
+Resource          ../公共模块.txt
+Resource          操作层.txt
+Resource          审核验证.txt
+
+*** Keywords ***
+项目审核流程
+    [Arguments]    ${流水号}    ${错误类型}    ${错误描述}
+    select frame    id=ProjectAllot_Audit
+    等待列表创建完毕
+    审核流水号    ${流水号}
+    项目查询
+    等待列表创建完毕
+    等待加载完毕
+    审核接收
+    等待提示框出现
+    click Element    xpath=/html/body/div[6]/div[2]/div[4]/a
+    等待加载完毕
+    项目审核中
+    等待列表创建完毕
+    ${项目审核流水号}    get text    xpath=//*[contains(@id,"datagrid-row")]/td[3]/div
+    click Element    xpath=//*[contains(@id,"datagrid-row")]/td/div/a[text()="审核报告"]
+    Comment    sleep    5
+    Unselect Frame
+    Wait Until Page Contains Element    xpath=.//*[@id='framecenter']/div[2]/div[@tabid="audit_report"]
+    审核报告窗口
+    等待加载完毕
+    Click Element    xpath=.//div[text()='错误记录']/../div[2]/a
+    添加错误记录
+    Comment    sleep    5
+    Comment    select frame    id=xubox_iframe1
+    Comment    sleep    5
+    Input Text    xpath=//*[contains(@id,"datagrid-row")]/td[1]/div/table/tbody/tr/td/span/input[1]    ${错误类型}
+    Comment    click element    xpath=//*[@id="datagrid-row-r5-2-0"]/td[1]/div/table/tbody/tr/td/span/span/a
+    Comment    select from list by value    id=ErrorType
+    Comment    sleep    5
+    Input Text    xpath=//*[contains(@id,"datagrid-row")]/td[2]/div/table/tbody/tr/td/input    ${错误描述}
+    Comment    sleep    5
+    click Element    xpath=//*[contains(@id,"datagrid-row")]/td[3]/div/a[1]
+    Comment    sleep    5
+    Comment    Comment    退出窗口
+    Comment    审核报告窗口
+    Comment    上传文件
+    Comment    click Element    xpath=//*[@id="barother"]/table/tbody/tr/td[2]/a
+    Comment    sleep    5
+    Comment    select frame    id=xubox_iframe2
+    Comment    sleep    8
+    Comment    click Element    xpath=//*[@id="form1"]/div[1]/div
+    Comment    sleep    5
+    Comment    choose file    xpath=//input[@class='uploadbutton']
+    Comment    Comment    click Element
+    Comment    sleep    5
+    Comment    click Element    xpath=//*[@id="BtnSave"]
+    Comment    sleep    5
+    Comment    操作成功提示语
+    Comment    退出窗口
+    Comment    项目审核窗口
+    click Element    xpath=//*[@id="btn_submit"]
+    Comment    sleep    8
+    sleep    3
+    操作成功提示语
+    #    Run Keyword And Continue On Failure    等待处理完毕
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    切换到未审核子模块
+    Comment    sleep    2
+    click Element    xpath=//span[contains(.,'已审核过')]
+    Comment    项目审核完
+    #    Run Keyword And Continue On Failure    等待处理完毕
+    审核流水号    ${流水号}
+    项目查询
+    等待加载完毕
+    ${已审核流水号}    get text    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[contains(@id,"datagrid-row") ]/td[@field="ProjectNo"]/div
+    项目审核（已）按流水号查询校验    ${已审核流水号}    ${流水号}
+    Unselect Frame
+    click Element    xpath=//*[@id="framecenter"]/div[1]/ul/li/div[3]

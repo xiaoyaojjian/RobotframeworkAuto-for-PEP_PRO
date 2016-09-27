@@ -121,7 +121,7 @@ Resource          ../公共模块.txt
     ...    ELSE    Get Text    xpath=.//*[@id='Telephone']
     Set Pep Value    ${pep}    固定电话    ${固定电话}
     ${客户姓名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
-    ...    ELSE IF    ${is_fei_get_text}=1    Get Value    xpath=.//*[@id="customerid"]/..//input[@type="text"]
+    ...    ELSE IF    ${is_fei_get_text}==1    Get Value    xpath=.//*[@id="customerid"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="CustomerName"]
     Set Pep Value    ${pep}    客户姓名    ${客户姓名}
     ${所属机构}    Run Keyword If    ${is_get_text}==0 and ${is_xunjia}==0    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
@@ -194,7 +194,8 @@ Resource          ../公共模块.txt
     Set Pep Value    ${pep}    (专票)电话    ${(专票)电话}
 
 将立项界面的信息写入pep对象
-    [Arguments]    ${pep}    ${is_get_text}=0
+    [Arguments]    ${pep}    ${is_get_text}=0    ${是否清空列表数据}=0    # 1为清空看房联系人列表、快递地址列表
+    Run Keyword If    ${是否清空列表数据}!=0    Clean Pep List    ${pep}
     将客户信息写入PEP对象    ${pep}    ${is_get_text}
     将项目信息写入PEP对象    ${pep}    ${is_get_text}
     将收费信息写入PEP对象    ${pep}    ${is_get_text}
@@ -598,3 +599,156 @@ Resource          ../公共模块.txt
     Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteResource']    0
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='FinanceEmployeeName']
     Select From List By Index    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='IsCompleteWaiCai']    0
+
+将线上业务的信息写入pep对象
+    [Arguments]    ${pep}
+    将线上业务的基础信息写入pep对象    ${pep}
+    将线上业务的买卖方信息写入pep对象    ${pep}
+    将线上业务的勘查和收件信息写入pep对象    ${pep}
+    将线上备注的其他信息写入pep对象    ${pep}
+
+将线上业务的基础信息写入pep对象
+    [Arguments]    ${pep}
+    #基础信息
+    ${项目来源}    Get Text    xpath=.//*[@id='lb_DataSource']
+    Set Pep Value    ${pep}    项目来源    ${项目来源}
+    Set Pep Value    ${pep}    所属机构    ${项目来源}
+    ${交易编号}    Get Text    xpath=.//*[@id='lb_bscode']
+    Set Pep Value    ${pep}    交易编号    ${交易编号}
+    ${项目流水号}    Get Text    xpath=.//*[@id='lb_ProjectNo']
+    Set Pep Value    ${pep}    流水号    ${项目流水号}
+    ${报告号}    Get Text    xpath=.//*[@id='lb_ReportNo']
+    Set Pep Value    ${pep}    报告号    ${报告号}
+    ${城市}    Get Text    xpath=.//*[@id='lb_CityName']
+    Set Pep Value    ${pep}    城市    ${城市}
+    ${行政区域}    Get Text    xpath=.//*[@id='lb_region']
+    Set Pep Value    ${pep}    行政区    ${行政区域}
+    ${小区名称}    Get Text    xpath=.//*[@id='lb_community']
+    Set Pep Value    ${pep}    小区名称    ${小区名称}
+    Set Pep Value    ${pep}    小区名    ${小区名称}
+    ${小区地址}    Get Text    xpath=.//*[@id='lb_houseAddr']
+    Set Pep Value    ${pep}    小区地址    ${小区地址}
+    ${楼栋号}    Get Text    xpath=.//*[@id='lb_FloorBuilding']
+    Set Pep Value    ${pep}    楼栋号    ${楼栋号}
+    ${单元}    Get Text    xpath=.//*[@id='lb_UnitName']
+    Set Pep Value    ${pep}    单元号    ${单元}
+    ${户号}    Get Text    xpath=.//*[@id='lb_HouseNo']
+    Set Pep Value    ${pep}    户号名    ${户号}
+    ${装修情况}    Get Text    xpath=.//*[@id='lb_DecorateCase']
+    Set Pep Value    ${pep}    装修情况    ${装修情况}
+    ${厅}    Get Text    xpath=.//*[@id='lb_DoorModelHall']
+    Set Pep Value    ${pep}    厅    ${厅}
+    ${室}    Get Text    xpath=.//*[@id='lb_RoomType']
+    Set Pep Value    ${pep}    室    ${室}
+    ${卫}    Get Text    xpath=.//*[@id='lb_DoorModelWash']
+    Set Pep Value    ${pep}    卫    ${卫}
+    ${总楼层}    Get Text    xpath=.//*[@id='lb_TotalFloor']
+    Set Pep Value    ${pep}    总楼层    ${总楼层}
+    ${所在楼层}    Get Text    xpath=.//*[@id='lb_floor']
+    Set Pep Value    ${pep}    所在楼层    ${所在楼层}
+    ${朝向}    Get Text    xpath=.//*[@id='lb_orientation']
+    Set Pep Value    ${pep}    朝向    ${朝向}
+    ${面积}    Get Text    xpath=.//*[@id='lb_area']
+    Set Pep Value    ${pep}    建筑面积    ${面积}
+    ${建成年代}    Get Text    xpath=.//*[@id='lb_buildYear']
+    Set Pep Value    ${pep}    建成年代    ${建成年代}
+    ${物业类型}    Get Text    xpath=.//*[@id='lb_houseType']
+    Set Pep Value    ${pep}    物业类型    ${物业类型}
+    ${规划用途}    Get Text    xpath=.//*[@id='lb_planUse']
+    Set Pep Value    ${pep}    规划用途    ${规划用途}
+    ${房屋性质}    Get Text    xpath=.//*[@id='lb_houseroperties']
+    Set Pep Value    ${pep}    房屋性质    ${房屋性质}
+    ${紧急程度}    Get Text    xpath=.//*[@id='lb_urgency']
+    Set Pep Value    ${pep}    紧急程度    ${紧急程度}
+    ${报告份数}    Get Text    xpath=.//*[@id='lb_reportNum']
+    Set Pep Value    ${pep}    发送份数    ${报告份数}
+    ${受理公司}    Get Text    xpath=.//*[@id='lb_dm']
+    Set Pep Value    ${pep}    受理公司    ${受理公司}
+    ${贷款类型}    Get Text    xpath=.//*[@id='lb_businessType']
+    Set Pep Value    ${pep}    贷款类型    ${贷款类型}
+    ${贷款成数}    Get Text    xpath=.//*[@id='lb_loanRatio']
+    Set Pep Value    ${pep}    贷款成数    ${贷款成数}
+    ${期望评估价}    Get Text    xpath=.//*[@id='lb_assessment']
+    Set Pep Value    ${pep}    期贷信息    ${期望评估价[:-3]}
+    ${期望单价}    Get Text    xpath=.//*[@id='lb_assessmentPrice']
+    Set Pep Value    ${pep}    期望单价    ${期望单价}
+    ${成交价}    Get Text    xpath=.//*[@id='lb_realMoney']
+    Set Pep Value    ${pep}    成交价    ${成交价}
+    ${网签价}    Get Text    xpath=.//*[@id='lb_contractMoney']
+    Set Pep Value    ${pep}    网签价    ${网签价}
+    ${贷款期望}    Get Text    xpath=.//*[@id='lb_HighLowAssess']
+    Set Pep Value    ${pep}    贷款期望    ${贷款期望}
+    ${创建时间}    Get Text    xpath=.//*[@id='lb_CreatDate']
+    Set Pep Value    ${pep}    线上业务创建时间    ${创建时间}
+    ${贷款银行}    Get Text    xpath=.//*[@id='lb_BankInfoListStr']
+    Set Pep Value    ${pep}    贷款银行    ${贷款银行}
+    ${贷款机构_list}    Findall    (.*)[(](.*)[)]    ${贷款银行}
+    Run Keyword If    len(${贷款机构_list})>0    Set Pep Value    ${pep}    贷款机构    ${贷款机构_list[0][0]}
+    ...    ELSE    Set Pep Value    ${pep}    贷款机构    ${贷款银行}
+    Run Keyword If    len(${贷款机构_list})>0    Set Pep Value    ${pep}    贷款支行    ${贷款机构_list[0][1]}
+    Set Pep Value    ${pep}    土地面积    0.00
+    Set Pep Value    ${pep}    应收金额    400.00
+    Set Pep Value    ${pep}    结算方式    月结
+    Set Pep Value    ${pep}    是否勘查    是
+    Set Pep Value    ${pep}    资料提供方式    现场收资料
+
+将线上业务的买卖方信息写入pep对象
+    [Arguments]    ${pep}
+    #买卖方信息
+    ${买方姓名}    Get Text    xpath=.//*[@id='lb_buyerName']
+    Set Pep Value    ${pep}    买方姓名    ${买方姓名}
+    ${买方性别}    Get Text    xpath=.//*[@id='lb_buyerGender']
+    Set Pep Value    ${pep}    买方性别    ${买方性别}
+    ${买方证件类型}    Get Text    xpath=.//*[@id='lb_DelegateCardType']
+    Set Pep Value    ${pep}    买方证件类型    ${买方证件类型}
+    ${买方证件号}    Get Text    xpath=.//*[@id='lb_buyerID']
+    Set Pep Value    ${pep}    买方证件号    ${买方证件号}
+    ${卖方姓名}    Get Text    xpath=.//*[@id='lb_sellerName']
+    Set Pep Value    ${pep}    卖方姓名    ${卖方姓名}
+    ${卖方证件类型}    Get Text    xpath=.//*[@id='lb_SellerCardType']
+    Set Pep Value    ${pep}    卖方证件类型    ${卖方证件类型}
+    ${卖方证件号}    Get Text    xpath=.//*[@id='lb_sellerID']
+    Set Pep Value    ${pep}    卖方证件号    ${卖方证件号}
+    ${卖方联系电话}    Get Text    xpath=.//*[@id='lb_SellerPhone']
+    Set Pep Value    ${pep}    卖方联系电话    ${卖方联系电话}
+    ${经纪人姓名}    Get Text    xpath=.//*[@id='lb_dealuserName']
+    Set Pep Value    ${pep}    经纪人姓名    ${经纪人姓名}
+    ${经纪人电话}    Get Text    xpath=.//*[@id='lb_dealuserMobile']
+    Set Pep Value    ${pep}    经纪人电话    ${经纪人电话}
+    ${中台姓名}    Get Text    xpath=.//*[@id='lb_linkMan']
+    Set Pep Value    ${pep}    中台姓名    ${中台姓名}
+    ${中台电话}    Get Text    xpath=.//*[@id='lb_linkMobile']
+    Set Pep Value    ${pep}    中台电话    ${中台电话}
+    ${金融顾问}    Get Text    xpath=.//*[@id='lb_servName']
+    Set Pep Value    ${pep}    金融顾问    ${金融顾问}
+    Set Pep Value    ${pep}    客户姓名    ${金融顾问}
+    ${金融顾问电话}    Get Text    xpath=.//*[@id='lb_servMobile']
+    Set Pep Value    ${pep}    金融顾问电话    ${金融顾问电话}
+    Set Pep Value    ${pep}    客户手机    ${金融顾问电话}
+
+将线上业务的勘查和收件信息写入pep对象
+    [Arguments]    ${pep}
+    #勘查和收件人信息
+    ${看房联系人_str}    Get Text    xpath=.//*[@id='lb_ContactInfoListStr']
+    ${看房联系人_list}    Findall    (.*)[(](.*)[)]    ${看房联系人_str}
+    Set Kanfang Value    ${pep}    ${看房联系人_list[0][0]}    ${看房联系人_list[0][1]}
+    ${收件人姓名}    Get Text    xpath=.//*[@id='lb_RecipientName']
+    ${收件人电话}    Get Text    xpath=.//*[@id='lb_RecipientTelephone']
+    ${收件地址}    Get Text    xpath=.//*[@id='lb_street']
+    Run Keyword If    '${收件人姓名}'!=''    Set Kuaidi Value    ${pep}    ${收件人姓名}    ${收件人电话}    ${EMPTY}
+    ...    ${收件地址}    ${EMPTY}
+    Run Keyword If    '${收件人姓名}'!=''    Set Pep Value    ${pep}    收取方式    快递
+    ...    ELSE    Set Pep Value    ${pep}    收取方式    未确认
+
+将线上备注的其他信息写入pep对象
+    [Arguments]    ${pep}
+    ${是否已受理}    Get Text    xpath=.//*[@id='lb_IsAccept']
+    ${不受理原因}    Get Text    xpath=.//*[@id='lb_RefusedReason']
+    ${是否已终止}    Get Text    xpath=.//*[@id='lb_IsCancel']
+    ${终止原因}    Get Text    xpath=.//*[@id='lb_CancelReson']
+    ${备注}    Get Text    xpath=.//*[@id='lb_comment']
+    Set Pep Value    ${pep}    是否已受理    ${是否已受理}
+    Set Pep Value    ${pep}    不受理原因    ${不受理原因}
+    Set Pep Value    ${pep}    是否已终止    ${是否已终止}
+    Set Pep Value    ${pep}    终止原因    ${终止原因}
+    Set Pep Value    ${pep}    线上备注    ${备注};贷款银行:${pep.get_value(u'贷款银行')};中台姓名:${pep.get_value(u'中台姓名')};中台电话:${pep.get_value(u'中台电话')}

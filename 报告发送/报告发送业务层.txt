@@ -1,3 +1,116 @@
 *** Settings ***
 Resource          报告发送操作层.txt
 Resource          报告发送校验层.txt
+
+*** Keywords ***
+报告发送列表有效查询
+    [Arguments]    ${发送状态}=None    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    ${发送状态}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    点击查询按钮    0
+    等待列表创建完毕
+    验证报告发送查询数据    流水号=${流水号}    报告号=${报告号}    项目地址=${项目地址}    小区名称=${小区名称}
+    Unselect Frame
+
+报告发送列表无效查询
+    [Arguments]    ${发送状态}=None    ${流水号}=None    ${报告号}=None    ${项目地址}=None    ${小区名称}=None
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    ${发送状态}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    点击查询按钮    0
+    等待列表创建完毕
+    ${表格列数}    Get Matching Xpath Count    .//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${表格列数}    0    msg=无效查询查询出数据
+    Unselect Frame
+
+发送报告流程
+    [Arguments]    ${pep}    ${发送方式}
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    未发送    ${pep.get_value(u'流水号')}
+    点击查询按钮    0
+    等待列表创建完毕
+    获取已发送份数到pep对象    ${pep}
+    ${发送份数_int}    Convert To Integer    ${pep.get_value(u'发送份数')}
+    ${已发送份数_int}    Convert To Integer    ${pep.get_value(u'已发送份数')}
+    ${未发份数}    Evaluate    ${发送份数_int}-${已发送份数_int}
+    发送报告操作    ${pep}    ${未发份数}    发送方式=${发送方式}
+    等待列表创建完毕
+    输入报告发送查询条件    已发送    ${pep.get_value(u'流水号')}
+    点击查询按钮    0
+    验证报告发送查询数据    ${pep.get_value(u'流水号')}    已发送份数=${pep.get_value(u'已发送份数')}
+    ${pep_list}    Create List    ${pep}
+    查询并验证报告发送历史记录    ${pep_list}    ${pep.get_value(u'流水号')}
+    Unselect Frame
+
+批量发送报告流程
+    [Arguments]    ${发送方式}=快递
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    Select Checkbox    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]/td[@field="cb"]//input    #选中第一条记录
+    ${pep1}    Create Pep Object
+    将报告发送列表送指定行的数据写入pep对象    ${pep1}    0
+    Select Checkbox    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="1"]/td[@field="cb"]//input    #选中第二条记录
+    ${pep2}    Create Pep Object
+    将报告发送列表送指定行的数据写入pep对象    ${pep2}    1
+    ${pep_list}    Create List    ${pep1}    ${pep2}
+    批量发送报告操作    ${pep_list}    ${发送方式}
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    已发送    ${pep1.get_value(u'流水号')}
+    点击查询按钮    0
+    验证报告发送查询数据    ${pep1.get_value(u'流水号')}    已发送份数=${pep1.get_value(u'已发送份数')}
+    输入报告发送查询条件    已发送    ${pep2.get_value(u'流水号')}
+    点击查询按钮    0
+    验证报告发送查询数据    ${pep2.get_value(u'流水号')}    已发送份数=${pep2.get_value(u'已发送份数')}
+    Unselect Frame
+
+分批发送报告流程
+    [Arguments]    ${pep}
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    未发送    ${pep.get_value(u'流水号')}
+    点击查询按钮    0
+    等待列表创建完毕
+    获取已发送份数到pep对象    ${pep}
+    ${pep_list}    分批发送报告操作    ${pep}
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    已发送    ${pep.get_value(u'流水号')}
+    点击查询按钮    0
+    验证报告发送查询数据    ${pep.get_value(u'流水号')}    已发送份数=${pep.get_value(u'发送份数')}
+    查询并验证报告发送历史记录    ${pep_list}    ${pep.get_value(u'流水号')}
+    Unselect Frame
+    [Return]    ${pep_list}
+
+报告回收流程
+    [Arguments]    ${pep}    ${发送方式}
+    打开功能模块    我的项目    报告发送
+    Select Frame    id=ProjectAllot_Send
+    等待列表创建完毕
+    输入报告发送查询条件    未发送    ${pep.get_value(u'流水号')}
+    点击查询按钮    0
+    等待列表创建完毕
+    获取已发送份数到pep对象    ${pep}
+    ${发送份数_int}    Convert To Integer    ${pep.get_value(u'发送份数')}
+    ${已发送份数_int}    Convert To Integer    ${pep.get_value(u'已发送份数')}
+    ${未发份数}    Evaluate    ${发送份数_int}-${已发送份数_int}
+    发送报告操作    ${pep}    ${未发份数}    发送方式=${发送方式}
+    等待列表创建完毕
+    输入报告发送查询条件    已发送    ${pep.get_value(u'流水号')}
+    点击查询按钮    0
+    验证报告发送查询数据    ${pep.get_value(u'流水号')}    已发送份数=${pep.get_value(u'已发送份数')}
+    ${pep_list}    Create List    ${pep}
+    查询并验证报告发送历史记录    ${pep_list}    ${pep.get_value(u'流水号')}
+    报告回收操作    ${pep}
+    切换到报告收回子模块
+    验证报告回收记录是否正确    ${pep}
+    Unselect Frame

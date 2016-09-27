@@ -10,6 +10,10 @@ Resource          ../../项目受理/项目受理业务层.txt
 
 *** Test Cases ***
 添加询价
+    [Documentation]    该用例含有
+    ...    1、添加住宅询价——进行添加住宅询价信息校验，所需参数包括客户手机号（进行查询方式进行获取北京CRM信息）
+    ...
+    ...    编写人：吕梓清
     [Setup]    登录
     询价打开模块公共方法
     ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
@@ -20,6 +24,11 @@ Resource          ../../项目受理/项目受理业务层.txt
     [Teardown]    Close Browser
 
 查看
+    [Documentation]    该用例描述
+    ...    1、添加住宅询价
+    ...    2、添加成功后进行询价列表界面进行列表字段校验
+    ...    3、进入查看页面进行添加住宅信息和查看信息数据校验
+    ...    编写人：吕梓清
     [Setup]    登录
     询价打开模块公共方法
     ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
@@ -27,11 +36,17 @@ Resource          ../../项目受理/项目受理业务层.txt
     ...    东南    90    三居室    成套住宅    简单装修    送露台
     ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    50000    35000.00    350.00    400000.00
     ...    4000.00
-    询价完成到住宅信息校验    ${price_range}
-    询价查看信息校验    ${price_range}
+    ${price_range1}    询价完成到住宅信息校验    ${price_range}
+    询价查看信息校验    ${price_range1}
     [Teardown]    Close Browser
 
 编辑
+    [Documentation]    该用例描述
+    ...    1、添加住宅询价
+    ...    2、添加成功后进行询价列表界面进行列表字段校验
+    ...    3、进入编辑进行对数据字段进行编辑
+    ...    4、进入询价查看页面对数据进行校验
+    ...    编写人：吕梓清
     [Setup]    登录
     询价打开模块公共方法
     ${price_range}    添加询价流程    13480195935    北京市    西城区    五栋大楼    车公庄大街9号院
@@ -48,12 +63,12 @@ Resource          ../../项目受理/项目受理业务层.txt
     ...    loft    QQ    询价相聚时刻的分离式的解放路快圣诞节饭    40000    4000.00    40.00
     ...    500000.00    5000.00
     询价查看信息校验    ${new_price_range}
-    [Teardown]    Close Browser
+    [Teardown]
 
 转立项
     [Documentation]    该用例含有
     ...    1、添加询价——询价——转立项——进行数据对比
-    ...    2、添加询价——询价——保存——询价查询——转立项——进行数据对比
+    ...    2、添加询价——询价——保存——询价查询——转立项——进行数据对比（数据需调用立项相关字段）
     ...
     ...
     ...    编写人：吕梓清
@@ -68,7 +83,7 @@ Resource          ../../项目受理/项目受理业务层.txt
     Unselect Frame
     Select Frame    xpath=//iframe[@name="立项"]
     等待加载完毕
-    验证立项界面的值是否正常    ${price_range}    是否询价跳转=1
+    验证立项界面的值是否正常    ${price_range}    跳转来源=1
     Comment    询价完成返回询价页面后点击转立项
     Unselect Frame
     Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
@@ -88,10 +103,18 @@ Resource          ../../项目受理/项目受理业务层.txt
     Unselect Frame
     Select Frame    xpath=//iframe[@name="create_project_"]
     等待加载完毕
-    验证立项界面的值是否正常    ${price_range1}    是否询价跳转=1
+    验证立项界面的值是否正常    ${price_range1}    跳转来源=1
     [Teardown]    Close Browser
 
 案例信息
+    [Documentation]    该用例描述
+    ...    1、添加住宅询价
+    ...    2、报盘案例校验
+    ...    3、成交案例校验
+    ...    4、报告案例校验
+    ...    5、旧系统报告记录校验
+    ...    6、旧系统询价记录校验
+    ...    编写人：吕梓清
     [Setup]    登录
     询价打开模块公共方法
     等待列表创建完毕

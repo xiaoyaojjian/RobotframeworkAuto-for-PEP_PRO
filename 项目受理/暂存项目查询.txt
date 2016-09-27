@@ -1,6 +1,6 @@
 *** Settings ***
 Test Setup        登录
-Test Teardown     Close Browser
+Test Teardown     关闭浏览器_TestTeardown
 Resource          项目受理业务层.txt
 
 *** Test Cases ***

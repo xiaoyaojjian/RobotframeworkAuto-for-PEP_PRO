@@ -87,6 +87,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${fei_xunjia_info}    获取非住宅询价列表第一行数据
     Run Keyword If    '${pep_info.get_value(u'项目来源')}'=='${fei_xunjia_info.get_value(u'询价来源')}' and '${pep_info.get_value(u'所属机构')}'=='${fei_xunjia_info.get_value(u'询价机构')}'    log    pass
     ...    ELSE    Fail
+    [Return]    ${fei_xunjia_info}
 
 获取非住宅询价列表第一行数据
     ${地址}    get text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Address"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field='Address']
@@ -103,9 +104,47 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Set Pep Value    ${fei_xunjia_info}    询值总价(万元)    ${询值总价(万元)}
     Set Pep Value    ${fei_xunjia_info}    询值单价(元/m²)    ${询值单价(元/m²)}
     Set Pep Value    ${fei_xunjia_info}    询价机构    ${询价机构}
-    Set Pep Value    ${fei_xunjia_info}    询价人    ${询价人}
+    Set Pep Value    ${fei_xunjia_info}    客户姓名    ${询价人}
     Set Pep Value    ${fei_xunjia_info}    询价时间    ${询价时间}
     Set Pep Value    ${fei_xunjia_info}    询价添加人    ${询价添加人}
     Set Pep Value    ${fei_xunjia_info}    询价来源    ${询价来源}
     Set Pep Value    ${fei_xunjia_info}    立项    ${立项}
     [Return]    ${fei_xunjia_info}
+
+弹出提示框并关闭提示语
+    Set Selenium Speed    5s
+    ${mes}    confirm action
+    log    ${mes}
+    Comment    Should Be Equal    ${mes}    操作成功
+    Choose Ok On Next Confirmation
+    Comment    sleep    5
+    Set Selenium Speed    0.5s
+
+非住宅信息回复查询校验
+    [Arguments]    ${fei_xunjia_info}    ${pep_input}    ${回复内容}
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    询价查询按钮
+    等待列表创建完毕
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="回复"]
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="询价查看"]
+    sleep    5
+    获取添加非询价所有数据校验    ${pep_input}    ${fei_xunjia_info}
+    回复内容    ${回复内容}
+    点击回复按钮
+    弹出提示框并关闭提示语
+    Unselect Frame
+    Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
+    询价窗口
+    询价查询按钮
+    等待列表创建完毕
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="回复"]
+    Unselect Frame
+    Select Frame    xpath=//iframe[@name="询价查看"]
+    sleep    5
+    获取添加非询价所有数据校验    ${pep_input}    ${fei_xunjia_info}
+    ${回复}    get value    xpath=//*[@id="OnlineMessage"]
+    Run Keyword If    '${回复内容}'=='${回复}'    log    pass
+    ...    ELSE    fail

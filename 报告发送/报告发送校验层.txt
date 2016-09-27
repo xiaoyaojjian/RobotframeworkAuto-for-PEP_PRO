@@ -1,2 +1,63 @@
 *** Settings ***
 Resource          ../公共模块.txt
+Resource          ../项目受理/项目受理校验层.txt
+
+*** Keywords ***
+验证报告发送查询数据
+    [Arguments]    ${流水号}=None    ${报告号}=None    ${项目状态}=None    ${项目地址}=None    ${小区名称}=None    ${需发送份数}=None
+    ...    ${已发送份数}=None
+    ${表格列数}    Get Matching Xpath Count    .//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
+    Should Not Be Equal    '${表格列数}'    '0'    表格中没有查询到数据
+    Run Keyword If    '${流水号}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div[contains(text(),'${流水号}')]    ${表格列数}    表格中的流水号：“${流水号}”与表格列数不一致
+    Run Keyword If    '${报告号}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="ReportNo"]/div[contains(text(),'${报告号}')]    ${表格列数}    表格中的报告号：“${报告号}”与表格列数不一致
+    Run Keyword If    '${项目状态}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="ReportProperty"]/div[contains(text(),'${项目状态}')]    ${表格列数}    表格中的项目状态：“${项目状态}”与表格列数不一致
+    Run Keyword If    '${项目地址}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="ResidentialAreaAddress"]/div[contains(text(),'${项目地址}')]    ${表格列数}    表格中的是项目地址：“${项目地址}”与表格列数不一致
+    Run Keyword If    '${小区名称}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="ResidentialAreaName"]/div[contains(text(),'${小区名称}')]    ${表格列数}    表格中的小区名称：“${小区名称}”与表格列数不一致
+    Run Keyword If    '${需发送份数}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="SendCount"]/div[contains(text(),'${需发送份数}')]    ${表格列数}    表格中的需发分数：“${需发送份数}”与表格列数不一致
+    Run Keyword If    '${已发送份数}'!='None'    验证xpath路径匹配的数量    .//*[@class="datagrid-btable"]//td[@field="SentCount"]/div[contains(text(),'${已发送份数}')]    ${表格列数}    表格中的已发分数：“${已发送份数}”与表格列数不一致
+
+验证界面是否自动填充收件人信息
+    [Arguments]    ${pep}
+    ${发送分数}    Get Value    xpath=.//*[@id='sendpiece']
+    ${发送份数_int}    Convert To Integer    ${pep.get_value(u'发送份数')}
+    ${已发送份数_int}    Convert To Integer    ${pep.get_value(u'已发送份数')}
+    ${未发份数}    Evaluate    str(${发送份数_int}-${已发送份数_int})
+    Run Keyword And Continue On Failure    Should Be Equal    ${发送分数}    ${未发份数}
+    ${接收人}    Get Value    xpath=.//*[@id='receiver']
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[0][u'姓名']}    ${接收人}    收件人姓名的值不匹配
+    ${接收人电话}    Get Value    xpath=.//*[@id='recivermobile']
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[0][u'联系方式']}    ${接收人电话}    收件人联系方式不匹配
+    ${接收人地址}    Get Value    xpath=.//*[@id='sendaddress']
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[0][u'地址']}    ${接收人地址}    收件地址不匹配
+
+验证报告发送历史列表指定行数据
+    [Arguments]    ${pep}    ${row_num}
+    ${发送方式}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="SendType"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'发送方式')}    ${发送方式}
+    ${自取人}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ReciverName"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'取件人')}    ${自取人}
+    ${快递公司}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="SendExpress"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递公司')}    ${快递公司}
+    ${快递单号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ExpressNO"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递单号')}    ${快递单号}
+    ${发送地址}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="SendAddress"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'接收地址')}    ${发送地址}
+    ${接收人}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Receiver"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'接收人')}    ${接收人}
+    ${接收人电话}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ReciverMobile"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'接收电话')}    ${接收人电话}
+    ${发送份数}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="SendPiece"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'已发送份数')}    ${发送份数}
+    ${备注}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Remark"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'发送报告备注')}    ${备注}
+
+验证报告回收记录是否正确
+    [Arguments]    ${pep}
+    ${表格列数}    Get Matching Xpath Count    .//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="Reclaimer"]/div
+    Should Not Be Equal    '${表格列数}'    '0'    表格中没有查询到数据
+    ${回收人}    Get Text    xpath=.//*[@class="datagrid-btable"]//td[@field="Reclaimer"]/div
+    ${回收份数}    Get Text    xpath=.//*[@class="datagrid-btable"]//td[@field="ReclaimPiece"]/div
+    ${回收备注}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="Remark"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${回收人}    ${pep.get_value(u'回收人')}
+    Run Keyword And Continue On Failure    Should Be Equal    ${回收份数}    ${pep.get_value(u'回收份数')}
+    Run Keyword And Continue On Failure    Should Be Equal    ${回收备注}    ${pep.get_value(u'回收备注')}

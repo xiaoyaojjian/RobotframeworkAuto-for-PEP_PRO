@@ -1,0 +1,73 @@
+*** Settings ***
+Resource          ../变更审批/流程层/流程层.txt
+Resource          ../询价/元素层/元素层.txt
+Resource          ../询价/流程层/流程层.txt
+Resource          ../询价/组件层/住宅信息.txt
+Resource          ../公共模块.txt
+Resource          ../外业分配/内业分配业务层.txt
+
+*** Test Cases ***
+小区名称查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    询价正确数据查询    小区名称    蒲黄榆路小区    xqName
+    询价错误特殊字符查询    小区名称    @$@    xqName
+    询价为空查询    小区名称    ${empty}    xqName    ${总数据量}
+    询价模糊查询    小区名称    蒲黄    xqName
+    询价错误查询    小区名称    232收到罚单是打发反反    xqName    ${总数据量}
+    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    xqName    ${总数据量}
+
+流水号查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    499961945105    ${empty}
+    ...    ${empty}    ${empty}
+    错误特殊字符查询    流水号    ProjectNo    ProjectNo    多个大范甘迪发    ${empty}    ${empty}
+    ...    ${empty}
+    为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}    ${empty}
+    ...    ${empty}    ${empty}
+    内业分配模糊查询    流水号    ProjectNo    ProjectNo    4999    ${empty}    ${empty}
+    ...    ${empty}
+    错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564    ${empty}
+    ...    ${empty}    ${empty}
+    超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643    ${empty}
+    ...    ${empty}    ${empty}
+
+报告号查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    分配正确查询数据    报告号    ReportNo    ReportNo    ${empty}    201601101003508
+    ...    ${empty}    ${empty}
+    错误特殊字符查询    报告号    ReportNo    ReportNo    ${empty}    多个大范甘迪发    ${empty}
+    ...    ${empty}
+    为空查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    ${empty}
+    ...    ${empty}    ${empty}
+    内业分配模糊查询    报告号    ReportNo    ReportNo    ${empty}    20160    ${empty}
+    ...    ${empty}
+    错误查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    123456789564
+    ...    ${empty}    ${empty}
+    超长字符查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    1231232312312312
+    ...    ${empty}    ${empty}
+
+项目地址查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    询价正确数据查询    项目地址    北京市东城区    ProAddress
+    询价错误特殊字符查询    项目地址    @$@    ProAddress
+    询价为空查询    项目地址    ${empty}    ProAddress    ${总数据量}
+    询价模糊查询    项目地址    东城区    ProAddress
+    询价错误查询    项目地址    232收到罚单是打发反反    ProAddress    ${总数据量}
+    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ProAddress    ${总数据量}
+
+紧急程度查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${紧急程度普通数据总量}    紧急程度状态查询    普通    PriorityLevel
+    ${紧急程度紧急数据总量}    紧急程度状态查询    紧急    PriorityLevel
+    ${紧急程度加急数据总量}    紧急程度状态查询    加急    PriorityLevel
+    ${紧急程度全部数据总量}    紧急程度状态查询    ${EMPTY}    PriorityLevel

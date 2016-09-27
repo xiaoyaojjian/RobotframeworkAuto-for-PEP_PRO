@@ -3,8 +3,8 @@
 # Filename: TestDataLib.py
 
 import MySQLdb
-import os, sys
-import random, types
+import sys
+import random
 from robot.libraries.BuiltIn import BuiltIn
 
 
@@ -12,9 +12,11 @@ class TestDataLib:
     conn = ''
     cursor = ''
 
-    def __init__(self, host='192.168.14.38', user='root', password='gh001', db='robot_result'):
+    def __init__(self, host='192.168.14.38', user='root',
+                 password='gh001', db='robot_result'):
         try:
-            self.conn = MySQLdb.connect(host, user, password, db, charset='utf8')
+            self.conn = MySQLdb.connect(
+                host, user, password, db, charset='utf8')
         except Exception, e:
             print e
             sys.exit()
@@ -36,10 +38,15 @@ class TestDataLib:
         strsql = 'SELECT '
         for index in range(len(data_name)):
             if index == len(data_name) - 1:
-                strsql = strsql + ' max(if(dataName=\'' + data_name[index] + '\',dataContent,\'\'))'
+                strsql = strsql + \
+                    ' max(if(dataName=\'' + \
+                    data_name[index] + '\',dataContent,\'\'))'
             else:
-                strsql = strsql + ' max(if(dataName=\'' + data_name[index] + '\',dataContent,\'\')),'
-        strsql = strsql + ' FROM dict_test_data td WHERE EXISTS ( SELECT 1 FROM dict_test_case tc  WHERE tc.id = td.caseId AND tc.caseName = \'' + case_name + '\')'
+                strsql = strsql + \
+                    ' max(if(dataName=\'' + \
+                    data_name[index] + '\',dataContent,\'\')),'
+        strsql = strsql + \
+            ' FROM dict_test_data td WHERE EXISTS ( SELECT 1 FROM dict_test_case tc  WHERE tc.id = td.caseId AND tc.caseName = \'' + case_name + '\')'
         strsql = strsql + ' GROUP BY groupid'
         print strsql
         self._query(strsql)
@@ -60,7 +67,8 @@ class TestDataLib:
             args = tuple(i)
             return bi.run_keyword_and_continue_on_failure(keywordName, *args)
 
-    def run_keyword_by_testdata_return_dict(self, caseName, getValueType, keywordName, *dataName):
+    def run_keyword_by_testdata_return_dict(self, caseName, getValueType,
+                                            keywordName, *dataName):
         """根据用例名称去查询数据库，获取测试数据，并返回一个字典类型给指定关键字
             参数说明：caseName<数据库测试数据的用例名>
                       getValueType<获取数据的方式：0-全部数据，-1-随机获取一条记录(该模式有可以传出返回值)，n-随机获取n条记录>
@@ -94,7 +102,8 @@ class TestDataLib:
                 args[dataNameList[j]] = i[j]
             bi.run_keyword_and_continue_on_failure(keywordName, args)
 
-    def run_keyword_by_testdata_return_keyvalue(self, caseName, getValueType, keywordName, *dataName):
+    def run_keyword_by_testdata_return_keyvalue(self, caseName, getValueType,
+                                                keywordName, *dataName):
         """根据用例名称去查询数据库，获取测试数据，并运行指定关键字
             参数说明：caseName<数据库测试数据的用例名>
                       getValueType<获取数据的方式：0-全部数据，-1-随机获取一条记录(该模式有可以传出返回值)，n-随机获取n条记录>

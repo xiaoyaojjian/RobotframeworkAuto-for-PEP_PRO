@@ -1,0 +1,7 @@
+*** Settings ***
+Resource          项目收费业务层.txt
+
+*** Test Cases ***
+有效查询
+
+无效查询
