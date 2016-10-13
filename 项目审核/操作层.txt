@@ -30,7 +30,7 @@ Library           Selenium2Library
     click Element    xpath=//*[@id="tabs"]/div[1]/div[3]/ul/li[3]/a
 
 审核接收
-    Click Element    xpath=//*[@id="datagrid-row-r6-1-0"]/td/div/a[1]
+    Click Element    //div[@id='tabs']//div[2]/div[1]//div[@class='datagrid-view1']/div[2]//tbody//tr[1]//a[text()='接收']
 
 审核报告窗口
     select frame    id=audit_report
@@ -46,3 +46,9 @@ Library           Selenium2Library
     Choose Ok On Next Confirmation
     Comment    sleep    5
     Set Selenium Speed    0.5s
+
+项目审核选择审核人
+    Select From List By Label    id=userId    李楠
+
+点击查看详细
+    Click Element    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[1]

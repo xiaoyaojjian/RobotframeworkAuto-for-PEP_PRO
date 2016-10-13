@@ -1,0 +1,28 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../公共模块.txt
+Resource          内业操作层.txt
+
+*** Keywords ***
+获取流水号
+    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ProjectNo"]/div
+    log    ${流水号}
+    [Return]    ${流水号}
+
+判断是否分配成功
+    [Arguments]    ${流水号}
+    Input Text    id=ProjectNo    ${流水号}
+    Sleep    3
+    点击查询按钮
+    Comment    Page Should Contain    显示1到1,共1记录
+    ${流水号2}    Get Text    //div[@id='tabs']//div[@class='panel']/../div[2]//div[@class='datagrid-view2']/div[@class='datagrid-body']//td[@field='ProjectNo']/div
+    Run Keyword If    ${流水号}==${流水号2}    log    pass
+    ...    ELSE    Fail
+
+判断是否有挂起
+    : FOR    ${i}    IN RANGE    10
+    \    ${获取挂起}    get text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}+1]/td[@field="Fenpei"]/div/a[2]
+    \    log    ${i}
+    \    Run Keyword If    '${获取挂起}'=='挂起'    进行选择
+    \    ...    ELSE    Fail
+    ${EMPTY}

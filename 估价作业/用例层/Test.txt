@@ -1,0 +1,41 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../组件层/公共.txt
+Resource          ../组件层/未领取.txt
+Resource          ../组件层/进行中.txt
+Resource          ../组件层/已完成.txt
+Resource          ../../公共模块.txt
+Resource          ../流程层/流程.txt
+
+*** Test Cases ***
+线下报告
+    Run Keyword And Continue On Failure    线下报告
+    [Teardown]    Close Browser
+
+线上报告
+    Run Keyword And Continue On Failure    线上报告
+    [Teardown]    Close Browser
+
+未领取挂起
+    Run Keyword And Continue On Failure    未领取挂起
+    [Teardown]    Close Browser
+
+未领取解挂
+    Run Keyword And Continue On Failure    未领取解挂
+    [Teardown]    Close Browser
+
+进行中挂起
+    Run Keyword And Continue On Failure    进行中挂起
+    [Teardown]    Close Browser
+
+进行中解挂
+    Run Keyword And Continue On Failure    进行中解挂
+    [Teardown]    Close Browser
+
+基本信息校验
+    Run Keyword And Continue On Failure    基本信息校验
+    [Teardown]    Close Browser
+
+流程信息校验
+    Run Keyword And Continue On Failure    流程信息校验
+    [Teardown]    Close Browser

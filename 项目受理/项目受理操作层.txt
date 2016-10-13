@@ -196,12 +196,12 @@ Resource          ../公共模块.txt
 将立项界面的信息写入pep对象
     [Arguments]    ${pep}    ${is_get_text}=0    ${是否清空列表数据}=0    # 1为清空看房联系人列表、快递地址列表
     Run Keyword If    ${是否清空列表数据}!=0    Clean Pep List    ${pep}
-    将客户信息写入PEP对象    ${pep}    ${is_get_text}
     将项目信息写入PEP对象    ${pep}    ${is_get_text}
     将收费信息写入PEP对象    ${pep}    ${is_get_text}
     将勘查信息写入PEP对象    ${pep}    ${is_get_text}
     将收件信息写入PEP对象    ${pep}    ${is_get_text}
     将其他信息写入pep对象    ${pep}    ${is_get_text}
+    将客户信息写入PEP对象    ${pep}    ${is_get_text}
 
 将项目信息写入pep对象
     [Arguments]    ${pep}    ${is_get_text}=0

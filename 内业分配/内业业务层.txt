@@ -1,0 +1,23 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../公共模块.txt
+
+*** Keywords ***
+随机选择多条数据
+    [Arguments]    ${num1}    ${num2}
+    : FOR    ${i}    IN RANGE    ${num1}    ${num2}
+    \    log    ${i}
+    \    等待加载完毕
+    \    Click Element    //div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="TID"]/div/input[1]
+
+挂起
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
+
+挂起原因
+    sleep    5
+    Input Text    //textarea[not(@id)]    噜啦啦啦噜啦啦
+
+内业解挂
+    ${流水号}    Get Text    //form[@id="form1"]/div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ProjectNo"]/div
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[1]
+    [Return]    ${流水号}

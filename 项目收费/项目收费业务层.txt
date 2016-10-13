@@ -4,6 +4,8 @@ Resource          项目收费校验层.txt
 
 *** Keywords ***
 项目收费有效查询
+    [Arguments]    ${子模块名称}    ${流水号}=None    ${报告号}=None    ${小区名称}=None    ${项目地址}=None    ${票据号}=None
+    ...    ${收费责任人}=None    ${最小实收金额}=None    ${最大实收金额}=None
     打开功能模块    财务管理    项目收费
     Select Frame    id=Finance_AdvanceCharge
     等待列表创建完毕
@@ -13,7 +15,51 @@ Resource          项目收费校验层.txt
     ...    ${最小实收金额}    ${最大实收金额}
     点击查询按钮
     等待列表创建完毕
-    验证项目收费查询数据    交易编号=${交易编号}    是否受理=${是否已受理}    项目来源=${项目来源}    是否终止=${是否已终止}    业务类型=${业务类型}    小区名=${小区名称}
-    ...    小区地址=${物业地址}    流水号=${项目流水号}
-    Comment    清空线上业务查询条件
+    验证项目收费查询数据    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}    收费责任人=${收费责任人}    最小实收金额=${最小实收金额}
+    ...    最大实收金额=${最大实收金额}
+    Unselect Frame
+
+项目收费无效查询
+    [Arguments]    ${子模块名称}    ${流水号}=None    ${报告号}=None    ${小区名称}=None    ${项目地址}=None    ${票据号}=None
+    ...    ${收费责任人}=None    ${最小实收金额}=None    ${最大实收金额}=None
+    打开功能模块    财务管理    项目收费
+    Select Frame    id=Finance_AdvanceCharge
+    等待列表创建完毕
+    切换到${子模块名称}子模块
+    等待列表创建完毕
+    输入项目收费查询条件    ${流水号}    ${报告号}    ${小区名称}    ${项目地址}    ${票据号}    ${收费责任人}
+    ...    ${最小实收金额}    ${最大实收金额}
+    点击查询按钮
+    等待列表创建完毕
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
+    Run Keyword And Continue On Failure    Should Be Equal    ${表格列数}    0
+    Unselect Frame
+
+金额修改流程
+    [Arguments]    ${子模块名称}    ${流水号}    ${最低收费}    ${应收金额}
+    打开功能模块    财务管理    项目收费
+    Select Frame    id=Finance_AdvanceCharge
+    等待列表创建完毕
+    切换到${子模块名称}子模块
+    等待列表创建完毕
+    输入项目收费查询条件    ${流水号}
+    点击查询按钮
+    等待列表创建完毕
+    Select Checkbox    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index = '0']/td[@field="cb"]//input    #选中第一条记录
+    点击金额修改按钮
+    等待弹出窗口出现
+    文本框清空并输入    //*[@name="StandardFee"]/../input[@type="text"]    ${最低收费}
+    文本框清空并输入    //*[@name="AdjustFee"]/../input[@type="text"]    ${应收金额}
+    Click Element    xpath=.//*[@id='BtnOK']    #点击确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=Finance_AdvanceCharge
+    等待列表创建完毕
+    切换到${子模块名称}子模块
+    等待列表创建完毕
+    输入项目收费查询条件    ${流水号}
+    点击查询按钮
+    等待列表创建完毕
+    验证项目收费查询数据    ${流水号}    最低收费=${最低收费}    应收金额=${应收金额}
     Unselect Frame

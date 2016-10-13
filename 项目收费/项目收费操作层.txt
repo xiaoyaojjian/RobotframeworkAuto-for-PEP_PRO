@@ -17,7 +17,21 @@ Resource          ../公共模块.txt
     ...    ELSE    Clear Element Text    xpath=.//*[@id='OrderNo']
     Run Keyword If    '${收费责任人}'!='None'    Input Text    xpath=.//*[@id='FinanceEmployeeName']    ${收费责任人}
     ...    ELSE    Clear Element Text    xpath=.//*[@id='FinanceEmployeeName']
-    Run Keyword If    '${最小实收金额}'!='None'    Input Text    xpath=.//*[@id='ActualFeeFrom']    ${最小实收金额}
-    ...    ELSE    Clear Element Text    xpath=.//*[@id='ActualFeeFrom']
-    Run Keyword If    '${最大实收金额}'!='None'    Input Text    xpath=.//*[@id='ActualFeeTo']    ${最大实收金额}
-    ...    ELSE    Clear Element Text    xpath=.//*[@id='ActualFeeTo']
+    Run Keyword If    '${最小实收金额}'!='None'    Input Text    xpath=.//*[@name='ActualFeeFrom']/../input[1]    ${最小实收金额}
+    ...    ELSE    Clear Element Text    xpath=.//*[@name='ActualFeeFrom']/../input[1]
+    Run Keyword If    '${最大实收金额}'!='None'    Input Text    xpath=.//*[@name='ActualFeeTo']/../input[1]    ${最大实收金额}
+    ...    ELSE    Clear Element Text    xpath=.//*[@name='ActualFeeTo']/../input[1]
+
+点击金额修改按钮
+    Click Element    xpath=.//*[@id='BtnEdit']
+
+获取项目收费列表中一个流水号
+    [Arguments]    ${子模块名称}
+    打开功能模块    财务管理    项目收费
+    Select Frame    id=Finance_AdvanceCharge
+    等待列表创建完毕
+    切换到${子模块名称}子模块
+    等待列表创建完毕
+    ${流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]//td[@field="ProjectNo"]/div
+    Unselect Frame
+    [Return]    ${流水号}

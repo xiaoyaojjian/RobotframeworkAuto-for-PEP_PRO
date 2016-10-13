@@ -1,0 +1,157 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          ../../公共模块.txt
+Resource          ../组件层/添加变更申请.txt
+Resource          ../组件层/项目变更.txt
+Resource          ../组件层/变更审批.txt
+
+*** Keywords ***
+点击我的项目
+    Click Element    //span[contains(text(),'我的项目')]
+    Wait Until Page Contains Element    //a[contains(text(),'项目变更' ) and @href]
+
+点击项目变更
+    Click Element    //a[contains(text(),'项目变更' ) and @href]
+
+点击查询
+    [Arguments]    ${serial_no}
+    等待列表加载完成
+    ${status}    Run Keyword And Return Status    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    Run Keyword If    ${status}==False    Input Text    //input[@id='pno']    ${serial_no}
+    Click Element    //span[text()='查询']/../..
+    Wait Until Page Contains    成套住宅    10
+
+等待列表加载完成
+    Wait Until Page Contains Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[10]/td[2]/div/../..    60    60s内未加载出来数据
+
+等待一条记录查询出来
+    Wait Until Element Is Visible    //div[text()='显示1到1,共1记录']    60    60s内数据未加载出来
+
+点击提交
+    Click Element    //span[text()='提交']/../..
+
+随机选择一条其它数据
+    [Arguments]    ${serial_no}
+    ${rand}    Evaluate    random.randint(1,10)    random
+    ${流水号}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[2]/div
+    Run Keyword If    ${流水号}!=${serial_no}    Click Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[2]/div/../..
+    ...    ELSE    随机选择一条其它数据
+    ${return}    Set Variable If    ${流水号}!=${serial_no}    ${流水号}
+    [Return]    ${return}
+
+获取框架的id名称
+    [Arguments]    ${css_name}
+    Execute Javascript    id_name=jquery=$(".${css_name}").attr("id")
+    ${id_name}    Execute Javascript    return id_name
+    ${length}    Get Length    ${id_name}
+    ${name}    Evaluate    '${id_name}'[0:(${length-1})]
+    ${num}    Evaluate    '${id_name}'[${length-1}]
+    ${dict}    Create Dictionary    name=${name}    num=${num}
+    [Return]    ${dict}
+
+点击确定
+    Click Element    //span[text()='确定']/../..
+
+随机获取一条未撤销的数据
+    ${rand}    Evaluate    random.randint(1,10)    random
+    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
+    ${return}    Run Keyword If    'status'=='已撤销'    随机获取一条未撤销的数据
+    ...    ELSE    Set Variable    ${rand}
+    Comment    Click Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[2]/div/../..
+    [Return]    ${return}
+
+操作
+    [Arguments]    ${rand}    ${href_name}
+    Click Element    //div[@class='datagrid-view']/div[1]/div[2]//tbody//tr[${rand}]/td//a[text()='${href_name}']
+
+等待确定窗口弹出
+    Wait Until Page Contains    确定    20
+
+随机点击一条申请中的记录
+    ${rand}    Evaluate    random.randint(1,10)    random
+    ${pno}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[2]/div
+    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
+    Run Keyword If    '${status}'!='申请中'    随机点击一条申请中的记录
+    ...    ELSE    操作    ${rand}    审核
+    [Return]    ${pno}
+
+循环选出未通过的项目
+    ${记录}    Get Text    //div[contains(text(),'显示')]
+    ${count}    Findall    共(.*)记录    ${记录}
+    ${count}    Evaluate    ${count}[0]
+    : FOR    ${i}    IN RANGE    ${count}
+    \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
+    \    ${index}    Run Keyword And Return If    '${status}'=='未通过'    Set Variable    ${i+1}
+    \    Exit For Loop If    '${status}'=='未通过'
+    [Return]    ${index}
+
+获取列表记录数
+    ${str}    Get Text    //div[contains(text(),'显示1到')]
+    ${count}    Findall    共(.*)记录    ${str}
+    ${count}    Evaluate    ${count}[0]
+    [Return]    ${count}
+
+获取table中各列的值
+    [Arguments]    ${table_locator}    ${row}    ${col}
+    log    lalallalal
+    ${cell_value}    Get Table Cell    ${table_locator}    ${row}    ${col}
+    [Return]    ${cell_value}
+
+随机点击一条数据
+    ${rand}    Evaluate    random.randint(1,10)    random
+    Click Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[2]/div/../..
+    [Return]    ${rand}
+
+根据状态重新赋值
+    [Arguments]    ${审核结果}
+    ${final}    Run Keyword If    '${审核结果}'=='申请中'    Set Variable
+    ...    ELSE IF    '${审核结果}'=='未通过'    Set Variable    不同意
+    ...    ELSE IF    '${审核结果}'=='已撤销'    Set Variable
+    [Return]    ${final}
+
+去除两个小数点
+    [Arguments]    ${str}
+    ${index}    Evaluate    '${str}'.index('.')    string
+    ${1}    Evaluate    '${str}'[${index+1}]    string
+    ${2}    Evaluate    '${str}'[${index+2}]    string
+    ${str}    Run Keyword If    ${1}==0 and ${2}==0    Evaluate    '${str}'[0:${index}]    string
+    ...    ELSE    Set Variable    ${str}
+    [Return]    ${str}
+
+获取未通过的总数
+    ${rows}    查询列表总记录数
+    ${ranges}    Run Keyword If    ${rows}>=10    Set Variable    10
+    ...    ELSE    Set Variable    ${rows}
+    ${count}    Set Variable    0
+    : FOR    ${i}    IN RANGE    ${ranges}
+    \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
+    \    ${count}    Run Keyword If    '${status}'=='未通过'    Evaluate    ${count}+1
+    \    ...    ELSE    Set Variable    ${count}
+    [Return]    ${count}
+
+获取已撤销的总数
+    [Arguments]    ${记录条数}
+    ${count}    Set Variable    0
+    : FOR    ${i}    IN RANGE    ${记录条数}
+    \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
+    \    ${count}    Run Keyword If    '${status}'=='已撤销'    Evaluate    ${count}+1
+    \    ...    ELSE    Set Variable    ${count}
+    [Return]    ${count}
+
+选择每页显示数量
+    ${count}    查询列表总记录数
+    Run Keyword If    ${count}>10    Select From List By Label    //select[@class='pagination-page-list']    50
+    ${rows}    Run Keyword If    ${count}>=50    Set Variable    50
+    ...    ELSE    Set Variable    ${count}
+    Wait Until Page Contains Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rows}]/td[13]/div    60
+    [Return]    ${rows}
+
+普通查询
+    Click Element    //span[text()='查询']/..
+
+查询列表总记录数
+    ${记录}    Get Text    //div[contains(text(),'显示')]
+    ${count}    Findall    共(.*)记录    ${记录}
+    ${count}    Evaluate    ${count}[0]
+    [Return]    ${count}

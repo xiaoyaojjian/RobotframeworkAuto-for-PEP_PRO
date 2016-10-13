@@ -3,10 +3,12 @@ Resource          报告发送业务层.txt
 
 *** Test Cases ***
 有效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
     Run Keyword By Testdata Return Keyvalue    报告发送有效查询用例数据    0    报告发送列表有效查询    发送状态    流水号    报告号
     ...    项目地址    小区名称
 
 无效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
     Run Keyword By Testdata Return Keyvalue    报告发送无效查询用例数据    0    报告发送列表无效查询    发送状态    流水号    报告号
     ...    项目地址    小区名称
 

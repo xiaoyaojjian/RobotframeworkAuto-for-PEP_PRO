@@ -1,0 +1,129 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../组件层/公共.txt
+Resource          ../组件层/未盖章.txt
+Resource          ../组件层/已盖章.txt
+Resource          ../../公共模块.txt
+
+*** Keywords ***
+盖章
+    [Arguments]    ${serial_no}
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    点击盖章    ${serial_no}
+    ${pno}    随机选择一条记录    1
+    ${seal_status}    点击报告信息
+    Run Keyword And Continue On Failure    Should Be True    '${seal_status}'=='否'
+    ${跟进信息}    点击流程信息
+    Run Keyword And Continue On Failure    Should Be True    '${跟进信息}'=='盖章失败'
+    ${repoter}    点击汇总信息
+    Run Keyword And Continue On Failure    Should Not Be Empty    ${repoter}    报告撰写人不应该为空
+
+电子盖章
+    [Arguments]    ${serial_no}
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    点击电子盖章    ${serial_no}
+
+未盖章收回
+    [Arguments]    ${serial_no}
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    点击收回    ${serial_no}
+
+已盖章收回流程
+    [Arguments]    ${serial_no}
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    点击已盖章
+    已盖章收回    ${serial_no}
+
+获取盖章是否成功
+    [Documentation]    返回True或False，True表示成功，False表示失败
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    等待列表加载完成    1
+    ${serial_no}    随机选择一条记录    1
+    ${result}    查询盖章结果    ${serial_no}
+    Run Keyword If    ${result}==True    Capture Page Screenshot    第一次查询成功.png
+    ...    ELSE    盖章失败后续操作    ${serial_no}
+
+随机盖章
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    等待列表加载完成    1
+    ${serial_no}    随机选择一条记录    1
+    点击盖章    ${serial_no}
+    ${seal_status}    点击报告信息
+    Run Keyword And Continue On Failure    Should Be True    '${seal_status}'=='否'
+    ${跟进信息}    点击流程信息
+    Run Keyword And Continue On Failure    Should Be True    '${跟进信息}'=='盖章失败'
+    ${repoter}    点击汇总信息
+    Run Keyword And Continue On Failure    Should Not Be Empty    ${repoter}    报告撰写人不应该为空
+
+随机电子盖章
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    等待列表加载完成    1
+    ${serial_no}    随机选择一条记录    1
+    点击电子盖章    ${serial_no}
+
+随机盖章未收回
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    ${serial_no}    随机选择一条记录    1
+    点击收回    ${serial_no}
+
+已盖章验证状态
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    等待列表加载完成    1
+    点击已盖章
+    等待列表加载完成    2
+    ${serial_no}    随机选择一条记录    2
+    ${seal_status}    点击报告信息
+    Run Keyword And Continue On Failure    Should Be True    '${seal_status}'=='是'
+
+流程信息校验
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    ${pno}    随机选择一条记录    1
+    Input Text    //input[@id='ProjectNo']    ${pno}
+    点击查询    1
+    Wait Until Page Contains    显示1到1,共1记录    30
+    Click Element    //span[text()='流程信息']/..
+    ${count}    Get Matching Xpath Count    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr
+    ${all}    Set Variable
+    : FOR    ${i}    IN RANGE    ${count}
+    \    ${temp}    获取流程信息每列的值    ${i}
+    \    ${all}    Set Variable    ${all}${temp}

@@ -1,0 +1,15 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          公共.txt
+Resource          添加变更申请.txt
+Resource          ../../公共模块.txt
+
+*** Keywords ***
+点击添加变更申请
+    Click Element    //span[text()='添加变更申请']/..
+
+获取状态
+    [Arguments]    ${serial_no}
+    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[1]/td[11]/div    #选择最新的一条
+    [Return]    ${status}

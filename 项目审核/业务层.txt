@@ -2,14 +2,17 @@
 Resource          ../公共模块.txt
 Resource          操作层.txt
 Resource          审核验证.txt
+Resource          ../内业分配/内业操作层.txt
+Resource          ../外业分配/外业分配业务层.txt
 
 *** Keywords ***
 项目审核流程
-    [Arguments]    ${流水号}    ${错误类型}    ${错误描述}
+    [Arguments]    ${错误类型}    ${错误描述}
     select frame    id=ProjectAllot_Audit
     等待列表创建完毕
-    审核流水号    ${流水号}
-    项目查询
+    Comment    审核流水号    ${流水号}
+    查询流水号
+    Comment    项目查询
     等待列表创建完毕
     等待加载完毕
     审核接收
@@ -74,3 +77,19 @@ Resource          审核验证.txt
     项目审核（已）按流水号查询校验    ${已审核流水号}    ${流水号}
     Unselect Frame
     click Element    xpath=//*[@id="framecenter"]/div[1]/ul/li/div[3]
+
+随机选择一条数据
+    ${rand}    Evaluate    random.randint(1,4)    random
+    Comment    sleep    5
+    Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
+    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=ProjectNo    ${流水号}
+    点击查询按钮
+
+随机选择一条查看详情
+    ${rand}    Evaluate    random.randint(1,4)    random
+    Comment    sleep    5
+    Wait Until Page Contains Element    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
+    ${流水号}    Get Text    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=ProjectNo    ${流水号}
+    点击查询按钮

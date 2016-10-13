@@ -5,9 +5,11 @@ Resource          项目受理业务层.txt
 
 *** Test Cases ***
 有效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
     Run Keyword By Testdata Return Keyvalue    线上业务有效查询用例数据    0    线上业务有效查询    交易编号    项目流水号    小区名称
     ...    物业地址    项目来源    是否已受理    是否已终止    业务类型
 
 无效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
     Run Keyword By Testdata Return Keyvalue    线上业务无效查询用例数据    0    线上业务无效查询    交易编号    项目流水号    小区名称
     ...    物业地址    项目来源    是否已受理    是否已终止    业务类型

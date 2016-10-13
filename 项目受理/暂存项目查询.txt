@@ -5,11 +5,13 @@ Resource          项目受理业务层.txt
 
 *** Test Cases ***
 有效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
     Run Keyword By Testdata Return Keyvalue    暂存项目有效查询用例数据    0    暂存项目有效查询    流水号    项目地址    小区名称
     ...    估价委托方    项目分类    物业类型    估价目的    业务来源    开始时间
     ...    结束时间
 
 无效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
     Run Keyword By Testdata Return Keyvalue    暂存项目无效查询用例数据    0    暂存项目无效查询    流水号    项目地址    小区名称
     ...    估价委托方    项目分类    物业类型    估价目的    业务来源    开始时间
     ...    结束时间

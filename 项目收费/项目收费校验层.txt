@@ -5,8 +5,8 @@ Resource          ../公共模块.txt
 验证项目收费查询数据
     [Arguments]    ${流水号}=None    ${报告编号}=None    ${项目地址}=None    ${小区名称}=None    ${报告类型}=None    ${物业类型}=None
     ...    ${子物业类型}=None    ${结算方式}=None    ${评估总价}=None    ${最低收费}=None    ${应收金额}=None    ${实收金额}=None
-    ...    ${未确认金额}=None    ${免收金额}=None    ${收费责任人}=None
-    ${表格列数}    Get Matching Xpath Count    .//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
+    ...    ${未确认金额}=None    ${免收金额}=None    ${收费责任人}=None    ${最小实收金额}=None    ${最大实收金额}=None
+    ${表格列数}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="ProjectNo"]/div
     Should Not Be Equal    '${表格列数}'    '0'    表格中没有查询到数据
     Run Keyword If    '${流水号}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/div[contains(text(),'${流水号}')]    ${表格列数}    表格中的流水号：“${流水号}”与表格列数不一致
     Run Keyword If    '${报告编号}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ReportNo"]/div[contains(text(),'${报告编号}')]    ${表格列数}    表格中的报告编号：“${报告编号}”与表格列数不一致
@@ -19,6 +19,9 @@ Resource          ../公共模块.txt
     Run Keyword If    '${评估总价}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="EvaluateTotal"]/div[contains(text(),'${评估总价}')]    ${表格列数}    表格中的评估总价：“${评估总价}”与表格列数不一致
     Run Keyword If    '${最低收费}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="StandardFee"]/div[contains(text(),'${最低收费}')]    ${表格列数}    表格中的最低收费：“${最低收费}”与表格列数不一致
     Run Keyword If    '${应收金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="AdjustFee"]/div[contains(text(),'${应收金额}')]    ${表格列数}    表格中的应收金额：“${应收金额}”与表格列数不一致
+    Run Keyword If    '${最小实收金额}'!='None' \ and '${最大实收金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ActualFee"]/div[number(text())>=${最小实收金额} and number(text())<=${最大实收金额}]    ${表格列数}    表格中的实收金额：“${最小实收金额}<=实收金额<=${最大实收金额}”的记录数与表格列数不一致
+    ...    ELSE IF    '${最小实收金额}'!='None' \ and '${最大实收金额}'=='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ActualFee"]/div[number(text())>=${最小实收金额}]    ${表格列数}    表格中的实收金额：“${最小实收金额}<=实收金额<=${最大实收金额}”的记录数与表格列数不一致
+    ...    ELSE IF    '${最小实收金额}'=='None' \ and '${最大实收金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ActualFee"]/div[number(text())<=${最大实收金额}]    ${表格列数}    表格中的实收金额：“${最小实收金额}<=实收金额<=${最大实收金额}”的记录数与表格列数不一致
     Run Keyword If    '${实收金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ActualFee"]/div[contains(text(),'${实收金额}')]    ${表格列数}    表格中的实收金额：“${实收金额}”与表格列数不一致
     Run Keyword If    '${未确认金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="NotConfirmFee"]/div[contains(text(),'${未确认金额}')]    ${表格列数}    表格中的未确认金额：“${未确认金额}”与表格列数不一致
     Run Keyword If    '${免收金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="FreePrice"]/div[contains(text(),'${免收金额}')]    ${表格列数}    表格中的免收金额：“${免收金额}”与表格列数不一致

@@ -1,0 +1,31 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../组件层/公共.txt
+Resource          ../组件层/未盖章.txt
+Resource          ../组件层/已盖章.txt
+Resource          ../流程层/流程.txt
+
+*** Test Cases ***
+主流程
+    Run Keyword And Continue On Failure    获取盖章是否成功
+    [Teardown]    Close Browser
+
+随机盖章
+    Run Keyword And Continue On Failure    随机盖章
+    [Teardown]    Close Browser
+
+随机电子盖章
+    Run Keyword And Continue On Failure    随机电子盖章
+    [Teardown]    Close Browser
+
+随机盖章未收回
+    Run Keyword And Continue On Failure    随机盖章未收回
+    [Teardown]    Close Browser
+
+已盖章验证状态
+    Run Keyword And Continue On Failure    已盖章验证状态
+    [Teardown]    Close Browser
+
+流程信息校验
+    Run Keyword And Continue On Failure    流程信息校验
+    [Teardown]    Close Browser

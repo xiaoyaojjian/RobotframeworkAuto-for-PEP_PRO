@@ -12,8 +12,10 @@ Resource          ../流程层/流程层.txt
     Wait Until Page Contains    流水号
 
 变更点击查询按钮
+    [Arguments]    ${状态}=0
     Comment    click Element    id=BtnSearch
-    click Element    xpath=//span[text()="查询"]/..
+    Run Keyword If    ${状态}==0    click Element    xpath=//span[text()="查询"]/..
+    ...    ELSE    click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/..
 
 清空输入框装订流水号
     [Arguments]    ${路径}
@@ -32,8 +34,10 @@ Resource          ../流程层/流程层.txt
     Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入小区名称}
 
 装订状态
-    [Arguments]    ${装订状态列表值}
-    Select From List By Label    id=IsPrintComplete    ${装订状态列表值}
+    [Arguments]    ${装订状态列表值}    ${路径}    ${状态}=0
+    Comment    Select From List By Label    id=${路径}    ${装订状态列表值}
+    Run Keyword If    ${状态}==0 or ${状态}==1    Select From List By Label    id=${路径}    ${装订状态列表值}
+    ...    ELSE    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']    ${装订状态列表值}
 
 装订完成按钮
     Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td/div[1]
@@ -43,3 +47,15 @@ Resource          ../流程层/流程层.txt
 
 取消按钮
     Click Element    xpath=//a[contains(.,'取消')]
+
+撰写人员
+    [Arguments]    ${输入撰写人员}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入撰写人员}
+
+查勘人员
+    [Arguments]    ${输入查勘人员}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入查勘人员}
+
+分配人员
+    [Arguments]    ${输入分配人员}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入分配人员}

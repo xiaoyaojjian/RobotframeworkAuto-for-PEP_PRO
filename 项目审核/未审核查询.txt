@@ -4,7 +4,7 @@ Resource          ../询价/元素层/元素层.txt
 Resource          ../询价/流程层/流程层.txt
 Resource          ../询价/组件层/住宅信息.txt
 Resource          ../公共模块.txt
-Resource          ../外业分配/内业分配业务层.txt
+Resource          ../外业分配/外业分配业务层.txt
 
 *** Test Cases ***
 小区名称查询
@@ -28,7 +28,7 @@ Resource          ../外业分配/内业分配业务层.txt
     ...    ${empty}
     为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    ${empty}
-    内业分配模糊查询    流水号    ProjectNo    ProjectNo    4999    ${empty}    ${empty}
+    外业分配模糊查询    流水号    ProjectNo    ProjectNo    4999    ${empty}    ${empty}
     ...    ${empty}
     错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564    ${empty}
     ...    ${empty}    ${empty}
@@ -45,7 +45,7 @@ Resource          ../外业分配/内业分配业务层.txt
     ...    ${empty}
     为空查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    ${empty}
-    内业分配模糊查询    报告号    ReportNo    ReportNo    ${empty}    20160    ${empty}
+    外业分配模糊查询    报告号    ReportNo    ReportNo    ${empty}    20160    ${empty}
     ...    ${empty}
     错误查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    123456789564
     ...    ${empty}    ${empty}

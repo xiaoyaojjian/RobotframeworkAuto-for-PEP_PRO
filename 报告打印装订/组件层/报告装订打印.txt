@@ -1,8 +1,9 @@
 *** Settings ***
 Resource          ../../公共模块.txt
 Resource          ../元素层/元素层.txt
-Resource          ../../外业分配/元素/元素层.txt
+Resource          ../../外业分配/元素/外业元素层.txt
 Resource          ../../外业分配/验证/验证层.txt
+Resource          ../../查勘任务/查勘任务操作层.txt
 
 *** Keywords ***
 输入流水号
@@ -43,7 +44,10 @@ Resource          ../../外业分配/验证/验证层.txt
     [Return]    ${lineNumberP1}
 
 获取页面显示总数据量
-    ${列表总共数据数}    Get Text    xpath=//div[@class='pagination-info']
+    [Arguments]    ${状态}=0
+    ${列表总共数据数}    Run Keyword If    ${状态}==0 or ${状态}==1    Get Text    xpath=//div[@class='pagination-info']
+    ...    ELSE    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[@class='pagination-info']
+    Comment    ${列表总共数据数}    Get Text    xpath=//div[@class='pagination-info']
     ${显示第}    Findall    显示(.*)到    ${列表总共数据数}
     ${到第}    Findall    到(.*),共    ${列表总共数据数}
     ${总共多少条}    Findall    共(.*)记录    ${列表总共数据数}
@@ -222,24 +226,26 @@ Resource          ../../外业分配/验证/验证层.txt
     [Return]    ${获取输入参数最终值}
 
 根据装订状态选择查询方式
-    [Arguments]    ${装订状态列表值}    ${路径}
-    Run Keyword If    '${装订状态列表值}'=='全部'    按全部装订状态    ${装订状态列表值}    ${路径}
-    ...    ELSE IF    '${装订状态列表值}'=='装订未完成'    按装订未完成状态    ${装订状态列表值}
-    ...    ELSE IF    '${装订状态列表值}'=='装订完成'    按装订未完成状态    ${装订状态列表值}
+    [Arguments]    ${装订状态列表值}    ${路径}    ${列数}    ${状态}
+    Run Keyword If    '${装订状态列表值}'=='全部'    按全部装订状态    ${装订状态列表值}    ${路径}    ${列数}    ${状态}
+    ...    ELSE IF    '${装订状态列表值}'=='装订未完成'    按装订未完成状态    ${装订状态列表值}    ${路径}
+    ...    ELSE IF    '${装订状态列表值}'=='装订完成'    按装订未完成状态    ${装订状态列表值}    ${路径}
+    ...    ELSE IF    '${装订状态列表值}'=='普通'or '${装订状态列表值}'=='紧急'or '${装订状态列表值}'=='加急' or '${装订状态列表值}'==''    按状态进行查询    ${装订状态列表值}    ${路径}    ${列数}
+    ...    ${状态}
 
 按全部装订状态
-    [Arguments]    ${装订状态列表值}    ${路径}
-    装订状态    ${装订状态列表值}
+    [Arguments]    ${装订状态列表值}    ${路径}    ${列数}    ${状态}
+    装订状态    ${装订状态列表值}    ${路径}
     变更点击查询按钮
     等待列表创建完毕
     ${总数据量}    获取页面显示总数据量
     ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
     ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
-    查询操作单元结果检测    ${获取报告打印第一页行数}/10    ${装订状态列表值}    ${路径}
+    查询操作单元结果检测    ${获取报告打印第一页行数}/10    ${装订状态列表值}    ${路径}    ${列数}    ${状态}
 
 按装订未完成状态
-    [Arguments]    ${装订状态列表值}
-    装订状态    ${装订状态列表值}
+    [Arguments]    ${装订状态列表值}    ${路径}
+    装订状态    ${装订状态列表值}    ${路径}
     变更点击查询按钮
     等待列表创建完毕
     ${总数据量}    获取页面显示总数据量
@@ -256,24 +262,28 @@ Resource          ../../外业分配/验证/验证层.txt
     ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
 
 获取操作框单元格的值
-    [Arguments]    ${row}    ${路径}
-    ${操作字段值}    Run Keyword If    '${路径}'=='PriorityLevel'    获取紧急程度状态值    ${row}
+    [Arguments]    ${row}    ${路径}    ${列数}    ${状态}=0
+    log    ${row}
+    log    ${列数}
+    ${操作字段值}    Run Keyword If    '${路径}'=='PriorityLevel'    获取紧急程度状态值    ${row}    ${列数}    ${状态}
     ...    ELSE IF    '${路径}'=='IsPrintComplete'    获取打印状态值    ${row}
-    ...    ELSE IF    '${路径}'=='ProjectType'    获取物业类型状态值    ${row}
+    ...    ELSE IF    '${路径}'=='ProjectType'    获取物业类型状态值    ${row}    ${状态}
     Comment    ${操作字段值}    Get Text    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]
     Comment    ${操作字段值}    Get Text    xpath=//td[@field="PriorityLevel"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[9]/div[1]
-    ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
+    ${流水号字段值}    Run Keyword If    ${状态}==0 or ${状态}==1    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
+    ...    ELSE    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
+    Comment    ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
     Comment    ${状态字段值}    Run Keyword If    '${路径}'=='State'    获取状态值    ${row}
-    ${状态字段值}    Run Keyword If    '${路径}'=='PriorityLevel'    获取紧急程度状态值    ${row}
+    ${状态字段值}    Run Keyword If    '${路径}'=='PriorityLevel'    获取紧急程度状态值    ${row}    ${列数}    ${状态}
     ...    ELSE IF    '${路径}'=='State'    获取状态值    ${row}
-    ...    ELSE IF    '${路径}'=='ProjectType'    获取物业类型状态值    ${row}
+    ...    ELSE IF    '${路径}'=='ProjectType'    获取物业类型状态值    ${row}    ${状态}
     Comment    ${状态字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[11]/div[1]
     Comment    log    ${操作字段值}
     Comment    log    ${流水号字段值}
     [Return]    ${流水号字段值}    ${操作字段值}    ${状态字段值}
 
 查询操作单元结果检测
-    [Arguments]    ${行数}    ${查询类型}    ${路径}
+    [Arguments]    ${行数}    ${查询类型}    ${路径}    ${列数}    ${状态}
     log    ${查询类型}
     log    ${行数}
     log    测试使用
@@ -281,7 +291,7 @@ Resource          ../../外业分配/验证/验证层.txt
     \    log    ${rows}
     \    log    测试使用1
     \    ${流水号字段值}    ${字段值}    ${状态字段值}    Run Keyword If    ${rows}>=1    获取操作框单元格的值
-    \    ...    ${rows}    ${路径}
+    \    ...    ${rows}    ${路径}    ${列数}    ${状态}
     \    log    '吕梓清'
     \    Run Keyword If    '${查询类型}'=='全部'    操作全部状态校验数据    ${流水号字段值}    ${字段值}    ${状态字段值}
     \    ...    ELSE IF    '${查询类型}'=='装订完成'    操作已完成状态校验数据    ${流水号字段值}    ${字段值}
@@ -391,3 +401,10 @@ Resource          ../../外业分配/验证/验证层.txt
     Comment    Should Be Equal    ${n}    int('60')
     Run Keyword If    ${n}==int('150')    log    pass
     ...    ELSE    Fail
+
+重新获取报告装订打印查询数据行数
+    [Arguments]    ${路径}
+    ${lineNumberP2}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Comment    ${lineNumberP1}    Get Matching Xpath Count    //td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr    .//div[@class="panel" and contains(@style,"display: block")]//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Comment    查询操作单元结果检测    ${lineNumberP1}    ${装订状态列表值}    ${路径}    ${列数}
+    [Return]    ${lineNumberP2}

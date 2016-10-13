@@ -1,0 +1,159 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Library           requests
+Resource          未领取.txt
+Resource          进行中.txt
+Resource          项目审核.txt
+Resource          外业分配任务.txt
+
+*** Keywords ***
+点击查询
+    [Arguments]    ${pno}
+    Input Text    //input[@id='ProjectNo']    ${pno}
+    Click Element    //span[text()='查询']/../..
+    sleep    5
+    ${status}    Run Keyword And Return Status    Page Should Contain    显示1到1,共1记录    INFO
+    Run Keyword If    ${status}==False    外业分配    ${pno}
+    ...    ELSE    查勘领取    ${pno}
+
+操作
+    [Arguments]    ${page_index}    ${href_name}
+    Wait Until Element Is Visible    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='${href_name}']    10
+    Click Element    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='${href_name}']
+
+生成线上报告
+    ${seriNo}    ${reportId}    获取流水号和报告号    2
+    Create Session    ${USER_NAME}    http://reporttest2.yunfangdata.com:81/
+    Write Report    ${seriNo}    ${reportId}
+
+点击保存
+    ${status}    Run Keyword And Return Status    Click Element    //span[text()='保存']/..
+    Run Keyword If    ${status}==False    Click Element    //div[@id='dlg-buttons']//span[text()='保存']/..
+
+切换选项卡
+    [Arguments]    ${tab_name}
+    Unselect Frame
+    ${status}    Run Keyword And Return Status    Click Element    //span[text()='${tab_name}']/../..
+    Run Keyword If    ${status}==False    Click Element    //a[text()='${tab_name}']/parent::li[@tabid]
+
+点击确定
+    等待确定窗口弹出
+    Click Element    //span[text()='确定']/../..
+
+点击挂起
+    [Arguments]    ${page_index}
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='挂起']
+    Run Keyword If    ${status}==False    Run Keywords    解除挂起    ${page_index}
+    ...    AND    点击挂起    ${page_index}
+    ...    ELSE    挂起后续操作    ${page_index}
+
+挂起内容
+    [Arguments]    ${content}
+    Input Text    //textarea[not(@id)]    ${content}
+
+解除挂起
+    [Arguments]    ${page_index}
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='解挂']
+    Run Keyword If    ${status}==False    Run Keywords    点击挂起    ${page_index}
+    ...    AND    解除挂起    ${page_index}
+    ...    ELSE    解挂后续操作    ${page_index}
+
+普通提交
+    Select Frame    css=.xubox_iframe
+    Click Element    //span[text()='提交']/..
+
+点击我的项目
+    Click Element    //span[contains(text(),'我的项目')]
+    Wait Until Page Contains Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']    10
+
+点击估价作业
+    Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
+
+等待确定窗口弹出
+    Wait Until Element Is Visible    //span[text()='确定']/../..    30    确定窗口30s内未弹出
+
+挂起后续操作
+    [Arguments]    ${page_index}
+    Wait Until Element Is Visible    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='挂起']    5
+    Click Element    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='挂起']
+    挂起内容    测试挂起
+    点击保存
+    点击确定
+    等待列表加载完成    ${page_index}
+
+等待列表加载完成
+    [Arguments]    ${page­_index}
+    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[${page­_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[10]    60    60s未加载出数据
+
+解挂后续操作
+    [Arguments]    ${page_index}
+    操作    ${page_index}    解挂
+    点击确定
+    等待列表加载完成    ${page_index}
+
+获取列表中各列的值
+    [Arguments]    ${page_index}    ${col_index}
+    ${text}    Get Text    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[${col_index}]/div
+    [Return]    ${text}
+
+点击一条记录
+    [Arguments]    ${page_index}
+    Click Element    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]
+
+获取流程信息每列的值
+    [Arguments]    ${j}
+    : FOR    ${i}    IN RANGE    4
+    \    ${content}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[${i+1}]/div
+    \    Should Not Be Empty    ${content}
+    \    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[1]/div
+    \    Should Be Equal    ${操作人}    ${USER_NAME}
+
+循环获取文本值
+    [Arguments]    ${locator}
+    : FOR    ${i}    IN RANGE    5
+    \    ${text}    Get Text    ${locator}
+    \    Run Keyword If    '${text}'==''    sleep    1
+    \    ${result}    Run Keyword If    '${text}'!=''    Set Variable    ${text}
+    \    Exit For Loop If    '${text}'!=''
+    [Return]    ${result}
+
+获取查询条件的行数
+    [Arguments]    ${locator}
+    ${row_count}    Get Matching Xpath Count    ${locator}
+    [Return]    ${row_count}
+
+获取每行的查询条件个数
+    [Arguments]    ${locator}
+    ${每行的条件个数}    Get Matching Xpath Count    ${locator}
+    [Return]    ${每行的条件个数}
+
+根据标签名进行查询
+    [Arguments]    ${row_count}    ${i}    ${tbody_locator}
+    : FOR    ${j}    IN RANGE    ${row_count}
+    \    ${col_no}    Evaluate    ${j+1}*2
+    \    ${element}    Get Webelement    ${tbody_locator}/tr[${i+1}]//td[${col_no}]/child::*
+    \    ${name}    Set Variable    ${element.tag_name}
+    \    根据标签类型进行查询    ${name}
+
+根据标签类型进行查询
+    [Arguments]    ${type}
+    Run Keyword If    '${type}'=='input'
+
+根据列名随机获取一个列值
+    [Arguments]    ${col_name}
+
+循环获取列表的名称
+    [Arguments]    ${table_locator}
+    ${type}    Evaluate    sys.getdefaultencoding()    sys
+    ${dict}    Create Dictionary
+    ${cols}    Get Matching Xpath Count    ${table_locator}//td
+    : FOR    ${i}    IN RANGE    ${cols}-1
+    \    ${col_name}    Get Text    ${table_locator}//tr/td[${i+2}]/div/span[1]
+    \    ${temp_dict}    Create Dictionary    ${col_name}=${i+2}
+    ${EMPTY}
+    ${EMPTY}
+
+普通查询
+    Click Element    //span[text()='查询']/..

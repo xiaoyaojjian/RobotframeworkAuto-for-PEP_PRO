@@ -3,28 +3,31 @@ Resource          ../公共模块.txt
 Resource          ../变更审批/流程层/流程层.txt
 Resource          ../询价/元素层/元素层.txt
 Resource          ../询价/流程层/流程层.txt
-Resource          操作层.txt
-Resource          ../外业分配/内业分配业务层.txt
+Resource          审核调度操作层.txt
+Resource          ../外业分配/外业分配业务层.txt
+Resource          ../内业分配/内业操作层.txt
 
 *** Test Cases ***
 任务转发
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
+    内业查询流水号
+    审核调度点击查询
     等待列表创建完毕
     点击转发按钮
     等待弹出窗口出现
     Set Selenium Speed    1s
     选择审核人
-    点击提交
+    审核点击提交
     等待提示框出现
     点击提示框中的确定按钮
     Comment    验证审核人是否正确
     Unselect Frame
     Select Frame    id=ProjectAllot_AuditAssign
     等待列表创建完毕
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
     ${获取审核人信息}    获取审核人信息
     验证审核人是否正确    ${获取审核人信息}
 
@@ -32,11 +35,13 @@ Resource          ../外业分配/内业分配业务层.txt
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
+    内业查询流水号
+    审核调度点击查询
     等待列表创建完毕
     点击退回任务
     等待提示框出现
     点击提示框中的确定按钮
     等待提示框出现
     点击提示框中的确定按钮
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186

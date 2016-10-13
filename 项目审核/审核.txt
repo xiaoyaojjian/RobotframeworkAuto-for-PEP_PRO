@@ -3,10 +3,36 @@ Resource          ../公共模块.txt
 Resource          操作层.txt
 Resource          审核验证.txt
 Resource          业务层.txt
+Library           Selenium2Library
+Resource          ../审核调度/审核调度操作层.txt
 
 *** Test Cases ***
 审核流程
     [Setup]    登录
     打开功能模块    我的项目    项目审核
     等待列表创建完毕
-    项目审核流程    545048072856    低级错误    界面需要优化，不符合用户需求
+    项目审核流程    低级错误    界面需要优化，不符合用户需求
+
+转让
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    等待列表创建完毕
+    select frame    id=ProjectAllot_Audit
+    随机选择一条数据
+    Comment    sleep    7
+    Click Element    //div[@id='tabs']//div[2]/div[1]//div[@class='datagrid-view1']/div[2]//tbody//tr[1]//a[text()='转让']
+    select Frame    xpath=//iframe[contains(@id,"xubox_iframe")]
+    Wait Until Page Contains    ${USER_NAME}    20
+    项目审核选择审核人
+    审核点击提交
+    等待提示框出现
+    点击提示框中的确定按钮
+
+查看详情
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    等待列表创建完毕
+    select frame    id=ProjectAllot_Audit
+    切换到已审核过子模块
+    随机选择一条查看详情
+    点击查看详细

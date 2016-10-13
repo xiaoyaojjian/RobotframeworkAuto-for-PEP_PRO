@@ -1,0 +1,65 @@
+*** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
+Resource          ../公共模块.txt
+Resource          ../外业分配/元素/外业元素层.txt
+Resource          ../外业分配/外业分配业务层.txt
+Resource          ../外业分配/外业分配操作层.txt
+Resource          ../外业分配/外业分配校验层.txt
+Resource          ../预估转正/预估操作层.txt
+
+*** Test Cases ***
+查询预估状态
+    [Setup]    登录
+    打开功能模块    我的项目    预估转正
+    Select Frame    id=ProjectAllot_Positive
+    Comment    全部查询
+    未转正查询
+    Comment    已转正查询
+
+预估流水号才查询
+    [Setup]    登录
+    打开功能模块    我的项目    预估转正
+    Select Frame    id=ProjectAllot_Positive
+    等待列表创建完毕
+    ${总数据量}    预估转正查询状态    流水号    551687353583    ProjectNo
+    预估特殊错误字符查询    流水号    @$@    ProjectNo
+    预估为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    预估模糊查询    流水号    551    ProjectNo
+    预估错误查询    流水号    234234234234    ProjectNo    ${总数据量}
+    预估超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
+
+预估报告查询
+    [Setup]    登录
+    打开功能模块    我的项目    预估转正
+    Select Frame    id=ProjectAllot_Positive
+    等待列表创建完毕
+    ${总数据量}    预估转正查询状态    报告号    201601101004127    ReportNo
+    预估特殊错误字符查询    报告号    @$@    ReportNo
+    预估为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    预估模糊查询    报告号    201601    ReportNo
+    预估错误查询    报告号    234234234234    ReportNo    ${总数据量}
+    预估超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
+
+预估项目地址查询
+    [Setup]    登录
+    打开功能模块    我的项目    预估转正
+    Select Frame    id=ProjectAllot_Positive
+    等待列表创建完毕
+    ${总数据量}    预估转正查询状态    项目地址    北京市朝阳区北苑路170号4号楼1层126(凯旋城)    Address
+    预估特殊错误字符查询    项目地址    @$@    Address
+    预估为空查询    项目地址    ${empty}    Address    ${总数据量}
+    预估模糊查询    项目地址    凯旋城    Address
+    预估错误查询    项目地址    232收到罚单是打发反反    Address    ${总数据量}
+    预估超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
+
+预估小区名称查询
+    打开功能模块    我的项目    预估转正
+    Select Frame    id=ProjectAllot_Positive
+    等待列表创建完毕
+    ${总数据量}    预估转正查询状态    小区名称    五栋大楼    AreaName
+    预估特殊错误字符查询    小区名称    @$@    AreaName
+    预估为空查询    小区名称    ${empty}    AreaName    ${总数据量}
+    预估模糊查询    小区名称    五栋    AreaName
+    预估错误查询    小区名称    232收到罚单是打发反反    AreaName    ${总数据量}
+    预估超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}

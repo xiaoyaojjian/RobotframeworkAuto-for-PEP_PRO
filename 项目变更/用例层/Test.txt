@@ -1,0 +1,27 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../流程层/流程.txt
+Resource          ../../公共模块.txt
+Resource          ../组件层/公共.txt
+Resource          ../组件层/添加变更申请.txt
+
+*** Test Cases ***
+申请流程
+    Run Keyword And Continue On Failure    申请流程    549978253776
+    [Teardown]    Close Browser
+
+重新申请流程
+    Run Keyword And Continue On Failure    重新申请流程
+    [Teardown]    Close Browser
+
+重新选择流程
+    Run Keyword And Continue On Failure    重新选择流程    549978253776
+    [Teardown]    Close Browser
+
+项目详情校验
+    Run Keyword And Continue On Failure    项目详情校验
+    [Teardown]    Close Browser
+
+撤销流程
+    Run Keyword And Continue On Failure    撤销流程
+    [Teardown]    Close Browser

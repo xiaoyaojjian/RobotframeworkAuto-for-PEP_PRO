@@ -1,0 +1,57 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ..//公共模块.txt
+Resource          ..//内业分配/内业操作层.txt
+Resource          ..//查勘任务/查勘任务操作层.txt
+Resource          ..//预估转正/预估操作层.txt
+Resource          ..//查勘任务/查勘任务业务层.txt
+
+*** Test Cases ***
+领取
+    [Setup]    登录
+    打开功能模块    我的项目    查勘任务
+    Select Frame    id=ProjectAllot_OutsideAccept
+    等待列表创建完毕
+    Comment    Input Text    id=ProjectNo    471171592754
+    内业查询流水号
+    点击查询按钮
+    点击领取
+    ${线上}    线上
+    判断线上业务    ${线上}
+    Comment    弹出提示语
+    Comment    等待提示框出现
+    Comment    点击提示框中的确定按钮
+    Comment    填写预约信息
+
+挂起
+    [Setup]    登录
+    打开功能模块    我的项目    查勘任务
+    Select Frame    id=ProjectAllot_OutsideAccept
+    等待列表创建完毕
+    内业查询流水号
+    点击查询按钮
+    查勘挂起
+    等待弹出窗口出现
+    查勘挂起原因
+    点击查勘保存
+    等待提示框出现
+    点击提示框中的确定按钮
+
+解挂
+    [Setup]    登录
+    打开功能模块    我的项目    查勘任务
+    Select Frame    id=ProjectAllot_OutsideAccept
+    等待列表创建完毕
+    Input Text    id=ProjectNo    514212146051
+    点击查询按钮
+    点击查勘挂起
+    等待提示框出现
+    点击提示框中的确定按钮
+
+批量领取
+    [Setup]    登录
+    打开功能模块    我的项目    查勘任务
+    Select Frame    id=ProjectAllot_OutsideAccept
+    等待列表创建完毕
+    领取多条数据    4    6
+    批量领取按钮

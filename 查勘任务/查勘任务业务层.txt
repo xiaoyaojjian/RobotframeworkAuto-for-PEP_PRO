@@ -1,0 +1,37 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ..//公共模块.txt
+Resource          ..//查勘任务/查勘任务操作层.txt
+
+*** Keywords ***
+填写预约信息
+    Comment    Input Text    .//*[@id='form1']/div/table/tbody/tr[1]/td[2]/span/input[1]    s
+    Click Element    xpath=//*[@id='form1']/div/table/tbody/tr[1]/td[2]/span/span/a
+    Click Element    xpath=html/body/div[2]/div/div[3]/table/tbody/tr/td[1]/a
+    Clear Element Text    id=Contacts
+    Input Text    id=Contacts    芬达菲菲大厦
+    Clear Element Text    id=Phone
+    Input Text    id=Phone    13544549195
+    Click Element    id=BookSuccessTrue
+    Input Text    xpath=.//*[@id='form1']/div/table/tbody/tr[5]/td[2]/span/textarea    范德萨发打发大
+
+查勘挂起原因
+    Comment    sleep    6
+    Comment    Click Element    //textarea[@id="info"]
+    Input Text    xpath=//*[@id='info']    发发大厦芬达
+
+点击查勘挂起
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Update"]/div/a[1]
+
+领取多条数据
+    [Arguments]    ${num1}    ${num2}
+    :FOR    ${i}    IN RANGE    ${num1}    ${num2}
+    \    log    ${i}
+    \    等待加载完毕
+    \    Click Element    //div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="cb"]/div/input[1]
+
+判断线上业务
+    [Arguments]    ${链家}
+    Run Keyword If    '${链家}'=='链家测试'
+    ...    ELSE IF    填写预约信息
+    ...    ELSE IF    弹出提示语

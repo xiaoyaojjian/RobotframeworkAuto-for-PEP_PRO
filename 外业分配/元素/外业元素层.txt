@@ -1,0 +1,111 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../验证/验证层.txt
+Resource          ../../询价/元素层/元素层.txt
+
+*** Keywords ***
+根据紧急程度状态选择查询方式
+    [Arguments]    ${紧急程度状态列表值}    ${路径}
+    Run Keyword If    '${紧急程度状态列表值}'==''    程度状态    ${紧急程度状态列表值}    ${路径}
+    ...    ELSE IF    '${紧急程度状态列表值}'=='普通'    程度状态    ${紧急程度状态列表值}    ${路径}
+    ...    ELSE IF    '${紧急程度状态列表值}'=='紧急'    程度状态    ${紧急程度状态列表值}    ${路径}
+    ...    ELSE IF    '${紧急程度状态列表值}'=='加急'    程度状态    ${紧急程度状态列表值}    ${路径}
+
+紧急程度状态
+    [Arguments]    ${紧急程度状态列表值}
+    Select From List By Label    id=PriorityLevel    ${紧急程度状态列表值}
+
+获取紧急程度状态值
+    [Arguments]    ${row}    ${列数}    ${状态}=0
+    log    ${row}
+    log    ${列数}
+    ${状态字段值}    Run Keyword If    ${状态}==0 or ${状态}==1    Get Text    xpath=//td[@field="PriorityLevel"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[${列数}]/div[1]
+    ...    ELSE    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="PriorityLevel"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[${列数}]/div[1]
+    Comment    ${状态字段值}    Get Text    xpath=//td[@field="PriorityLevel"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[${列数}]/div[1]
+    [Return]    ${状态字段值}
+
+获取打印状态值
+    [Arguments]    ${row}
+    ${操作字段值}    Get Text    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]
+    [Return]    ${操作字段值}
+
+物业类型选择查询方式
+    [Arguments]    ${物业类型状态列表值}    ${路径}
+    Run Keyword If    '${物业类型状态列表值}'==''    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='成套住宅'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='成套商业'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='成套办公'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='别墅'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='储备地'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='城镇土地'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='农村集体土地'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='非住宅（拆迁）'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='住宅（拆迁）'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='大型办公'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='大型商业'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='综合房地产'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='工业房地产'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='酒店、度假村'    类型状态    ${物业类型状态列表值}    ${路径}
+    ...    ELSE IF    '${物业类型状态列表值}'=='在建工程'    类型状态    ${物业类型状态列表值}    ${路径}
+
+物业类型状态
+    [Arguments]    ${物业类型状态列表值}
+    Select From List By Label    id=ProjectType    ${物业类型状态列表值}
+
+获取物业类型状态值
+    [Arguments]    ${row}    ${状态}=0
+    ${状态字段值}    Run Keyword If    ${状态}==0 or ${状态}==1    Get Text    xpath=//td[@field="ProjectType"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[6]/div[1]
+    ...    ELSE    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ProjectType"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[6]/div[1]
+    Comment    ${状态字段值}    Get Text    xpath=//td[@field="ProjectType"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[6]/div[1]
+    [Return]    ${状态字段值}
+
+单个分配按钮
+    [Arguments]    ${row}=1
+    Comment    Click Element    xpath=//td[@field="op"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]
+    Comment    click Element    xpath=//span[text()="分配任务"]/..
+    Click Element    xpath=//td[@field="cb"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="cb"]/div[1]
+
+选择外采用户
+    Comment    等待弹出窗口出现
+    Comment    Unselect Frame
+    Comment    Select Frame    id=xubox_iframe1
+    Comment    Select From List By Value    id=taskowner    李楠
+    Comment    Run Keyword And Continue On Failure    select Frame    id=xubox_iframe1
+    Clear Element Text    xpath=.//*[@id='taskowner']/..//span/input[1]
+    Input Text    xpath=.//*[@id='taskowner']/..//span/input[1]    李楠
+    Comment    Click Element    xpath=.//*[@id='taskowner']/..//span/span
+    Comment    Select From List By Label    .//*[@class='combo-panel panel-body panel-body-noheader']    李楠
+
+分配按钮
+    click Element    xpath=//span[text()="分配任务"]/..
+
+回收按钮
+    [Arguments]    ${row}=1
+    Click Element    xpath=//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]/a[2]
+
+重新分配
+    [Arguments]    ${row}=1
+    Click Element    xpath=//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]/a[1]
+
+选择外采分配pad端
+    Wait Until Element Is Enabled    id=istopad
+    Click Element    id=istopad
+    Select From List By Value    id=eiastype    273
+
+删除app
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Update"]/div/a[3]
+
+外业分配正确查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    log    ${查询类型}
+    log    ${路径}
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    ${获取报告打印第一页列数}    获取询价列表列数据
+    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    [Return]    ${总数据量}

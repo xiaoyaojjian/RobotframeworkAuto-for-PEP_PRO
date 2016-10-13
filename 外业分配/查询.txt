@@ -1,13 +1,14 @@
 *** Settings ***
+Test Setup        登录
 Resource          ../变更审批/流程层/流程层.txt
 Resource          ../询价/元素层/元素层.txt
 Resource          ../询价/流程层/流程层.txt
 Resource          ../询价/组件层/住宅信息.txt
 Resource          ../公共模块.txt
-Resource          内业分配业务层.txt
+Resource          外业分配业务层.txt
 
 *** Test Cases ***
-小区名称查询
+(未)小区名称查询
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
@@ -18,41 +19,29 @@ Resource          内业分配业务层.txt
     询价错误查询    小区名称    232收到罚单是打发反反    areaname    ${总数据量}
     询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    areaname    ${总数据量}
 
-流水号查询
+(未)流水号查询
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    547676399078    ${empty}
-    ...    ${empty}    ${empty}
-    错误特殊字符查询    流水号    ProjectNo    ProjectNo    多个大范甘迪发    ${empty}    ${empty}
-    ...    ${empty}
-    为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}    ${empty}
-    ...    ${empty}    ${empty}
-    内业分配模糊查询    流水号    ProjectNo    ProjectNo    5476    ${empty}    ${empty}
-    ...    ${empty}
-    错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564    ${empty}
-    ...    ${empty}    ${empty}
-    超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643    ${empty}
-    ...    ${empty}    ${empty}
+    ${总数据量}    询价正确数据查询    流水号    547676399078    ProjectNo
+    询价错误特殊字符查询    流水号    @$@    ProjectNo
+    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    询价模糊查询    流水号    5476    ProjectNo
+    询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
+    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
 
-报告号查询
+(未)报告号查询
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
-    ${总数据量}    分配正确查询数据    报告号    ReportNo    ReportNo    ${empty}    201601102004014
-    ...    ${empty}    ${empty}
-    错误特殊字符查询    报告号    ReportNo    ReportNo    ${empty}    多个大范甘迪发    ${empty}
-    ...    ${empty}
-    为空查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    ${empty}
-    ...    ${empty}    ${empty}
-    内业分配模糊查询    报告号    ReportNo    ReportNo    ${empty}    20160    ${empty}
-    ...    ${empty}
-    错误查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    123456789564
-    ...    ${empty}    ${empty}
-    超长字符查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    1231232312312312
-    ...    ${empty}    ${empty}
+    ${总数据量}    询价正确数据查询    报告号    201601102004469    ReportNo
+    询价错误特殊字符查询    报告号    @$@    ReportNo
+    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    询价模糊查询    报告号    1020    ReportNo
+    询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
+    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
 
-项目地址查询
+(未)项目地址查询
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
@@ -63,32 +52,115 @@ Resource          内业分配业务层.txt
     询价错误查询    项目地址    232收到罚单是打发反反    address    ${总数据量}
     询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    address    ${总数据量}
 
-紧急程度查询
+(未)紧急程度查询
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
-    ${紧急程度普通数据总量}    紧急程度状态查询    普通    PriorityLevel
-    ${紧急程度紧急数据总量}    紧急程度状态查询    紧急    PriorityLevel
-    ${紧急程度加急数据总量}    紧急程度状态查询    加急    PriorityLevel
-    ${紧急程度全部数据总量}    紧急程度状态查询    ${EMPTY}    PriorityLevel
+    等待列表创建完毕
+    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
+    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
+    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
+    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2
 
-物业类型查询
+(未)物业类型查询
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
-    ${成套住宅数据总量}    物业类型状态查询    成套住宅    ProjectType
-    ${成套商业数据总量}    物业类型状态查询    成套商业    ProjectType
-    ${成套办公数据总量}    物业类型状态查询    成套办公    ProjectType
-    ${别墅数据总量}    物业类型状态查询    别墅    ProjectType
-    ${储备地数据总量}    物业类型状态查询    储备地    ProjectType
-    ${城镇土地数据总量}    物业类型状态查询    城镇土地    ProjectType
-    ${农村集体土地数据总量}    物业类型状态查询    城镇土地    ProjectType
-    ${在建工程数据总量}    物业类型状态查询    在建工程    ProjectType
-    ${酒店、度假村数据总量}    物业类型状态查询    酒店、度假村    ProjectType
-    ${工业房地产数据总量}    物业类型状态查询    工业房地产    ProjectType
-    ${综合房地产数据总量}    物业类型状态查询    综合房地产    ProjectType
-    ${大型商业数据总量}    物业类型状态查询    大型商业    ProjectType
-    ${大型办公数据总量}    物业类型状态查询    大型办公    ProjectType
-    ${住宅（拆迁）数据总量}    物业类型状态查询    住宅（拆迁）    ProjectType
-    ${非住宅（拆迁）数据总量}    物业类型状态查询    非住宅（拆迁）    ProjectType
-    ${全部数据总量}    物业类型状态查询    ${EMPTY}    ProjectType
+    等待列表创建完毕
+    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=1
+    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=1
+    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=1
+    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=1
+
+(已)小区名称查询
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${总数据量}    询价正确数据查询    小区名称    五栋大楼    areaname
+    询价错误特殊字符查询    小区名称    @$@    areaname
+    询价为空查询    小区名称    ${empty}    areaname    ${总数据量}
+    询价模糊查询    小区名称    盘古    areaname
+    询价错误查询    小区名称    232收到罚单是打发反反    areaname    ${总数据量}
+    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    areaname    ${总数据量}
+
+(已)流水号查询
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    486575936688    ${empty}
+    Comment    错误特殊字符查询    流水号    ProjectNo    ProjectNo    多个大范甘迪发    2
+    ...    ${empty}    ${empty}
+    Comment    为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}
+    ...    2    ${empty}    ${empty}
+    Comment    外业分配模糊查询    流水号    ProjectNo    ProjectNo    4865    2
+    ...    ${empty}    ${empty}
+    Comment    错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564
+    ...    2    ${empty}    ${empty}
+    Comment    超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643
+    ...    2    ${empty}    ${empty}
+
+(已)报告号查询
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${总数据量}    询价正确数据查询    报告号    201601101004491    ReportNo
+    询价错误特殊字符查询    报告号    @$@    ReportNo
+    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    询价模糊查询    报告号    201601    ReportNo
+    询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
+    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
+
+(已)项目地址查询
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${总数据量}    询价正确数据查询    项目地址    北京市西城区    address
+    询价错误特殊字符查询    项目地址    @$@    address
+    询价为空查询    项目地址    ${empty}    address    ${总数据量}
+    询价模糊查询    项目地址    盘古    address
+    询价错误查询    项目地址    232收到罚单是打发反反    address    ${总数据量}
+    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    address    ${总数据量}
+
+(已)紧急程度查询
+    [Setup]    登录
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
+    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
+    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
+    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2
+
+(已)物业类型查询
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=1
+    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=1
+    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=1
+    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=1
+
+(已)查勘人员
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${总数据量}    询价正确数据查询    查勘人员    米楠    TaskOwner
+    询价错误特殊字符查询    查勘人员    @$@    TaskOwner
+    询价为空查询    查勘人员    ${empty}    TaskOwner    ${总数据量}
+    询价模糊查询    查勘人员    米    TaskOwner
+    询价错误查询    查勘人员    232收到罚单是打发反反    TaskOwner    ${总数据量}
+    询价超长字符查询    查勘人员    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    TaskOwner    ${总数据量}
+
+(已)分配人员
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    ${总数据量}    询价正确数据查询    分配人员    米楠    assignuser
+    询价错误特殊字符查询    分配人员    @$@    assignuser
+    询价为空查询    分配人员    ${empty}    assignuser    ${总数据量}
+    询价模糊查询    分配人员    米    assignuser
+    询价错误查询    分配人员    232收到罚单是打发反反    assignuser    ${总数据量}
+    询价超长字符查询    分配人员    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    assignuser    ${总数据量}

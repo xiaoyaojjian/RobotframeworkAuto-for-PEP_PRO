@@ -1,0 +1,65 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Resource          公共.txt
+Library           ../../ReportRequests.py
+Resource          未领取.txt
+Resource          公共.txt
+Resource          已完成.txt
+
+*** Keywords ***
+查勘任务已完成
+    [Arguments]    ${pno}
+    Unselect Frame
+    Click Element    //a[contains(text(),'查勘任务') and @href]
+    Select Frame    id=ProjectAllot_OutsideAccept
+    等待列表加载完成    1
+    点击查询    ${pno}
+
+填写预约信息
+    Set Selenium Speed    0.5
+    Select Frame    css=.xubox_iframe
+    Wait Until Page Contains    预约成功    10    预约信息窗口10s内未打开
+    Click Element    //a[@class='textbox-icon combo-arrow']/..
+    Click Element    //a[text()='今天']
+    Click Element    //span[text()='确定']/../..
+    Wait Until Page Contains    操作成功    20
+    Click Element    //div[@class='messager-button']/a/span/..
+    等待列表加载完成    1
+
+查勘完成
+    [Arguments]    ${pno}
+    Set Selenium Speed    0.5
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAccept
+    点击进行中
+    等待列表加载完成    2
+    Wait Until Element Is Visible    //div[@id='toolbarNo2']//input[@id='ProjectNo']
+    Clear Element Text    //div[@id='toolbarNo2']//input[@id='ProjectNo']
+    Input Text    //div[@id='toolbarNo2']//input[@id='ProjectNo']    ${pno}
+    Click Element    //div[@id='toolbarNo2']//span[text()='查询']/../..
+    Wait Until Page Contains    显示1到1,共1记录
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    //div[@id='tabs']/div[2]/div[2]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='完成']    项目派发到pad端,无法在内业中手动完成
+    Run Keyword If    ${status}==False    Fatal Error    项目派发到pad端,无法在内业中手动完成
+    操作    2    完成
+    点击确定
+    切换选项卡    估价作业
+    Unselect Frame
+    Select Frame    id=ProjectAllot_ReportAccept
+    Select Frame    css=.xubox_iframe
+    ${element_tip}    Get Webelement    id=Span_ReportType_Tip
+    ${status}    Set Variable    ${element_tip.is_displayed()}
+    Run Keyword If    ${status}==True    选择线上报告    ${pno}
+    ...    ELSE    获取提交结果    ${pno}
+
+查勘领取
+    [Arguments]    ${pno}
+    Unselect Frame
+    Select Frame    id=ProjectAllot_OutsideAccept
+    操作    1    领取
+    ${status}    Run Keyword And Return Status    Confirm Action
+    Run Keyword If    ${status}==False    Run Keywords    填写预约信息
+    ...    AND    查勘完成    ${pno}
+    ...    ELSE    Run Keywords    点击确定
+    ...    AND    查勘完成    ${pno}

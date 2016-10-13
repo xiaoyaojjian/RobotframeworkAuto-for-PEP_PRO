@@ -2,7 +2,7 @@
 Resource          ../公共模块.txt
 Resource          ../询价/流程层/流程层.txt
 Resource          ../询价/元素层/元素层.txt
-Resource          内业分配业务层.txt
+Resource          外业分配业务层.txt
 
 *** Test Cases ***
 单个分配
@@ -11,6 +11,7 @@ Resource          内业分配业务层.txt
     Select Frame    id=ProjectAllot_OutsideAssign
     Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    473345151004
     查询流水号
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     Comment    等待列表创建完毕
     Comment    单个分配按钮
     Comment    分配按钮
@@ -52,6 +53,7 @@ Resource          内业分配业务层.txt
     Comment    单个分配按钮
     Comment    分配按钮
     查询流水号
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     等待弹出窗口出现
     选择外采用户
     确定按钮
@@ -77,6 +79,7 @@ Resource          内业分配业务层.txt
     Comment    单个分配按钮
     Comment    分配按钮
     查询流水号
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     等待弹出窗口出现
     选择外采用户
     确定按钮
@@ -107,6 +110,7 @@ Resource          内业分配业务层.txt
     点击查询按钮
     询价获取页面数据总量
     查询流水号
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     Comment    Click Element    xpath=//td[@field="OuterTaskId"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[3]/td[@field="cb"]/div/input
     Comment    等待列表创建完毕
     Comment    单个分配按钮
@@ -135,6 +139,7 @@ Resource          内业分配业务层.txt
     Comment    单个分配按钮
     Comment    分配按钮
     查询流水号
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     等待弹出窗口出现
     选择外采用户
     选择外采分配pad端

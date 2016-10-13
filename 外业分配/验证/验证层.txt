@@ -3,7 +3,7 @@ Library           Selenium2Library
 Resource          ../../公共模块.txt
 Resource          ../../报告打印装订/组件层/报告装订打印.txt
 Resource          ../../报告打印装订/元素层/元素层.txt
-Resource          ../元素/元素层.txt
+Resource          ../元素/外业元素层.txt
 
 *** Keywords ***
 程度状态
@@ -28,7 +28,7 @@ Resource          ../元素/元素层.txt
 
 分配查询结果验证
     [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
-    :FOR    ${row}    IN RANGE    1    ${行数}+1
+    : FOR    ${row}    IN RANGE    1    ${行数}+1
     \    log    ${row}
     \    log    ${查询类型}
     \    ${字段值}    Run Keyword If    '${查询类型}'=='小区名称'    获取询价列表单元格    ${row}    ${路径}

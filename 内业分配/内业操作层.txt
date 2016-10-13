@@ -1,0 +1,29 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../公共模块.txt
+
+*** Keywords ***
+内业查询流水号
+    ${rand}    Evaluate    random.randint(1,10)    random
+    Sleep    3
+    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=ProjectNo    ${流水号}
+    [Return]    ${流水号}
+
+内业分配用户
+    Clear Element Text    xpath=.//*[@id='uid']/..//span/input[1]
+    Input Text    xpath=.//*[@id='uid']/..//span/input[1]    李楠
+
+点击保存
+    Click Element    //a[@onclick="ProjectHangComit()"]//span[text()='保存']
+    Comment    //span[text()="保存"]
+
+进行选择
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="Fenpei"]/div/a[2]
+    [Return]    ${i}
+
+内外业查询按钮
+    Click Element    //span[text()='查询']
+
+内业重新分配
+    Click Element    //td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td/div[1]/a[text()='重新分配']

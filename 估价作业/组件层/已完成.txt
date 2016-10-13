@@ -1,0 +1,22 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Resource          公共.txt
+
+*** Keywords ***
+点击已完成
+    Click Element    //span[text()='已完成']/parent::a/parent::li
+
+重新提交审核操作
+    :FOR    ${i}    IN RANGE    10
+    \    ${flag}    Run Keyword And Continue On Failure    Get Text    xpath=html/body/div[1]/form/div[1]/div[2]/div[3]/div/div/div/div/div[2]/div[1]/div[2]/div/table/tbody/tr[${i+1}]/td/div/a
+    \    Run Keyword And Continue On Failure    Run Keyword If    '${flag}'=='重新提交审核'    审核选择    ${i}
+    \    Exit For Loop If    '${flag}'=='重新提交审核'
+
+审核选择
+    [Arguments]    ${i}
+    Click Element    xpath=html/body/div[1]/form/div[1]/div[2]/div[3]/div/div/div/div/div[2]/div[1]/div[2]/div/table/tbody/tr[${i+1}]/td/div/a
+    sleep    10
+    普通提交
+    点击确定

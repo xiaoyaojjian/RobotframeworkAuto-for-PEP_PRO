@@ -1,0 +1,48 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          公共.txt
+Resource          添加变更申请.txt
+Resource          ../../公共模块.txt
+
+*** Keywords ***
+等待提交窗口数据加载完成
+    Wait Until Page Contains    ${USER_NAME}    60
+    Comment    log    加载完成
+    Comment    Execute Manual Step    执行成功吗
+
+点击重新选择
+    Click Element    //span[text()='重新选择']/..
+
+选择变更类型
+    [Arguments]    ${name}
+    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='modifytype']    ${name}
+    Run Keyword If    ${status}==False    Select From List By Label    //select[@id='ModifyType']    ${name}
+
+输入收费金额
+    [Arguments]    ${money}
+    Input Text    //table[@id='tbcustomer']/tbody/tr[3]/td[2]//span/input    ${money}
+
+修改审批人
+    [Arguments]    ${修改审批人}
+    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='approveemptid']    ${修改审批人}
+    Run Keyword If    ${status}==False    Select From List By Label    //select[@id='ApproveEmployeeID']    ${修改审批人}
+
+选择变更原因
+    [Arguments]    ${modifyreason}
+    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='modifyreason']    ${modifyreason}
+    Run Keyword If    ${status}==False    Select From List By Label    //select[@id='ApplyReason']    ${modifyreason}
+
+填写备注
+    [Arguments]    ${备注}
+    ${status}    Run Keyword And Return Status    Input Text    //textarea[@id='remark']    ${备注}
+    Run Keyword If    ${status}==False    Input Text    //textarea[@id='Remark']    ${备注}
+
+验证流水号是否正确
+    [Arguments]    ${serial_no}
+    Unselect Frame
+    Select Frame    id=ProjectAllot_ChangeApply
+    Execute Javascript    src=jquery=$(".xubox_iframe").attr("src");
+    ${src}    Execute Javascript    return \ src
+    ${code}    Evaluate    '${src}'.find('${src}')
+    Run Keyword If    ${code}!=-1    log    流水号显示正确

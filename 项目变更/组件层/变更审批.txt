@@ -1,0 +1,20 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          公共.txt
+Resource          添加变更申请.txt
+Resource          ../../公共模块.txt
+
+*** Keywords ***
+变更审批不通过操作
+    Unselect Frame
+    Click Element    //a[contains(text(),'变更审批' ) and @href]
+    Select Frame    id=ProjectAllot_ChangeApprove
+    等待列表加载完成
+    ${pno}    随机点击一条申请中的记录
+    Select Frame    css=.xubox_iframe
+    Click Element    //input[@value='不同意']
+    等待确定窗口弹出
+    点击确定
+    sleep    2
+    [Return]    ${pno}

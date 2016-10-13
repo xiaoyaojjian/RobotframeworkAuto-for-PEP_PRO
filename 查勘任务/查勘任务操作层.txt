@@ -1,0 +1,65 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ..//公共模块.txt
+Resource          ..//内业分配/内业操作层.txt
+Resource          ..//查勘任务/查勘任务操作层.txt
+Resource          ..//预估转正/预估操作层.txt
+Resource          ..//查勘任务/查勘任务业务层.txt
+
+*** Keywords ***
+点击领取
+    Click Element    xpath=//form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Update"]/div/a[1]
+
+点击查询
+    Click Element    xpath=//div[@id="tabs"]/div[2]/div[1]//span[text()='查询']
+
+点击确定按钮
+    Click Element    id=submitform
+
+查勘挂起
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Update"]/div/a[2]
+
+点击查勘保存
+    Click Element    //span[text()="保存"]
+
+批量领取按钮
+    Click Element    .//span[text()='批量领取']
+
+弹出提示语
+    Set Selenium Speed    1s
+    ${mes}    confirm action
+    log    ${mes}
+    Comment    Should Be Equal    ${mes}    操作成功
+    Choose Ok On Next Confirmation
+    Comment    sleep    5
+    Set Selenium Speed    0.5s
+
+线上
+    ${线上}    Get Text    //div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]/div
+    log    ${线上}
+    [Return]    ${线上}
+
+按状态进行查询
+    [Arguments]    ${状态列表值}    ${路径}    ${列数}    ${状态}
+    查询状态    ${路径}    ${状态列表值}    ${状态}
+    询价查询按钮
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量    ${状态}
+    ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    查询操作单元结果检测    ${获取报告打印第一页行数}/10    ${状态列表值}    ${路径}    ${列数}    ${状态}
+
+查询状态
+    [Arguments]    ${参数}    ${状态列表值}    ${状态}=0
+    log    ${参数}
+    log    ${状态列表值}
+    Run Keyword If    ${状态}==0 or ${状态}==1    Select From List By Label    id=${参数}    ${状态列表值}
+    ...    ELSE    Select From List By Label    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${参数}']    ${状态列表值}
+    Comment    Select From List By Label    id=${参数}    ${状态列表值}
+
+查勘打开功能模块公共方法
+    打开功能模块    我的项目    查勘任务
+    查勘任务窗口
+
+查勘任务窗口
+    Select Frame    id=ProjectAllot_OutsideAccept

@@ -1,1 +1,13 @@
+*** Settings ***
+Resource          项目收费业务层.txt
+
 *** Test Cases ***
+有效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
+    Run Keyword By Testdata Return Keyvalue    已完成收费项目有效查询测试数据    0    项目收费有效查询    子模块名称    流水号    报告号
+    ...    小区名称    项目地址    票据号    收费责任人    最小实收金额    最大实收金额
+
+无效查询
+    Import Library    ${CURDIR}/../TestDataLib.py
+    Run Keyword By Testdata Return Keyvalue    已完成收费项目无效查询测试数据    0    项目收费无效查询    子模块名称    流水号    报告号
+    ...    小区名称    项目地址    票据号    收费责任人    最小实收金额    最大实收金额

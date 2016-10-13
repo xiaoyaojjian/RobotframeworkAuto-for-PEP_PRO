@@ -1,0 +1,19 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          预估操作层.txt
+
+*** Keywords ***
+未转正校验
+    ${未转正}    Get Text    xpath=//td[@field="IsPositive"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="IsPositive"]
+    ${流水号}    Get Text    xpath=//td[@field="ProjectNo"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="ProjectNo"]
+    log    ${流水号}
+    Run Keyword If    '${未转正}'=='否'    LOG    pass
+    ...    ELSE    Fatal Error    失败
+
+已转正校验
+    ${已转正}    Get Text    xpath=//td[@field="IsPositive"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="IsPositive"]
+    log    ${已转正}
+    ${流水号}    Get Text    xpath=//td[@field="ProjectNo"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="ProjectNo"]
+    log    ${流水号}
+    Run Keyword If    '${已转正}'=='是'    LOG    ${已转正}
+    ...    ELSE    Fatal Error    失败

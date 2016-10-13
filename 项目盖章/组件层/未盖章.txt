@@ -1,0 +1,82 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          公共.txt
+Library           re
+Library           Collections
+
+*** Keywords ***
+点击盖章
+    [Arguments]    ${serial_no}
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    1
+    操作    盖章
+    点击确定
+    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[text()='该项目有盖章规则，请盖电子章']    60
+    Run Keyword If    ${status}==True    点击确定
+    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[contains(text(),'该项目的报告文件格式只能为word')]    10
+    Run Keyword If    ${status}==True    点击确定
+    log    盖章成功
+
+点击电子盖章
+    [Arguments]    ${serial_no}
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    1
+    Wait Until Page Contains    显示1到1,共1记录    10
+    操作    电子盖章
+    Wait Until Page Contains    确定要电子盖章吗？
+    点击确定
+    Wait Until Element Is Enabled    //span[text()='确定']/../..    20
+    ${status}    Run Keyword And Return Status    Page Should Not Contain Element    //body/div[6]/div[2]/div[1]    10    盖章失败
+    ${text}    Run Keyword If    ${status}==False    Get Text    //body/div[6]/div[2]/div[2]
+    点击确定
+
+点击收回
+    [Arguments]    ${serial_no}
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    1
+    sleep    2
+    ${pageNo}    获取总页数    //div[@class='panel']/../div[1]//div[contains(text(),'显示')]
+    Run Keyword If    ${pageNo}!=0    操作    收回
+    ...    ELSE    Fail    没有需要回收的项目
+    点击确定
+    Unselect Frame
+    Select Frame    id=ProjectAllot_Seal
+    点击确定
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    1
+    sleep    3
+    ${pageNo}    获取总页数    //div[@class='panel']/../div[1]//div[contains(text(),'显示')]
+    Should Be Equal    ${pageNo}    0    收回失败
+
+获取盖章失败的内容
+    ${fail_reason}    Get Text    //div[contains(text(),'盖章失败')]/ancestor::tbody/tr[1]/td[last()]/div
+    [Return]    ${fail_reason}
+
+点击报告信息
+    Click Element    //span[text()='报告信息']/..
+    ${seal_status}    Get Text    //div[@class='datagrid-view2']/div[2]//td[@field='SealSucess']/div
+    [Return]    ${seal_status}
+
+点击流程信息
+    Click Element    //span[text()='流程信息']/..
+    ${跟进信息}    Get Text    //div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[@field='Description']/div
+    [Return]    ${跟进信息}
+
+点击汇总信息
+    Click Element    //span[text()='汇总信息']/..
+    ${repoter}    Get Text    //label[@id='ReportWriting']
+    [Return]    ${repoter}
+
+查询盖章结果
+    [Arguments]    ${serial_no}
+    点击已盖章
+    sleep    5
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    2
+    sleep    5
+    ${pageNo}    获取总页数    //div[@class='panel']/../div[2]//div[contains(text(),'显示')]
+    ${list}    Create List    True    False
+    ${result}    Run Keyword If    ${pageNo}==1    Get From List    ${list}    0
+    ...    ELSE    Get From List    ${list}    1
+    [Teardown]
+    [Return]    ${result}

@@ -1,0 +1,19 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Resource          公共.txt
+
+*** Keywords ***
+点击领取
+    操作    1    领取
+
+获取流水号和报告号
+    [Arguments]    ${tab_index}
+    [Documentation]    ${tab_index}有三个可选值：0,1,2
+    ...    0表示未领取页面
+    ...    1表示进行中页面
+    ...    2表示已完成页面
+    ${serialNo}    Get Text    //div[@id='tabs']/div[2]/div[${tab_index}]//td[@field='ProjectNo' and not(node()/span) and not(@style)]/div
+    ${reportId}    Get Text    //div[@id='tabs']/div[2]/div[${tab_index}]//td[@field='ReportNo' and not(node()/span) and not(@style)]/div
+    [Return]    ${serialNo}    ${reportId}

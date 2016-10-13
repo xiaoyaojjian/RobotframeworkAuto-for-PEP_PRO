@@ -1,0 +1,102 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../报告打印装订/元素层/元素层.txt
+Resource          ../报告打印装订/组件层/报告装订打印.txt
+Resource          ../项目受理/项目受理操作层.txt
+Resource          ../公共模块.txt
+Resource          元素/外业元素层.txt
+
+*** Keywords ***
+紧急程度状态查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量
+    log    ${查询类型}
+    log    ${路径}
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    ${获取报告打印第一页列数}    获取询价列表列数据
+    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    \    \    \    \    \    \    ${路径}
+
+...
+    ELSE    log    查询数据为空，请确保数据库是否有数据
+    [Return]    ${总数据量}
+
+物业类型状态查询
+    [Arguments]    ${物业类型状态列表值}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量
+    Comment    ${总数据量}    报告装订打印打开模块公共方法
+    物业类型选择查询方式    ${物业类型状态列表值}    ${路径}
+    物业类型状态    ${物业类型状态列表值}
+    点击查询按钮
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量
+    ${获取报告打印第一页行数}    获取分配查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    Comment    查询操作单元结果检测    ${获取报告打印第一页行数}    ${紧急程度状态列表值}    ${路径}
+    Run Keyword If    ${获取报告打印第一页行数}!=0    查询操作单元结果检测    ${获取报告打印第一页行数}    ${物业类型状态列表值}    ${路径}
+    ...    ELSE    log    查询数据为空，请确保数据库是否有数据    WARN
+    [Return]    ${总数据量}
+
+随机勾选列表数据
+    [Arguments]    ${num1}    ${num2}
+    : FOR    ${i}    IN RANGE    ${num1}    ${num2}
+    \    log    ${i}
+    \    等待加载完毕
+    \    Click Element    xpath=//td[@field="OuterTaskId"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="cb"]/div/input
+
+获取分配查询数据行数
+    ${lineNumberP1}    Get Matching Xpath Count    //div[@class='panel' and @style='display: block;']//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
+    [Return]    ${lineNumberP1}
+
+分配正确查询数据
+    [Arguments]    ${查询类型}    ${路径}    ${列表路径}    ${状态}=0    ${流水号}=None    ${报告号}=None
+    ...    ${项目地址}=None    ${小区名称}=None
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量    2
+    log    ${查询类型}
+    log    ${路径}
+    ${输入参数}    根据查询条件选择查询类型    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    ...    ${路径}
+    Comment    输入流水号    ${流水号}
+    变更点击查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    获取分配查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    Run Keyword If    ${获取报告打印第一页行数}>10    ${获取报告打印第一页行数}    Set Variable    ${获取报告打印第一页行数}-1
+    查询结果检测    ${获取报告打印第一页行数}    ${获取报告打印第一页列数}    ${输入参数}    ${查询类型}    ${路径}    ${列表路径}
+    [Return]    ${总数据量}
+
+外业分配模糊查询
+    [Arguments]    ${查询类型}    ${路径}    ${列表路径}    ${流水号}    ${报告号}    ${项目地址}
+    ...    ${小区名称}
+    清空输入框装订流水号    ${路径}
+    等待列表创建完毕
+    ${输入参数}    根据查询条件选择查询类型    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
+    ...    ${路径}
+    Comment    输入流水号    ${流水号}
+    变更点击查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    获取分配查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    查询结果检测    ${获取报告打印第一页行数}    ${获取报告打印第一页列数}    ${输入参数}    ${查询类型}    ${路径}    ${列表路径}
+
+查询流水号
+    Comment    : FOR    ${i}    IN RANGE    获取页面显示总数据量
+    Comment    \    log    ${i}
+    Comment    \    等待加载完毕
+    Comment    \    Click Element    xpath=//td[@field="OuterTaskId"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="cb"]/div/input
+    Comment    \    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]/div
+    Comment    \    Input Text    .//*[@id='ProjectNo']    ${流水号}
+    ${rand}    Evaluate    random.randint(1,10)    random
+    Comment    sleep    5
+    Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
+    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=ProjectNo    ${流水号}
+    点击查询按钮
+    Comment    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]

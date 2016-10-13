@@ -1,0 +1,21 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../公共模块.txt
+Resource          公共.txt
+
+*** Keywords ***
+已盖章收回
+    [Arguments]    ${serial_no}
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    2
+    sleep    2
+    Click Element    //a[@title='打印装订未完成的才能收回']
+    点击确定
+    Wait Until Page Contains    确定    10
+    点击确定
+    Wait Until Page Contains    确定    10
+    Input Text    //input[@id='ProjectNo']    ${serial_no}
+    点击查询    2
+    ${pageNo}    Get Text    //div[@class='panel']/../div[2]//div[contains(text(),'显示')]
+    ${pageNo}    Findall    共(.*)记录    ${pageNo}
+    Should Be Equal    ${pageNo}    0    收回失败

@@ -5,6 +5,7 @@ Resource          项目受理业务层.txt
 
 *** Test Cases ***
 暂存后进行立项
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
     ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
@@ -14,6 +15,7 @@ Resource          项目受理业务层.txt
     暂存后进行立项操作    ${pep_input}
 
 进行多次暂存操作
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
     ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
@@ -23,6 +25,7 @@ Resource          项目受理业务层.txt
     重复暂存操作    ${pep_input}
 
 新项目立项
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
     ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
@@ -68,6 +71,7 @@ Resource          项目受理业务层.txt
 
 立项时直接任务分配
     [Documentation]    立项后直接进行任务分配，需要到外业分配和内业分配去验证
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
     ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
@@ -79,6 +83,7 @@ Resource          项目受理业务层.txt
 
 暂存后进行任务分配
     [Documentation]    立项后直接进行任务分配，需要到外业分配和内业分配去验证
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
     ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
@@ -92,6 +97,7 @@ Resource          项目受理业务层.txt
     提取任务进行立项操作
 
 项目进行修改
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
     ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
@@ -104,6 +110,7 @@ Resource          项目受理业务层.txt
     查询并验证项目详情的值是否正确    ${pep}
 
 立项界面跳转询价
+    Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    立项转询价    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    发送份数    小区名    小区地址
     ...    楼栋号    单元号    户号名    建筑面积    土地面积    建成年代

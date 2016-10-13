@@ -92,7 +92,7 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Run Keyword If    ${跳转来源}!=2    Should Be Equal    ${pep.get_value(u'固定电话')}    ${固定电话}    客户固定电话不匹配
     ${客户姓名}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="CustomerName"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="CustomerName"]
-    Run Keyword And Continue On Failure    Should Start With    ${pep.get_value(u'客户姓名')}    ${客户姓名}    客户姓名不匹配
+    Run Keyword And Continue On Failure    Should Contain    ${客户姓名}    ${pep.get_value(u'客户姓名')}    客户姓名不匹配
     ${所属机构}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id="organiid"]/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id="CustomerType"]
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'所属机构')}    ${所属机构}    所属机构不匹配

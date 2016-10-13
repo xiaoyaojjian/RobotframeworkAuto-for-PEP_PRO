@@ -1,0 +1,11 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          ../../公共模块.txt
+
+*** Keywords ***
+点击复选框
+    Click Element    //input[@name='cb']
+
+点击确定选中
+    Click Element    //span[text()='确定选中']/..

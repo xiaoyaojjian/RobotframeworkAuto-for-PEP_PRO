@@ -1,0 +1,236 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Resource          公共.txt
+Library           ../../ReportRequests.py
+Resource          未领取.txt
+Resource          查勘任务.txt
+
+*** Keywords ***
+点击进行中
+    Click Element    //span[text()='进行中']/../..
+
+点击提交
+    操作    2    提交
+
+点击查看
+    操作    2    查看
+
+点击线下报告
+    操作    2    线下报告
+
+点击线上报告
+    操作    2    线上报告
+
+点击报告上传
+    Unselect Frame
+    Select Frame    id=offline_report
+    Click Element    //span[text()='报告上传']/..
+    Select Frame    css=.xubox_iframe
+    Choose File    id=Uploadfile    ${CURDIR}/光大银行.doc
+    点击保存
+    Confirm Action
+
+汇总数据新建或编辑
+    ${txt}    Get Text    //a[@id='ProjectData']
+    Click Element    //a[text()='${txt}']
+
+填写汇总数据
+    [Arguments]    ${新报告月度}    ${项目名称}    ${目的描述}    ${项目所在省}    ${项目所在市}    ${项目区县}
+    ...    ${小区名称}    ${楼栋号}    ${单元号}    ${户号}    ${项目推广名}    ${估价委托人}
+    ...    ${报告使用方}    ${支行}    ${报告有效期}    ${现场勘察员}    ${报告撰写人员}    ${估价师1}
+    ...    ${估价师2}    ${估价方法1}    ${估价方法2}    ${评估总价（万元）}    ${评估单价（元/㎡）}    ${成交总价（万元）}
+    ...    ${成交单价（元/㎡）}    ${交易日期}    ${处置扣税额（万元）}    ${扣税口净值（万元）}    ${土地增值税（元）}    ${扣除土地税后（万元）}
+    ...    ${环线}    ${其它影响因素}    ${补交出让金/综合地价款（元）}    ${优先受偿款}    ${物理结构是否变化}    ${使用现状}
+    ...    ${登记用途}    ${现状用途}    ${建筑结构}    ${建成年代}    ${所在楼层}    ${总楼层}
+    ...    ${楼层}    ${户型}    ${房屋所有权号}    ${房屋所有人}    ${建筑面积（㎡）}    ${产别}
+    ...    ${装修程度}    ${产权性质}    ${最高使用年限}    ${剩余经济寿命}    ${土地使用权人}    ${土地用途}
+    ...    ${使用权类型}    ${土地使用权面积（㎡）}    ${图号}    ${地号}    ${剩余土地年限（年）}    ${国有土地使用号}
+    ...    ${土地坐落}    ${借款人姓名}    ${借款人身份证}    ${基本地价级别}    ${区片编号}    ${结算单位经办}
+    Unselect Frame
+    Select Frame    id=collection_data
+    Comment    ${所属公司}    get value    xpath=//*[@id="Company"]
+    Comment    ${所属部门}    get value    xpath=//*[@id="Department"]
+    Comment    ${报告年度}    get value    xpath=//*[@id="ReportYear"]
+    Comment    ${报告月度}    get value    xpath=//*[@id="ReportMonth"]
+    Comment    ${估价目的}    get value    xpath=//*[@id="EvalGoal"]
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Company']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Company']    ${所属公司}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Department']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Department']    ${所属部门}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportYear']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportYear']    ${报告年度}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportMonth']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportMonth']    ${新报告月度}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectName']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectName']    ${项目名称}
+    Comment    Clear Element Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='GoalDescription']/../span/input[1]
+    Comment    Input Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='GoalDescription']/../span/input[1]    ${目的描述}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectProvince']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectProvince']    ${项目所在省}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectCity']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectCity']/../span/input[1]    ${项目所在市}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectDistrict']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectDistrict']/../span/input[1]    ${项目区县}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ResidentialAreaAddress']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ResidentialAreaAddress']    ${小区名称}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingNo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingNo']    ${楼栋号}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingUnitNo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingUnitNo']    ${单元号}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseNo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseNo']    ${户号}
+    Comment    ${余下地址}    get value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='OtherAddress']
+    Comment    #Input Text    xpath=//*[@id="OtherAddress"]    ${余下地址}
+    Comment    #完整地址
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectAddress']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectAddress']/../span/input[1]    ${项目所在省}${项目所在市}${项目区县}${小区名称}${楼栋号}${单元号}${户号}${余下地址}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectPopularizeName']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectPopularizeName']    ${项目推广名}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalEntrust']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalEntrust']    ${估价委托人}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportUse']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportUse']    ${报告使用方}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Subbranch']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Subbranch']    ${支行}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='SurveyPeople']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='SurveyPeople']    ${现场勘察员}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportWriting']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportWriting']    ${报告撰写人员}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='QuantitySurveyor1']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='QuantitySurveyor1']    ${估价师1}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='QuantitySurveyor2']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='QuantitySurveyor2']    ${估价师2}
+    Comment    ${估价师合并}    get value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='QuantitySurveyorJoin']
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalMethod1']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalMethod1']    ${估价方法1}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalMethod2']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalMethod2']    ${估价方法2}
+    Comment    ${方法汇总}    get value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalMethodJoin']
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluateTotal']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluateTotal']/../span/input[1]    ${评估总价（万元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluatePrice']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluatePrice']    ${评估单价（元/㎡）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DealTotal']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DealTotal']    ${成交总价（万元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DeaPrice']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DeaPrice']    ${成交单价（元/㎡）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BusinessTime']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BusinessTime']    ${交易日期}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HandleTaxQuota']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HandleTaxQuota']    ${处置扣税额（万元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='TaxAfterNet']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='TaxAfterNet']    ${扣税口净值（万元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandVatQuota']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandVatQuota']    ${土地增值税（元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='TaxAfterVatQuota']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='TaxAfterVatQuota']    ${扣除土地税后（万元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LoopLine']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LoopLine']/../span/input[1]    ${环线}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='OtherInfluenceFactor']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='OtherInfluenceFactor']    ${其它影响因素}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PayLeasing']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PayLeasing']    ${补交出让金/综合地价款（元）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PriorityRepaymentInfo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PriorityRepaymentInfo']    ${优先受偿款}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PhysicalHasChanged']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PhysicalHasChanged']    ${物理结构是否变化}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='StatusQuo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='StatusQuo']    ${使用现状}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='RegisterUse']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='RegisterUse']/../span/input[1]    ${登记用途}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUse']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUse']/../span/input[1]    ${现状用途}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingStructure']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingStructure']/../span/input[1]    ${建筑结构}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuiltYear']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuiltYear']    ${建成年代}
+    Comment    Clear Element Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Floor']
+    Comment    Input Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Floor']    ${所在楼层}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='MaxFloor']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='MaxFloor']    ${总楼层}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='FloorJoin']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='FloorJoin']    ${楼层}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseType']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseType']    ${户型}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseOwnershipNo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseOwnershipNo']    ${房屋所有权号}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseOwnershipPeople']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='HouseOwnershipPeople']    ${房屋所有人}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ArchitectureArea']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ArchitectureArea']    ${建筑面积（㎡）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Yield']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Yield']    ${产别}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Decoration']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Decoration']    ${装修程度}
+    Comment    select From List By Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='PropertyNature']    ${产权性质}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='MaxUseYear']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='MaxUseYear']/../span/input[1]    ${最高使用年限}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='SpareEconomicsYear']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='SpareEconomicsYear']    ${剩余经济寿命}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUsePeople']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUsePeople']    ${土地使用权人}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUse']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUse']/../span/input[1]    ${土地用途}
+    Comment    select From List By Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUseType']    ${使用权类型}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUseArea']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUseArea']    ${土地使用权面积（㎡）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='TuHao']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='TuHao']    ${图号}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DiHao']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DiHao']    ${地号}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LanSpareYear']/../span/input[1]
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LanSpareYear']/../span/input[1]    ${剩余土地年限（年）}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUseNo']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUseNo']    ${国有土地使用号}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandAddress']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandAddress']    ${土地坐落}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BorrowerName']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BorrowerName']    ${借款人姓名}
+    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BorrowerID']
+    Comment    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BorrowerID']    ${借款人身份证}
+    Clear Element Text    xpath=html/body/div[1]/div[1]/div[2]/div[2]/div[5]/div/form/div[5]/div/table/tbody/tr[1]/td[6]/input
+    Input Text    xpath=html/body/div[1]/div[1]/div[2]/div[2]/div[5]/div/form/div[5]/div/table/tbody/tr[1]/td[6]/input    ${基本地价级别}
+    Clear Element Text    xpath=html/body/div[1]/div[1]/div[2]/div[2]/div[5]/div/form/div[5]/div/table/tbody/tr[1]/td[8]/input
+    Input Text    xpath=html/body/div[1]/div[1]/div[2]/div[2]/div[5]/div/form/div[5]/div/table/tbody/tr[1]/td[8]/input    ${区片编号}
+    Clear Element Text    xpath=html/body/div[1]/div[1]/div[2]/div[2]/div[5]/div/form/div[5]/div/table/tbody/tr[2]/td[2]/input
+    Input Text    xpath=html/body/div[1]/div[1]/div[2]/div[2]/div[5]/div/form/div[5]/div/table/tbody/tr[2]/td[2]/input    ${结算单位经办}
+    [Return]    ${新报告月度}    ${项目名称}    ${目的描述}    ${项目所在省}    ${项目所在市}    ${项目区县}
+    ...    ${小区名称}    ${楼栋号}    ${单元号}    ${户号}    ${项目推广名}    ${估价委托人}
+    ...    ${报告使用方}    ${支行}    ${报告有效期}    ${现场勘察员}    ${报告撰写人员}    ${估价师1}
+    ...    ${估价师2}    ${估价方法1}    ${估价方法2}    ${评估总价（万元）}    ${评估单价（元/㎡）}    ${成交总价（万元）}
+    ...    ${成交单价（元/㎡）}    ${交易日期}    ${处置扣税额（万元）}    ${扣税口净值（万元）}    ${土地增值税（元）}    ${扣除土地税后（万元）}
+    ...    ${环线}    ${其它影响因素}    ${补交出让金/综合地价款（元）}    ${优先受偿款}    ${物理结构是否变化}    ${使用现状}
+    ...    ${登记用途}    ${现状用途}    ${建筑结构}    ${建成年代}    ${所在楼层}    ${总楼层}
+    ...    ${楼层}    ${户型}    ${房屋所有权号}    ${房屋所有人}    ${建筑面积（㎡）}    ${产别}
+    ...    ${装修程度}    ${产权性质}    ${最高使用年限}    ${剩余经济寿命}    ${土地使用权人}    ${土地用途}
+    ...    ${使用权类型}    ${土地使用权面积（㎡）}    ${图号}    ${地号}    ${剩余土地年限（年）}    ${国有土地使用号}
+    ...    ${土地坐落}    ${借款人姓名}    ${借款人身份证}    ${基本地价级别}    ${区片编号}    ${结算单位经办}
+
+提交审核
+    [Arguments]    ${pno}
+    Select Frame    css=.xubox_iframe
+    Wait Until Page Contains    附言信息    20    提交审核窗口20s内未打开
+    Select From List By Label    id=nextTask    三审
+    Wait Until Page Contains    ${USER_NAME}    60    60s内审核人员未加载出来
+    Select From List By Label    id=ReceiverId    ${USER_NAME}
+    ${element_tip}    Get Webelement    id=Span_ReportType_Tip
+    ${status}    Set Variable    ${element_tip.is_displayed()}
+    Run Keyword If    ${status}==True    选择线上报告    ${pno}
+    ...    ELSE    获取提交结果    ${pno}
+
+选择线上报告
+    [Arguments]    ${pno}
+    Click Element    //input[@name='ReportType' and @value='线上报告']
+    获取提交结果    ${pno}
+
+获取提交结果
+    [Arguments]    ${pno}
+    Click Element    //span[text()='提交']/..
+    ${text}    Get Text    xpath=html/body/div[4]/div[2]/div[2]
+    ${status}    Evaluate    '${text}'.find('是否提交流水号')
+    Run Keyword If    ${status}!=-1    Run Keywords    点击确定
+    ...    AND    验证审核列表    ${pno}
+    ...    ELSE    Run Keywords    点击确定
+    ...    AND    查勘任务已完成    ${pno}

@@ -1,0 +1,278 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../公共模块.txt
+Resource          ../报告打印装订/元素层/元素层.txt
+Resource          ../报告打印装订/组件层/报告装订打印.txt
+Resource          ../项目受理/项目受理操作层.txt
+Resource          ../外业分配/外业分配业务层.txt
+Resource          预估校验.txt
+
+*** Keywords ***
+转正
+    [Arguments]    ${row}=1
+    Comment    Click Element    .//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
+
+选择报告撰写人和收费信息
+    Clear Element Text    xpath=.//*[@id='people']/..//span/input[1]
+    Input Text    xpath=.//*[@id='people']/..//span/input[1]    李楠
+    Clear Element Text    xpath=.//*[@id='price']/..//span/input[1]
+    Input Text    xpath=.//*[@id='price']/..//span/input[1]    200
+
+点击提交
+    Click Element    xpath=html/body/div[1]/table/tbody/tr[6]/td/input
+
+点击查看数据
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[1]
+
+检测是否已经转正
+    ${检测是否已经转正}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="IsPositive"]/div
+    log    ${检测是否已经转正}
+    Comment    Set Global Variable    ${检测是否已经转正}
+    Comment    ${status}    Run Keyword And Return Status    Wait Until Element Is Not Visible    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
+    Comment    Run Keyword If    ${status}==True    log    转正成功
+    ...    ELSE    Fatal Error    转正失败
+    [Return]    ${检测是否已经转正}
+
+判断转正是否成功
+    ${检测是否已经转正}    Get Text    xpath=//td[@field="IsPositive"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="IsPositive"]/div
+    Run Keyword If    '${检测是否已经转正}'=='是'    log    pass
+    ...    ELSE    fail
+
+转正查询按钮
+    Click Element    id=BtnSearch
+
+预估转正查询状态
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    预估获取页面总数量
+    log    ${查询类型}
+    log    ${路径}
+    ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    转正查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    预估列表行数    ${路径}
+    ${获取报告打印第一页列数}    预估获取列表列数    ProjectNo
+    预估查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    [Return]    ${总数据量}
+
+预估状态
+    [Arguments]    ${预估状态列表值}
+    Select From List By Label    id=IsPositive    ${预估状态列表值}
+
+根据预估状态选择正确查询方式
+    [Arguments]    ${预估状态列表值}    ${路径}
+    Run Keyword If    '${预估状态列表值}'=='全部'    预估(未)正状态    ${预估状态列表值}    ${路径}
+    ...    ELSE IF    '${预估状态列表值}'=='未转正'    预估(未)正状态    ${预估状态列表值}    ${路径}
+    ...    ELSE IF    '${预估状态列表值}'=='已转正'    预估(未)正状态    ${预估状态列表值}    ${路径}
+
+预估(未)正状态
+    [Arguments]    ${预估状态列表值}    ${路径}
+    预估状态    ${预估状态列表值}
+    Comment    点击查询按钮
+    等待列表创建完毕
+    ${总数据量}    获取页面显示总数据量
+    ${获取报告打印第一页行数}    获取报告装订打印查询数据行数
+    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
+    查询操作单元结果检测    ${获取报告打印第一页行数}/10    ${预估状态列表值}    ${路径}
+
+获取转正状态值
+    [Arguments]    ${row}
+    ${流水号状态值}    Get Text    //td[@field="IsPositive"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="IsPositive"]/div
+    log    ${流水号状态值}
+    [Return]    ${流水号状态值}
+
+获取流水号状态值
+    [Arguments]    ${row}
+    ${转正状态值}    Get Text    //td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="ProjectNo"]/div
+    log    ${转正状态值}
+    [Return]    ${转正状态值}
+
+查询全部状态
+    点击查询按钮
+
+预估获取页面总数量
+    ${列表总共数据数}    Get Text    xpath=.//form[@id='form1']/div/div/div/div[3]/div[1]
+    ${显示第}    Findall    显示(.*)到    ${列表总共数据数}
+    ${到第}    Findall    到(.*),共    ${列表总共数据数}
+    ${总共多少条}    Findall    共(.*)记录    ${列表总共数据数}
+    log    ${总共多少条[0]}
+    [Return]    ${总共多少条[0]}
+
+预估查询结果校验
+    [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
+    :FOR    ${row}    IN RANGE    1    ${行数}+1
+    \    log    ${row}
+    \    log    ${查询类型}
+    \    ${字段值}    Run Keyword If    '${查询类型}'=='流水号'    获取预估单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='报告号'    获取预估单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='小区名称'    获取预估单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='项目地址'    获取预估单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='预估单编号'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='委托人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='权利人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='评估人员'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='所属机构'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='状态'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='客户名称'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='客户手机'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='收款责任人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='所属机构1'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='撰写人员'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='查勘人员'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='分配人员'    获取询价列表单元格    ${row}    ${路径}
+    \    Run Keyword If    '${查询条件名}'=='已立项'    Should Match Regexp    ${字段值}    (.*)是(.*)
+    \    ...    ELSE IF    '${查询条件名}'=='未立项'    Should Match Regexp    ${字段值}    (.*)否(.*)
+    \    ...    ELSE    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+    \    Comment    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+
+预估条件参数
+    [Arguments]    ${输入流水号}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@id="toolbarNo"]//td/input[@id='${路径}']    ${输入流水号}
+
+获取预估单元格
+    [Arguments]    ${row}    ${路径}
+    log    ${路径}
+    log    ${row}
+    ${字段值}    Get Text    xpath=.//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='${路径}']
+    log    ${字段值}
+    [Return]    ${字段值}
+
+预估查询选择查询类型
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    Comment    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    输入询价机构    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    输入询价人(客户名称)    ${输入参数}    ${路径}
+    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    预估条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    预估条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    预估条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    预估条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='客户名称'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='客户手机'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='收款责任人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='预估单编号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人估价人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='评估人员'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构'    下拉选项框条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='状态'    下拉选项框条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构1'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='撰写人员'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='查勘人员'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='分配人员'    条件输入参数    ${输入参数}    ${路径}
+    [Return]    ${输入参数}
+
+预估条件输入参数
+    [Arguments]    ${输入条件}    ${路径}
+    log    ${输入条件}
+    log    ${路径}
+    预估条件参数    ${输入条件}    ${路径}
+    [Return]    ${输入条件}
+
+预估列表行数
+    [Arguments]    ${路径}
+    ${lineNumberP1}    Get Matching Xpath Count    .//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
+    [Return]    ${lineNumberP1}
+
+预估获取列表列数
+    [Arguments]    ${路径}
+    ${rowNumberP1}    Get Matching Xpath Count    //td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td
+    [Return]    ${rowNumberP1}
+
+预估特殊错误字符查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    预估获取页面总数量
+    log    ${查询类型}
+    log    ${路径}
+    ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    ${提示语}    get text    //div[@class='tooltip tooltip-right']
+    特殊字符校验提示语    ${查询类型}    ${提示语}
+    [Return]    ${总数据量}
+
+预估为空查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${总数据量}
+    预估清空输入框内容    ${路径}
+    等待列表创建完毕
+    ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    转正查询按钮
+    等待列表创建完毕
+    ${新总数}    预估获取页面总数量
+    Should Be Equal    ${新总数}    ${总数据量}
+
+预估模糊查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    预估清空输入框内容    ${路径}
+    等待列表创建完毕
+    ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    转正查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    预估列表行数    ${路径}
+    ${获取报告打印第一页列数}    预估获取列表列数
+    预估查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+
+预估错误查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${总数据量}
+    预估清空输入框内容    ${路径}
+    等待列表创建完毕
+    ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    转正查询按钮
+    等待列表创建完毕
+    ${新总数}    预估获取页面总数量
+    Should Be Equal    ${新总数}    0
+
+预估超长字符查询
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${总数据量}
+    预估清空输入框内容    ${路径}
+    等待列表创建完毕
+    ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    ${获取输入参数最终值}    预估输入参数最终值    ${查询类型}    ${路径}
+    ${n}    Get List Count    ${获取输入参数最终值}
+    超长字符校验    ${查询类型}    ${n}
+    预估清空输入框内容    ${路径}
+
+预估输入参数最终值
+    [Arguments]    ${查询类型}    ${路径}
+    ${获取输入参数最终值}    Run Keyword If    '${查询类型}'=='流水号'    获取预估输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    获取预估输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    获取预估输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    获取预估输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='预估单编号'    获取询价输入最终值    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构1'    获取询价输入最终值    ${路径}
+    [Return]    ${获取输入参数最终值}
+
+获取预估输入最终值
+    [Arguments]    ${路径}
+    ${获取输入参数最终值}    Get Value    xpath=.//div[@id="toolbarNo"]//td/input[@id='${路径}']
+    [Return]    ${获取输入参数最终值}
+
+预估清空输入框内容
+    [Arguments]    ${路径}
+    clear Element Text    xpath=.//div[@id="toolbarNo"]//td/input[@id='${路径}']
+
+全部查询
+
+未转正查询
+    Select From List By Label    id=IsPositive    未转正
+    转正查询按钮
+    预估获取页面总数量
+    Comment    ${行数}    预估获取列表列数    IsPositive
+    sleep    5
+    未转正校验
+
+已转正查询

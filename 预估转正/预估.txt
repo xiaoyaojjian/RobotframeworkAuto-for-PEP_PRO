@@ -1,19 +1,26 @@
 *** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
 Resource          ../公共模块.txt
-Resource          操作层.txt
+Resource          预估操作层.txt
 Resource          ../变更审批/流程层/流程层.txt
 Resource          ../询价/元素层/元素层.txt
 Resource          ../询价/流程层/流程层.txt
 Resource          ../询价/组件层/住宅信息.txt
-Resource          ../外业分配/内业分配业务层.txt
-Resource          操作层.txt
+Resource          ../外业分配/外业分配业务层.txt
+Resource          预估操作层.txt
+Resource          ../内业分配/内业操作层.txt
 
 *** Test Cases ***
 转正
     [Setup]    登录
     打开功能模块    我的项目    预估转正
     Select Frame    id=ProjectAllot_Positive
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    469638238542
+    Comment    ${预估未转正}    预估转正查询状态    未转正查询    IsPositive    IsPositive
+    Select From List By Label    id=IsPositive    未转正
+    转正查询按钮
+    ${流水号}    内业查询流水号
+    转正查询按钮
     等待列表创建完毕
     Comment    Click Element    .//a[text()="转正"]
     转正
@@ -26,14 +33,26 @@ Resource          操作层.txt
     Unselect Frame
     Select Frame    id=ProjectAllot_Positive
     等待列表创建完毕
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    529573468607
-    ${检测是否已经转正}    检测是否已经转正
-    判断转正是否成功    ${检测是否已经转正}
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    529573468607
+    Comment    ${预估已转正}    预估转正查询状态    已转正查询    IsPositive
+    Select From List By Label    id=IsPositive    全部
+    转正查询按钮
+    预估清空输入框内容    ProjectNo
+    Input Text    id=ProjectNo    ${流水号}
+    转正查询按钮
+    等待列表创建完毕
+    Comment    ${检测是否已经转正}    检测是否已经转正
+    已转正校验
+    Comment    判断转正是否成功
 
 查看
     [Setup]    登录
     打开功能模块    我的项目    预估转正
     Select Frame    id=ProjectAllot_Positive
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    504777503841
+    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    504777503841
+    ${预估已转正}    预估转正查询状态    已转正查询    IsPositive
     等待列表创建完毕
+    内业查询流水号
+    转正查询按钮
+    sleep    5
     点击查看数据
