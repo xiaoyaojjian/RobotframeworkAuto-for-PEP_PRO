@@ -127,3 +127,19 @@ Resource          ../../公共模块.txt
     : FOR    ${i}    IN RANGE    ${count}
     \    ${temp}    获取流程信息每列的值    ${i}
     \    ${all}    Set Variable    ${all}${temp}
+    ${盖章失败}    Evaluate    '${all}'.find('盖章失败')
+    ${审核完成}    Evaluate    '${all}'.find('审核完成')
+    ${三审审核中}    Evaluate    '${all}'.find('三审审核中')
+    ${三审未接收}    Evaluate    '${all}'.find('三审未接收')
+    ${内业进行中}    Evaluate    '${all}'.find('内业进行中')
+    ${分配任务}    Evaluate    '${all}'.find('分配内业任务给李楠')
+    ${估计领取}    Evaluate    '${all}'.find('李楠领取撰写任务')
+    ${审核领取}    Evaluate    '${all}'.find('三审任务已接收(李楠)')
+    Should Not Be Equal    -1    ${盖章失败}    流程信息有错误
+    Should Not Be Equal    -1    ${审核完成}    流程信息有错误
+    Should Not Be Equal    -1    ${盖章失败}    流程信息有错误
+    Should Not Be Equal    -1    ${三审审核中}    流程信息有错误
+    Should Not Be Equal    -1    ${内业进行中}    流程信息有错误
+    Should Not Be Equal    -1    ${分配任务}    流程信息有错误
+    Should Not Be Equal    -1    ${估计领取}    流程信息有错误
+    Should Not Be Equal    -1    ${审核领取}    流程信息有错误

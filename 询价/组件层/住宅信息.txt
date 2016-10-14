@@ -95,7 +95,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 估值信息参数
     [Arguments]    ${pep}
-    Run Keyword If    '${pep.get_value(u'城市')}'!=''    Select From List By Label    id=CityName    ${pep.get_value(u'城市')}
+    ${城市}    Get Value    xpath=.//*[@id='CityName']//..//input[@name="CityName"]
+    Run Keyword If    '${城市}'=='${pep.get_value(u'城市')}' and '${城市}'!=''    log    pass
+    ...    ELSE IF    '${城市}'=='' and '${pep.get_value(u'城市')}'!=''    Input Text    xpath=.//*[@id='CityName']//..//input[@name="CityName"]    ${pep.get_value(u'城市')}
+    Comment    Run Keyword If    '${pep.get_value(u'城市')}'!=''    Input Text    xpath=.//*[@id='CityName']//..//input[@name="CityName"]    ${pep.get_value(u'城市')}
     Run Keyword If    '${pep.get_value(u'行政区')}'!=''    Input Text    id=DistrictName    ${pep.get_value(u'行政区')}
     Run Keyword If    '${pep.get_value(u'小区名')}'!=''    Input Text    id=ResidentialAreaName    ${pep.get_value(u'小区名')}
     Run Keyword If    '${pep.get_value(u'小区地址')}'!=''    Input Text    id=ResidentialAddress    ${pep.get_value(u'小区地址')}
@@ -176,7 +179,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 添加系统价格校验
     [Arguments]    ${price_range}
-    Run Keyword If    '${price_range.get_value(u'系统价格单价')}'!='' and '${price_range.get_value(u'系统价格总价')}'!='' and '${price_range.get_value(u'抵押价值区间单价最小')}'!='' and '${price_range.get_value(u'抵押价值区间单价最大')}'!='' and '${price_range.get_value(u'抵押价值区间总价最小')}'!='' and '${price_range.get_value(u'抵押价值区间总价最大')}'!='' and '${price_range.get_value(u'价格差异说明')}'!=''    log    住宅询价PASS
+    Run Keyword If    '${price_range.get_value(u'系统价格单价')}'!='' and '${price_range.get_value(u'系统价格总价')}'!='' and '${price_range.get_value(u'抵押价值区间单价最小')}'!='' and '${price_range.get_value(u'抵押价值区间单价最大')}'!='' and '${price_range.get_value(u'抵押价值区间总价最小')}'!='' and '${price_range.get_value(u'抵押价值区间总价最大')}'!=''     log    住宅询价PASS
     ...    ELSE    fail
 
 获取添加询价所有数据校验
@@ -194,7 +197,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${所属机构}    Get Value    xpath=.//*[@id="Bank"]/../span/input[@type="text"]
     ${分支机构}    Get Value    xpath=.//*[@id="BankChild"]/../span/input[@type="text"]
     ${客户QQ}    Get Value    xpath=.//*[@id="QQ"]/..//input[@type="text"]
-    ${城市}    Get Value    id=CityName
+    ${城市}    Get Value    xpath=.//*[@id='CityName']//..//input[@name="CityName"]
     ${行政区}    Get Value    id=DistrictName
     ${小区名称}    Get Value    id=ResidentialAreaName
     ${小区地址}    Get Value    id=ResidentialAddress

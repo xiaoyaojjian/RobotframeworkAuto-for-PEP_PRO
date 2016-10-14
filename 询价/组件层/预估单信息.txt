@@ -102,14 +102,14 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${建筑结构}    Get Value    xpath=//*[@id='BuildStruct']/../span/input[@type="text"]
     Run Keyword If    '${建筑结构}'=='${pep_input.get_value(u'建筑结构')}' and '${建筑结构}'!=''    log    pass
     ...    ELSE IF    '${pep_input.get_value(u'建筑结构')}'!=''    Input Text    xpath=//*[@id='BuildStruct']/../span/input[@type="text"]    ${pep_input.get_value(u'建筑结构')}
-    Run Keyword If    '${pep_input.get_value(u'所在楼层')}'!=''    Input Text    xpath=.//*[@id='Floor']/../span/input[@type="text"]    ${pep_input.get_value(u'所在楼层')}
-    Run Keyword If    '${pep_input.get_value(u'总楼层')}'!=''    Input Text    xpath=.//*[@id='TotalFloor']/../span/input[@type="text"]    ${pep_input.get_value(u'总楼层')}
+    Run Keyword If    '${pep_input.get_value(u'所在楼层')}'!=''    Input Text    xpath=.//*[@id='Floor']    ${pep_input.get_value(u'所在楼层')}
+    Run Keyword If    '${pep_input.get_value(u'总楼层')}'!=''    Input Text    xpath=.//*[@id='TotalFloor']    ${pep_input.get_value(u'总楼层')}
     Run Keyword If    '${pep_input.get_value(u'建筑面积')}'!=''    Input Text    xpath=.//*[@id='HouseSize']/../span/input[@type="text"]    ${pep_input.get_value(u'建筑面积')}
     Run Keyword If    '${pep_input.get_value(u'建成年代')}'!=''    Input Text    xpath=.//*[@id='BuildYear']/../span/input[@type="text"]    ${pep_input.get_value(u'建成年代')}
-    Run Keyword If    '${pep_input.get_value(u'使用权来源')}'!=''    Input Text    xpath=.//*[@id='UsePowerSource']    ${pep_input.get_value(u'使用权来源')}
-    Run Keyword If    '${pep_input.get_value(u'权属性质')}'!=''    Input Text    xpath=.//*[@id='HouseNature']    ${pep_input.get_value(u'权属性质')}
-    Run Keyword If    '${pep_input.get_value(u'土地用途')}'!=''    Input Text    xpath=.//*[@id='LandUse']    ${pep_input.get_value(u'土地用途')}
-    Run Keyword If    '${pep_input.get_value(u'使用期限')}'!=''    Input Text    xpath=.//*[@id='UseYear']/../span/input[@type="text"]    ${pep_input.get_value(u'使用期限')}
+    Run Keyword If    '${pep_input.get_value(u'使用权来源')}'!=''    Input Text    xpath=.//*[@id='UsePowerSource']/../span/input[@type="text"]    ${pep_input.get_value(u'使用权来源')}
+    Run Keyword If    '${pep_input.get_value(u'权属性质')}'!=''    Input Text    xpath=.//*[@id='HouseNature']/../span/input[@type="text"]     ${pep_input.get_value(u'权属性质')}
+    Run Keyword If    '${pep_input.get_value(u'土地用途')}'!=''    Input Text    xpath=.//*[@id='LandUse']/../span/input[@type="text"]     ${pep_input.get_value(u'土地用途')}
+    Run Keyword If    '${pep_input.get_value(u'使用期限')}'!=''    Input Text    xpath=.//*[@id='UseYear']    ${pep_input.get_value(u'使用期限')}
     Run Keyword If    '${pep_input.get_value(u'地号')}'!=''    Input Text    xpath=.//*[@id='LandNumber']    ${pep_input.get_value(u'地号')}
     Run Keyword If    '${pep_input.get_value(u'图号')}'!=''    Input Text    xpath=.//*[@id='MapNumber']    ${pep_input.get_value(u'图号')}
     Run Keyword If    '${pep_input.get_value(u'土地摊分面积')}'!=''    Input Text    xpath=.//*[@id='LandSplitArea']/../span/input[@type="text"]    ${pep_input.get_value(u'土地摊分面积')}
@@ -121,10 +121,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${物业类型}    Get Value    xpath=//*[@id='PropertyType']/../span/input[@type="text"]
     Run Keyword If    '${物业类型}'=='${pep_input.get_value(u'物业类型')}' and '${物业类型}'!=''    log    pass
     ...    ELSE IF    '${pep_input.get_value(u'物业类型')}'!=''    Input Text    xpath=//*[@id='PropertyType']/../span/input[@type="text"]    ${pep_input.get_value(u'物业类型')}
-    Run Keyword If    '${pep_input.get_value(u'项目分类')}'!=''    Select From List By Label    xpath=.//*[@id='ProjectType']    ${pep_input.get_value(u'项目分类')}
+    Run Keyword If    '${pep_input.get_value(u'项目分类')}'!=''    Input Text    xpath=.//*[@id='ProjectType']/../span/input[@type="text"]     ${pep_input.get_value(u'项目分类')}
     Run Keyword If    '${pep_input.get_value(u'估价委托人')}'!=''    Input Text    xpath=.//*[@id='Entrust']    ${pep_input.get_value(u'估价委托人')}
-    Run Keyword If    '${pep_input.get_value(u'估价目的')}'!=''    Select From List By Label    xpath=.//*[@id='EvalPurpose']    ${pep_input.get_value(u'估价目的')}
-    Run Keyword If    '${pep_input.get_value(u'评估方法')}'!=''    Input Text    xpath=.//*[@id='EvalMethod']    ${pep_input.get_value(u'评估方法')}
+    Run Keyword If    '${pep_input.get_value(u'估价目的')}'!=''    Input Text    xpath=.//*[@id='EvalPurpose']/../span/input[@type="text"] \     ${pep_input.get_value(u'估价目的')}
+    Run Keyword If    '${pep_input.get_value(u'评估方法')}'!=''    Input Text    xpath=.//*[@id='EvalMethod']/../span/input[@type="text"]     ${pep_input.get_value(u'评估方法')}
     Run Keyword If    '${pep_input.get_value(u'评估单价(元)')}'!=''    Input Text    xpath=.//*[@id='EvaluatePrice']/../span/input[@type="text"]    ${pep_input.get_value(u'评估单价(元)')}
     Run Keyword If    '${pep_input.get_value(u'评估总价(万元)')}'!=''    Input Text    xpath=.//*[@id='EvaluateTotal']/../span/input[@type="text"]    ${pep_input.get_value(u'评估总价(万元)')}
     ${总价大写}    Get Value    xpath=//*[@id='TotalUpper']
@@ -373,59 +373,59 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Run Keyword And Continue On Failure    Run Keyword If    '${所属机构}'=='${input_info.get_value(u'所属机构')}'    log    pass
     ...    ELSE    fail
     ${分支机构}    Get Value    xpath=//*[@id='organichildid']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${分支机构}'=='${input_info.get_value(u'分支机构')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${分支机构}'=='${input_info.get_value(u'分支机构')}'    log    pass
     ...    ELSE    fail
     ${客户姓名}    Get Value    xpath=//*[@id='CustomerName']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${客户姓名}'=='${input_info.get_value(u'客户姓名')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${客户姓名}'=='${input_info.get_value(u'客户姓名')}'    log    pass
     ...    ELSE    fail
     ${客户手机}    Get Value    id=MobileNumber
-    Run Keyword And Continue On Failure    Run Keyword If    '${客户手机}'=='${input_info.get_value(u'客户手机')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${客户手机}'=='${input_info.get_value(u'客户手机')}'    log    pass
     ...    ELSE    fail
     ${机构全称}    Get Value    xpath=//*[@id='EntrustOrg']
-    Run Keyword And Continue On Failure    Run Keyword If    '${机构全称}'=='${input_info.get_value(u'机构全称')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${机构全称}'=='${input_info.get_value(u'机构全称')}'    log    pass
     ...    ELSE    fail
     ${市场负责人}    Get Value    xpath=//*[@id='EvaluatePeople']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${市场负责人}'=='${input_info.get_value(u'市场负责人')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${市场负责人}'=='${input_info.get_value(u'市场负责人')}'    log    pass
     ...    ELSE    fail
     ${询价人员}    Get Value    xpath=//*[@id='InquiryPerson']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${询价人员}'=='${input_info.get_value(u'询价人员')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${询价人员}'=='${input_info.get_value(u'询价人员')}'    log    pass
     ...    ELSE    fail
     ${估价师}    Get Value    xpath=//*[@id='EvaluateSurveyor']
-    Run Keyword And Continue On Failure    Run Keyword If    '${估价师}'=='${input_info.get_value(u'估价师')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${估价师}'=='${input_info.get_value(u'估价师')}'    log    pass
     ...    ELSE    fail
     ${证书名称}    Get Value    xpath=//*[@id='CertificateName']/../span/input[@type="text"]
     Run Keyword And Continue On Failure    Run Keyword If    '${证书名称}'=='${input_info.get_value(u'证书名称')}'    log    pass
     ...    ELSE    fail
     ${证书编号}    Get Value    xpath=.//*[@id='PropertyCertificate']
-    Run Keyword And Continue On Failure    Run Keyword If    '${证书编号}'=='${input_info.get_value(u'证书编号')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${证书编号}'=='${input_info.get_value(u'证书编号')}'    log    pass
     ...    ELSE    fail
     Comment    ${登记日期}    Get Value
     ${权利人}    Get Value    xpath=.//*[@id='BelongPeople']
-    Run Keyword And Continue On Failure    Run Keyword If    '${权利人}'=='${input_info.get_value(u'权利人')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${权利人}'=='${input_info.get_value(u'权利人')}'    log    pass
     ...    ELSE    fail
     ${城市}    Get Value    xpath=//*[@id='City']/../span/input[@type="text"]
     Run Keyword And Continue On Failure    Run Keyword If    '${城市}'=='${input_info.get_value(u'城市')}'    log    pass
     ...    ELSE    fail
     ${行政区}    Get Value    xpath=.//*[@id='DistrictName']
-    Run Keyword And Continue On Failure    Run Keyword If    '${行政区}'=='${input_info.get_value(u'行政区')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${行政区}'=='${input_info.get_value(u'行政区')}'    log    pass
     ...    ELSE    fail
     ${小区名称}    Get Value    xpath=.//*[@id='AreaName']
-    Run Keyword And Continue On Failure    Run Keyword If    '${小区名称}'=='${input_info.get_value(u'小区名称')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${小区名称}'=='${input_info.get_value(u'小区名称')}'    log    pass
     ...    ELSE    fail
     ${小区地址}    Get Value    xpath=.//*[@id='AreaAddress']
-    Run Keyword And Continue On Failure    Run Keyword If    '${小区地址}'=='${input_info.get_value(u'小区地址')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${小区地址}'=='${input_info.get_value(u'小区地址')}'    log    pass
     ...    ELSE    fail
     ${楼栋号}    Get Value    xpath=//*[@id='Building']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${楼栋号}'=='${input_info.get_value(u'楼栋号')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${楼栋号}'=='${input_info.get_value(u'楼栋号')}'    log    pass
     ...    ELSE    fail
     ${单元号}    Get Value    xpath=//*[@id='BuildingUnitName']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${单元号}'=='${input_info.get_value(u'单元号')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${单元号}'=='${input_info.get_value(u'单元号')}'    log    pass
     ...    ELSE    fail
     ${户号名}    Get Value    xpath=//*[@id='HouseName']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${户号名}'=='${input_info.get_value(u'户号名')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${户号名}'=='${input_info.get_value(u'户号名')}'    log    pass
     ...    ELSE    fail
     ${项目地址}    Get Value    xpath=.//*[@id='AreaDetailAddress']
-    Run Keyword And Continue On Failure    Run Keyword If    '${项目地址}'=='${input_info.get_value(u'项目地址')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${项目地址}'=='${input_info.get_value(u'项目地址')}'    log    pass
     ...    ELSE    fail
     ${房屋类型}    Get Value    xpath=//*[@id='HouseType']/../span/input[@type="text"]
     Run Keyword And Continue On Failure    Run Keyword If    '${房屋类型}'=='${input_info.get_value(u'房屋类型')}'    log    pass
@@ -434,78 +434,78 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Run Keyword And Continue On Failure    Run Keyword If    '${建筑结构}'=='${input_info.get_value(u'建筑结构')}'    log    pass
     ...    ELSE    fail
     ${所在楼层}    Get Value    xpath=.//*[@id='Floor']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${所在楼层}'=='${input_info.get_value(u'所在楼层')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${所在楼层}'=='${input_info.get_value(u'所在楼层')}'    log    pass
     ...    ELSE    fail
     ${总楼层}    Get Value    xpath=.//*[@id='TotalFloor']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${总楼层}'=='${input_info.get_value(u'总楼层')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${总楼层}'=='${input_info.get_value(u'总楼层')}'    log    pass
     ...    ELSE    fail
     ${建筑面积}    Get Value    xpath=.//*[@id='HouseSize']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${建筑面积}'=='${input_info.get_value(u'建筑面积')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${建筑面积}'=='${input_info.get_value(u'建筑面积')}'    log    pass
     ...    ELSE    fail
     ${建成年代}    Get Value    xpath=.//*[@id='BuildYear']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${建成年代}'=='${input_info.get_value(u'建成年代')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${建成年代}'=='${input_info.get_value(u'建成年代')}'    log    pass
     ...    ELSE    fail
     ${使用权来源}    Get Value    xpath=.//*[@id='UsePowerSource']
-    Run Keyword And Continue On Failure    Run Keyword If    '${使用权来源}'=='${input_info.get_value(u'使用权来源')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${使用权来源}'=='${input_info.get_value(u'使用权来源')}'    log    pass
     ...    ELSE    fail
     ${权属性质}    Get Value    xpath=.//*[@id='HouseNature']
-    Run Keyword And Continue On Failure    Run Keyword If    '${权属性质}'=='${input_info.get_value(u'权属性质')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${权属性质}'=='${input_info.get_value(u'权属性质')}'    log    pass
     ...    ELSE    fail
     ${土地用途}    Get Value    xpath=.//*[@id='LandUse']
-    Run Keyword And Continue On Failure    Run Keyword If    '${土地用途}'=='${input_info.get_value(u'土地用途')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${土地用途}'=='${input_info.get_value(u'土地用途')}'    log    pass
     ...    ELSE    fail
     ${使用期限}    Get Value    xpath=.//*[@id='UseYear']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${使用期限}'=='${input_info.get_value(u'使用期限')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${使用期限}'=='${input_info.get_value(u'使用期限')}'    log    pass
     ...    ELSE    fail
     ${地号}    Get Value    xpath=.//*[@id='LandNumber']
-    Run Keyword And Continue On Failure    Run Keyword If    '${地号}'=='${input_info.get_value(u'地号')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${地号}'=='${input_info.get_value(u'地号')}'    log    pass
     ...    ELSE    fail
     ${图号}    Get Value    xpath=.//*[@id='MapNumber']
-    Run Keyword And Continue On Failure    Run Keyword If    '${图号}'=='${input_info.get_value(u'图号')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${图号}'=='${input_info.get_value(u'图号')}'    log    pass
     ...    ELSE    fail
     ${土地摊分面积}    Get Value    xpath=.//*[@id='LandSplitArea']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${土地摊分面积}'=='${input_info.get_value(u'土地摊分面积')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${土地摊分面积}'=='${input_info.get_value(u'土地摊分面积')}'    log    pass
     ...    ELSE    fail
     ${房屋朝向}    Get Value    xpath=.//*[@id='Orientation']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${房屋朝向}'=='${input_info.get_value(u'房屋朝向')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${房屋朝向}'=='${input_info.get_value(u'房屋朝向')}' \    log    pass
     ...    ELSE    fail
     ${上落设施}    Get Value    xpath=.//*[@id='PickFacility']
-    Run Keyword And Continue On Failure    Run Keyword If    '${上落设施}'=='${input_info.get_value(u'上落设施')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${上落设施}'=='${input_info.get_value(u'上落设施')}' \    log    pass
     ...    ELSE    fail
     ${竣工日期}    Get Value    xpath=.//*[@id='CompletionDate']
-    Run Keyword And Continue On Failure    Run Keyword If    '${竣工日期}'=='${input_info.get_value(u'竣工日期')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${竣工日期}'=='${input_info.get_value(u'竣工日期')}' \    log    pass
     ...    ELSE    fail
     ${其他权利情况}    Get Value    xpath=.//*[@id='OtherUseCase']
-    Run Keyword And Continue On Failure    Run Keyword If    '${其他权利情况}'=='${input_info.get_value(u'其他权利情况')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${其他权利情况}'=='${input_info.get_value(u'其他权利情况')}' \    log    pass
     ...    ELSE    fail
     ${特殊事项说明}    Get Value    xpath=.//*[@id='SpecialCaseDesc']
-    Run Keyword And Continue On Failure    Run Keyword If    '${特殊事项说明}'=='${input_info.get_value(u'特殊事项说明')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${特殊事项说明}'=='${input_info.get_value(u'特殊事项说明')}' \    log    pass
     ...    ELSE    fail
     ${物业类型}    Get Value    xpath=//*[@id='PropertyType']/../span/input[@type="text"]
     Run Keyword And Continue On Failure    Run Keyword If    '${物业类型}'=='${input_info.get_value(u'物业类型')}'    log    pass
     ...    ELSE    fail
     ${项目分类}    Get Value    xpath=.//*[@id='ProjectType']
-    Run Keyword And Continue On Failure    Run Keyword If    '${项目分类}'=='${input_info.get_value(u'项目分类')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${项目分类}'=='${input_info.get_value(u'项目分类')}' \    log    pass
     ...    ELSE    fail
     ${估价委托人}    Get Value    xpath=.//*[@id='Entrust']
-    Run Keyword And Continue On Failure    Run Keyword If    '${估价委托人}'=='${input_info.get_value(u'估价委托人')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${估价委托人}'=='${input_info.get_value(u'估价委托人')}' \    log    pass
     ...    ELSE    fail
     ${估价目的}    Get Value    xpath=.//*[@id='EvalPurpose']
-    Run Keyword And Continue On Failure    Run Keyword If    '${估价目的}'=='${input_info.get_value(u'估价目的')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${估价目的}'=='${input_info.get_value(u'估价目的')}' \    log    pass
     ...    ELSE    fail
     Comment    ${价值时点}    Get Value
     ${评估方法}    Get Value    xpath=.//*[@id='EvalMethod']
-    Run Keyword And Continue On Failure    Run Keyword If    '${评估方法}'=='${input_info.get_value(u'评估方法')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${评估方法}'=='${input_info.get_value(u'评估方法')}'    log    pass
     ...    ELSE    fail
     Comment    ${评估模板}    Get Value
     ${评估单价(元)}    Get Value    xpath=.//*[@id='EvaluatePrice']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${评估单价(元)}'=='${input_info.get_value(u'评估单价(元)')}'     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${评估单价(元)}'=='${input_info.get_value(u'评估单价(元)')}'    log    pass
     ...    ELSE    fail
     ${评估总价(万元)}    Get Value    xpath=.//*[@id='EvaluateTotal']/../span/input[@type="text"]
-    Run Keyword And Continue On Failure    Run Keyword If    '${评估总价(万元)}'=='${input_info.get_value(u'评估总价(万元)')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${评估总价(万元)}'=='${input_info.get_value(u'评估总价(万元)')}' \    log    pass
     ...    ELSE    fail
     ${总价大写}    Get Value    xpath=//*[@id='TotalUpper']
-    Run Keyword And Continue On Failure    Run Keyword If    '${总价大写}'=='${input_info.get_value(u'总价大写')}' \     log    pass
+    Run Keyword And Continue On Failure    Run Keyword If    '${总价大写}'=='${input_info.get_value(u'总价大写')}' \    log    pass
     ...    ELSE    fail
 
 编辑预估单数据

@@ -50,7 +50,7 @@ Resource          ../内业分配/内业操作层.txt
     打开功能模块    我的项目    预估转正
     Select Frame    id=ProjectAllot_Positive
     Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    504777503841
-    ${预估已转正}    预估转正查询状态    已转正查询    IsPositive
+    Comment    ${预估已转正}    预估转正查询状态    已转正查询    IsPositive
     等待列表创建完毕
     内业查询流水号
     转正查询按钮

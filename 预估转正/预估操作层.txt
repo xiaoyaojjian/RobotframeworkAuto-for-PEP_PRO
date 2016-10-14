@@ -102,7 +102,7 @@ Resource          预估校验.txt
 
 预估查询结果校验
     [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
-    :FOR    ${row}    IN RANGE    1    ${行数}+1
+    : FOR    ${row}    IN RANGE    1    ${行数}+1
     \    log    ${row}
     \    log    ${查询类型}
     \    ${字段值}    Run Keyword If    '${查询类型}'=='流水号'    获取预估单元格    ${row}    ${路径}
@@ -219,7 +219,7 @@ Resource          预估校验.txt
     转正查询按钮
     等待列表创建完毕
     ${获取报告打印第一页行数}    预估列表行数    ${路径}
-    ${获取报告打印第一页列数}    预估获取列表列数
+    ${获取报告打印第一页列数}    预估获取列表列数    ProjectNo
     预估查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
 
 预估错误查询
@@ -266,13 +266,30 @@ Resource          预估校验.txt
     clear Element Text    xpath=.//div[@id="toolbarNo"]//td/input[@id='${路径}']
 
 全部查询
+    Select From List By Label    id=IsPositive    未转正
+    等待列表创建完毕
+    转正查询按钮
+    ${总数量}    预估获取页面总数量
+    :FOR    ${i}    in range    ${总数量}
+    \    log    ${i}
+    \    ${未转正}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[6]
+    \    ${流水号}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[1]
+    \    Exit For Loop If    '${未转正}'=='否'or'${未转正}'=='是'
 
 未转正查询
     Select From List By Label    id=IsPositive    未转正
+    等待列表创建完毕
     转正查询按钮
-    预估获取页面总数量
+    ${总数量}    预估获取页面总数量
     Comment    ${行数}    预估获取列表列数    IsPositive
     sleep    5
-    未转正校验
+    未转正校验    ${总数量}
 
 已转正查询
+    Select From List By Label    id=IsPositive    未转正
+    等待列表创建完毕
+    转正查询按钮
+    ${总数量}    预估获取页面总数量
+    Comment    ${行数}    预估获取列表列数    IsPositive
+    sleep    5
+    已转正校验    ${总数量}

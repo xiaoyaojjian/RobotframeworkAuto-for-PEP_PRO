@@ -15,17 +15,17 @@ Resource          ../../报告打印装订/流程层/流程层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     变更审批打开模块公共方法
-    ${总数据量}    正确数据查询    流水号    pno    ProjectNo    532636259525    ${empty}
+    ${总数据量}    正确数据查询    流水号    ProjectNo    ProjectNo    532636259525    ${empty}
     ...    ${empty}    ${empty}
-    错误特殊字符查询    流水号    pno    ProjectNo    多个大范甘迪发    ${empty}    ${empty}
+    错误特殊字符查询    流水号    ProjectNo    ProjectNo    多个大范甘迪发    ${empty}    ${empty}
     ...    ${empty}
-    为空查询    流水号    pno    ProjectNo    ${总数据量}    ${empty}    ${empty}
+    为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    ${empty}
-    模糊查询    流水号    pno    ProjectNo    79637    ${empty}    ${empty}
+    模糊查询    流水号    ProjectNo    ProjectNo    79637    ${empty}    ${empty}
     ...    ${empty}
-    错误查询    流水号    pno    ProjectNo    ${总数据量}    123456789564    ${empty}
+    错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564    ${empty}
     ...    ${empty}    ${empty}
-    超长字符查询    流水号    pno    ProjectNo    ${总数据量}    1234567895643    ${empty}
+    超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643    ${empty}
     ...    ${empty}    ${empty}
     [Teardown]    Close Browser
 
@@ -40,17 +40,17 @@ Resource          ../../报告打印装订/流程层/流程层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     变更审批打开模块公共方法
-    ${总数据量}    正确数据查询    报告号    rpno    ReportNo    ${empty}    201601101003462
+    ${总数据量}    正确数据查询    报告号    ReportNo    ReportNo    ${empty}    201601101003462
     ...    ${empty}    ${empty}
-    错误特殊字符查询    报告号    rpno    ReportNo    ${empty}    多个大范甘迪发    ${empty}
+    错误特殊字符查询    报告号    ReportNo    ReportNo    ${empty}    多个大范甘迪发    ${empty}
     ...    ${empty}
-    为空查询    报告号    rpno    ReportNo    ${总数据量}    ${empty}    ${empty}
+    为空查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    ${empty}
-    模糊查询    报告号    rpno    ReportNo    ${empty}    3407    ${empty}
+    模糊查询    报告号    ReportNo    ReportNo    ${empty}    3407    ${empty}
     ...    ${empty}
-    错误查询    报告号    rpno    ReportNo    ${总数据量}    ${empty}    123456789564
+    错误查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    123456789564
     ...    ${empty}    ${empty}
-    超长字符查询    报告号    rpno    ReportNo    ${总数据量}    ${empty}    1231232312312312
+    超长字符查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    1231232312312312
     ...    ${empty}    ${empty}
     [Teardown]    Close Browser
 
@@ -65,17 +65,17 @@ Resource          ../../报告打印装订/流程层/流程层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     变更审批打开模块公共方法
-    ${总数据量}    正确数据查询    项目地址    address    ResidentialAreaAddress    ${empty}    ${empty}
+    ${总数据量}    正确数据查询    项目地址    Address    ResidentialAreaAddress    ${empty}    ${empty}
     ...    北京市通州区远洋东方公馆    ${empty}
-    错误特殊字符查询    项目地址    address    ResidentialAreaAddress    ${empty}    ${empty}    @#@###￥￥@@￥@￥@￥
+    错误特殊字符查询    项目地址    Address    ResidentialAreaAddress    ${empty}    ${empty}    @#@###￥￥@@￥@￥@￥
     ...    ${empty}
-    为空查询    项目地址    address    ResidentialAreaAddress    ${总数据量}    ${empty}    ${empty}
+    为空查询    项目地址    Address    ResidentialAreaAddress    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    ${empty}
-    模糊查询    项目地址    address    ResidentialAreaAddress    ${empty}    ${empty}    远洋东方公馆
+    模糊查询    项目地址    Address    ResidentialAreaAddress    ${empty}    ${empty}    远洋东方公馆
     ...    ${empty}
-    错误查询    项目地址    address    ResidentialAreaAddress    ${总数据量}    ${empty}    ${empty}
+    错误查询    项目地址    Address    ResidentialAreaAddress    ${总数据量}    ${empty}    ${empty}
     ...    234234啥时发放的是方法反反复复凤飞飞发手动阀    ${empty}
-    超长字符查询    项目地址    address    ResidentialAreaAddress    ${总数据量}    ${empty}    ${empty}
+    超长字符查询    项目地址    Address    ResidentialAreaAddress    ${总数据量}    ${empty}    ${empty}
     ...    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ${empty}
     [Teardown]    Close Browser
 
@@ -90,17 +90,17 @@ Resource          ../../报告打印装订/流程层/流程层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     变更审批打开模块公共方法
-    ${总数据量}    正确数据查询    小区名称    areaname    ResidentialAreaName    ${empty}    ${empty}
+    ${总数据量}    正确数据查询    小区名称    AreaName    ResidentialAreaName    ${empty}    ${empty}
     ...    ${empty}    北岸莱茵
-    错误特殊字符查询    小区名称    areaname    ResidentialAreaName    ${empty}    ${empty}    ${empty}
+    错误特殊字符查询    小区名称    AreaName    ResidentialAreaName    ${empty}    ${empty}    ${empty}
     ...    @$@
-    为空查询    小区名称    areaname    ResidentialAreaName    ${总数据量}    ${empty}    ${empty}
+    为空查询    小区名称    AreaName    ResidentialAreaName    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    ${empty}
-    模糊查询    小区名称    areaname    ResidentialAreaName    ${empty}    ${empty}    ${empty}
+    模糊查询    小区名称    AreaName    ResidentialAreaName    ${empty}    ${empty}    ${empty}
     ...    远洋东方公馆
-    错误查询    小区名称    areaname    ResidentialAreaName    ${总数据量}    ${empty}    ${empty}
+    错误查询    小区名称    AreaName    ResidentialAreaName    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    232收到罚单是打发反反
-    超长字符查询    小区名称    areaname    ResidentialAreaName    ${总数据量}    ${empty}    ${empty}
+    超长字符查询    小区名称    AreaName    ResidentialAreaName    ${总数据量}    ${empty}    ${empty}
     ...    ${empty}    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1
     [Teardown]    Close Browser
 

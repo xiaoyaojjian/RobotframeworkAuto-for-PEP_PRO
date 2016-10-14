@@ -1,0 +1,63 @@
+*** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
+Resource          ../变更审批/流程层/流程层.txt
+Resource          ../询价/元素层/元素层.txt
+Resource          ../询价/流程层/流程层.txt
+Resource          ../询价/组件层/住宅信息.txt
+Resource          ../公共模块.txt
+Resource          ../外业分配/外业分配业务层.txt
+
+*** Test Cases ***
+小区名称查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    询价正确数据查询    小区名称    新明胡同    areaname
+    询价错误特殊字符查询    小区名称    @$@    areaname
+    询价为空查询    小区名称    ${empty}    areaname    ${总数据量}
+    询价模糊查询    小区名称    链家测试    areaname
+    询价错误查询    小区名称    232收到罚单是打发反反    areaname    ${总数据量}
+    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    areaname    ${总数据量}
+
+流水号查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    询价正确数据查询    流水号    575740983131    ProjectNo
+    询价错误特殊字符查询    流水号    @$@    ProjectNo
+    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    询价模糊查询    流水号    5757    ProjectNo
+    询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
+    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
+
+报告号查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    询价正确数据查询    报告号    201601102004379    ReportNo
+    询价错误特殊字符查询    报告号    @$@    ReportNo
+    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    询价模糊查询    报告号    201601    ReportNo
+    询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
+    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
+
+项目地址查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${总数据量}    询价正确数据查询    项目地址    北京市东城区禄米仓胡同(禄米仓胡同71号院20160920003424)禄米仓胡同42号楼11单元602    address
+    询价错误特殊字符查询    项目地址    @$@    address
+    询价为空查询    项目地址    ${empty}    address    ${总数据量}
+    询价模糊查询    项目地址    东城区禄米仓胡同    address
+    询价错误查询    项目地址    232收到罚单是打发反反    address    ${总数据量}
+    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    address    ${总数据量}
+
+紧急程度查询
+    [Setup]    登录
+    打开功能模块    我的项目    项目审核
+    Select Frame    id=ProjectAllot_Audit
+    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
+    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
+    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
+    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2

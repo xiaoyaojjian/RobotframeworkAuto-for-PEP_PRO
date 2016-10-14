@@ -40,5 +40,4 @@ Resource          ../公共模块.txt
 
 参数
     [Arguments]    ${输入流水号}    ${路径}
-    Comment    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']    ${输入流水号}
-    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@id="toolbarNo"]//*[@id='${路径}']    ${输入流水号}
+    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@id="toolbarNo"]//td/input[@id='${路径}']    ${输入流水号}

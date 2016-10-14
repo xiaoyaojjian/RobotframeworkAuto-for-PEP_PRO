@@ -12,45 +12,32 @@ Resource          审核调度业务层.txt
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
     等待列表创建完毕
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    490321009423    ${empty}
-    ...    ${empty}    ${empty}
-    错误特殊字符查询    流水号    ProjectNo    ProjectNo    多个大范甘迪发    ${empty}    ${empty}
-    ...    ${empty}
-    为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}    ${empty}
-    ...    ${empty}    ${empty}
-    外业分配模糊查询    流水号    ProjectNo    ProjectNo    49032    ${empty}    ${empty}
-    ...    ${empty}
-    错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564    ${empty}
-    ...    ${empty}    ${empty}
-    超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643    ${empty}
-    ...    ${empty}    ${empty}
+    ${总数据量}    审核调度正确查询    流水号    569818783458    ProjectNo
+    审核调度特殊字符查询    流水号    @$@    ProjectNo
+    审核调度为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    审核调度模糊查询    流水号    551    ProjectNo
+    审核调度错误查询    流水号    234234234234    ProjectNo    ${总数据量}
+    审核调度超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
 
 调度报告号查询
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
-    等待列表创建完毕
-    ${总数据量}    分配正确查询数据    报告号    ReportNo    ReportNo    ${empty}    201601102004312
-    ...    ${empty}    ${empty}
-    错误特殊字符查询    报告号    ReportNo    ReportNo    ${empty}    多个大范甘迪发    ${empty}
-    ...    ${empty}
-    为空查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    ${empty}
-    ...    ${empty}    ${empty}
-    外业分配模糊查询    报告号    ReportNo    ReportNo    ${empty}    1020    ${empty}
-    ...    ${empty}
-    错误查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    123456789564
-    ...    ${empty}    ${empty}
-    超长字符查询    报告号    ReportNo    ReportNo    ${总数据量}    ${empty}    1231232312312312
-    ...    ${empty}    ${empty}
+    ${总数据量}    审核调度正确查询    报告号    201601101004352    ReportNo
+    审核调度特殊字符查询    报告号    @$@    ReportNo
+    审核调度为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    审核调度模糊查询    报告号    20160    ReportNo
+    审核调度错误查询    报告号    234234234234    ReportNo    ${总数据量}
+    审核调度超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
 
 调度项目地址查询
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
     等待列表创建完毕
-    ${总数据量}    审核调度正确查询    项目地址    北京市(测试006)    address
+    ${总数据量}    审核调度正确查询    项目地址    北京市通州区远洋东方公馆(远洋东方公馆20160924010009)远洋东方公馆96号1单元1502    address
     审核调度特殊字符查询    项目地址    @$@    address
     审核调度为空查询    项目地址    ${empty}    address    ${总数据量}
-    审核调度模糊查询    项目地址    测试006    address
+    审核调度模糊查询    项目地址    远洋东方公馆    address
     审核调度错误查询    项目地址    232收到罚单是打发反反    address    ${总数据量}
-    审核调度超长字符查询    项目地址    感觉到了附近的会计法就减肥撒酒疯加速卡浪费饥渴了大数据付了款就打了款封疆大吏款撒娇付了款就搭上了解放路的卡死机飞快的将阿卡丽解放东路卡死机付了款的骄傲三块腹肌的卡减肥的卡拉胶快乐到家付款了叫撒付了款巨    address    ${总数据量}
+    审核调度超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅    address    ${总数据量}

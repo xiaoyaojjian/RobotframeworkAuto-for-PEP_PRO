@@ -12,10 +12,10 @@ Resource          ..//外业分配/外业分配业务层.txt
     打开功能模块    我的项目    内业分配
     Select Frame    id=ProjectAllot_ReportAssign
     等待列表创建完毕
-    ${总数据量}    询价正确数据查询    流水号    550825831269    ProjectNo
+    ${总数据量}    询价正确数据查询    流水号    476969277102    ProjectNo
     Comment    询价错误特殊字符查询    流水号    @$@    ProjectNo
     询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
-    询价模糊查询    流水号    550    ProjectNo
+    询价模糊查询    流水号    476    ProjectNo
     询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
     Comment    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
 
@@ -24,10 +24,10 @@ Resource          ..//外业分配/外业分配业务层.txt
     打开功能模块    我的项目    内业分配
     Select Frame    id=ProjectAllot_ReportAssign
     等待列表创建完毕
-    ${总数据量}    询价正确数据查询    报告号    201601101004474    ReportNo
+    ${总数据量}    询价正确数据查询    报告号    201601102004503    ReportNo
     询价错误特殊字符查询    报告号    @$@    ReportNo
     询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
-    询价模糊查询    报告号    01004    ReportNo
+    询价模糊查询    报告号    2016    ReportNo
     询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
     询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
 

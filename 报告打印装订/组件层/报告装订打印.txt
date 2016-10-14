@@ -365,7 +365,7 @@ Resource          ../../查勘任务/查勘任务操作层.txt
     等待提示框出现
     确定按钮
     等待列表创建完毕
-    装订状态    装订完成
+    装订状态    装订完成    IsPrintComplete
     变更点击查询按钮
     等待列表创建完毕
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[2]/div[1]
@@ -376,7 +376,7 @@ Resource          ../../查勘任务/查勘任务操作层.txt
 报告打开打印
     登录
     ${总数据量}    报告装订打印打开模块公共方法
-    装订状态    装订未完成
+    装订状态    装订未完成    IsPrintComplete
     变更点击查询按钮
     等待列表创建完毕
     ${总数据量}    获取页面显示总数据量
@@ -386,7 +386,7 @@ Resource          ../../查勘任务/查勘任务操作层.txt
 
 随机选择报告装订打印数据
     [Arguments]    ${行数}
-    ${row}    Evaluate    random.randint(1,${行数}+1)    random
+    ${row}    Evaluate    random.randint(1,${行数})    random
     ${流水号字段值}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
     Click Element    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[2]/div[1]
     sleep    10

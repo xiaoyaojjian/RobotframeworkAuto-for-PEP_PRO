@@ -13,9 +13,9 @@ Resource          ../预估转正/预估操作层.txt
     [Setup]    登录
     打开功能模块    我的项目    预估转正
     Select Frame    id=ProjectAllot_Positive
-    Comment    全部查询
+    全部查询
     未转正查询
-    Comment    已转正查询
+    已转正查询
 
 预估流水号才查询
     [Setup]    登录

@@ -136,7 +136,6 @@ Resource          未盖章.txt
     ${cc}    Set Variable
     : FOR    ${i}    IN RANGE    4
     \    ${content}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[${i+1}]/div
-    \    Evaluate    ${file.write(${content})}
     \    ${cc}    Set Variable    ${content}${cc}
     \    Should Not Be Empty    ${content}
     \    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[1]/div
