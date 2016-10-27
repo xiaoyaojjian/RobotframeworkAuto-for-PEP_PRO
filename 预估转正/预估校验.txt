@@ -5,21 +5,15 @@ Resource          预估操作层.txt
 *** Keywords ***
 未转正校验
     [Arguments]    ${总数量}
-    :FOR    ${i}    in range    ${总数量}
+    : FOR    ${i}    IN RANGE    ${总数量}
     \    log    ${i}
-    \    ${未转正}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[6]
-    \    ${流水号}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[1]
+    \    ${未转正}    Get Text    xpath=//td[@field="IsPositive"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="IsPositive"]/div
+    \    ${流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="ProjectNo"]/div
     \    Exit For Loop If    '${未转正}'=='否'
 
 已转正校验
-    [Arguments]    ${总数量}
-    :FOR    ${i}    in range    ${总数量}
+    : FOR    ${i}    IN RANGE    9
     \    log    ${i}
-    \    ${未转正}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[6]
-    \    ${流水号}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[1]
+    \    ${未转正}    Get Text    xpath=//td[@field="IsPositive"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="IsPositive"]/div
+    \    ${流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="ProjectNo"]/div
     \    Exit For Loop If    '${未转正}'=='是'
-    ${EMPTY}
-    ${EMPTY}
-    ${EMPTY}
-    ${EMPTY}
-    ${EMPTY}

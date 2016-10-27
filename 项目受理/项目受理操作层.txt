@@ -91,6 +91,8 @@ Resource          ../公共模块.txt
     ${线上备注}    Run Keyword If    '${是否有线上备注}'=='1' and ${is_get_text}==0    Get Value    xpath=.//*[@id='Comment']
     ...    ELSE IF    '${是否有线上备注}'=='1' and ${is_get_text}==1    Get Text    xpath=.//*[@id='Comment']
     Run Keyword If    '${是否有线上备注}'!='0'    Set Pep Value    ${pep}    线上备注    ${线上备注}
+    ${报告号}    Run Keyword If    ${is_get_text}==1    Get Text    xpath=.//*[@id='ReportNo']
+    Run Keyword If    ${is_get_text}==1    Set Pep Value    ${pep}    报告号    ${报告号}
 
 将勘查信息写入pep对象
     [Arguments]    ${pep}    ${is_get_text}=0

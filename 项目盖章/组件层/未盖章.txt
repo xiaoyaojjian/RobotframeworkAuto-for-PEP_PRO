@@ -9,6 +9,7 @@ Library           Collections
     [Arguments]    ${serial_no}
     Input Text    //input[@id='ProjectNo']    ${serial_no}
     点击查询    1
+    Wait Until Page Contains    显示1到1,共1记录    20    通过流水号查询20s内页面未加载成功
     操作    盖章
     点击确定
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[text()='该项目有盖章规则，请盖电子章']    60
@@ -42,6 +43,8 @@ Library           Collections
     Unselect Frame
     Select Frame    id=ProjectAllot_Seal
     点击确定
+    Wait Until Page Does Not Contain Element    //div[text()='收回成功']    10    收回成功提示窗口未关闭
+    Wait Until Element Is Enabled    //input[@id='ProjectNo']    10    10s内流水号文本框还不可操作
     Input Text    //input[@id='ProjectNo']    ${serial_no}
     点击查询    1
     sleep    3
@@ -71,7 +74,9 @@ Library           Collections
     [Arguments]    ${serial_no}
     点击已盖章
     sleep    5
+    Clear Element Text    //input[@id='ProjectNo']
     Input Text    //input[@id='ProjectNo']    ${serial_no}
+    Wait Until Element Is Visible    //span[text()='查询']/ancestor::tbody/tr[2]//span[text()='查询']/..    10    查询按钮无法点击
     点击查询    2
     sleep    5
     ${pageNo}    获取总页数    //div[@class='panel']/../div[2]//div[contains(text(),'显示')]

@@ -1,4 +1,6 @@
 *** Settings ***
+Test Setup        登录
+Test Teardown     Close Browser
 Resource          ../公共模块.txt
 Resource          操作层.txt
 Resource          审核验证.txt
@@ -13,7 +15,7 @@ Resource          ../审核调度/审核调度操作层.txt
     等待列表创建完毕
     项目审核流程    低级错误    界面需要优化，不符合用户需求
 
-转让
+(未)转让
     [Setup]    登录
     打开功能模块    我的项目    项目审核
     等待列表创建完毕
@@ -25,8 +27,10 @@ Resource          ../审核调度/审核调度操作层.txt
     Wait Until Page Contains    ${USER_NAME}    20
     项目审核选择审核人
     审核点击提交
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
     等待提示框出现
-    点击提示框中的确定按钮
+    Click Element    //span[text()='确定']/../..
 
 查看详情
     [Setup]    登录
@@ -36,3 +40,18 @@ Resource          ../审核调度/审核调度操作层.txt
     切换到已审核过子模块
     随机选择一条查看详情
     点击查看详细
+
+(中)转让
+    Comment    打开功能模块    我的项目    项目审核
+    Comment    等待列表创建完毕
+    Comment    select frame    id=ProjectAllot_Audit
+    Comment    切换到审核中子模块
+    Comment    ${rand}    Evaluate    random.randint(1,3)    random
+    Comment    Comment    sleep    5
+    Comment    Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
+    Comment    ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Comment    Input Text    id=ProjectNo    ${流水号}
+    Comment    点击查询按钮
+    Comment    select frame    id=ProjectAllot_Audit
+    Comment    等待提示框出现
+    Comment    Click Element    //span[text()='确定']/../..

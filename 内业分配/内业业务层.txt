@@ -1,6 +1,8 @@
 *** Settings ***
 Library           Selenium2Library
 Resource          ../公共模块.txt
+Resource          内业操作层.txt
+Resource          ..//询价/元素层/元素层.txt
 
 *** Keywords ***
 随机选择多条数据
@@ -9,15 +11,70 @@ Resource          ../公共模块.txt
     \    log    ${i}
     \    等待加载完毕
     \    Click Element    //div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="TID"]/div/input[1]
+    ${EMPTY}
+    ${EMPTY}
 
 挂起
-    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
+    点击挂起按钮
+    挂起原因
+    点击保存
+    等待提示框出现
+    点击提示框中的确定按钮
 
 挂起原因
-    sleep    5
-    Input Text    //textarea[not(@id)]    噜啦啦啦噜啦啦
+    Wait Until Page Contains Element    xpath=.//div[contains(@class,"panel window") and contains(@style,"display: block")]    60s
+    Input Text    xpath=//textarea[not(@id)]    噜啦啦啦噜啦啦
 
 内业解挂
     ${流水号}    Get Text    //form[@id="form1"]/div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ProjectNo"]/div
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[1]
     [Return]    ${流水号}
+
+挂起1
+    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
+
+点击挂起按钮
+    Click Element    xpath=//form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
+
+内业批量领取
+    [Arguments]    ${路径}    ${开始位置}    ${结束位置}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    @{LIST}    内业批量选择操作    ${开始位置}    ${结束位置}    ${获取报告打印第一页行数}
+    Click Element    xpath=.//span[text()='分配任务']
+    等待弹出窗口出现
+    内业分配用户
+    Click Element    //span[text()='提交']/..
+    等待提示框出现
+    点击提示框中的确定按钮
+
+内业批量选择操作
+    [Arguments]    ${开始位置}    ${结束位置}    ${获取报告打印第一页行数}
+    @{LIST}    Run Keyword If    ${结束位置}<=${获取报告打印第一页行数}    选择多条数据    ${开始位置}    ${结束位置}
+    Comment    log    @{LIST}[0]
+    [Return]    @{LIST}
+
+选择多条数据
+    [Arguments]    ${num1}    ${num2}
+    ${LIST}    Create List
+    : FOR    ${i}    IN RANGE    ${num1}    ${num2}
+    \    log    ${i}
+    \    等待列表创建完毕
+    \    ${获取查勘任务操作状态}    Get Text    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="Fenpei"]
+    \    ${获取查勘任务流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]
+    \    Return List    ${LIST}    ${获取查勘任务流水号}
+    \    Run Keyword If    '${获取查勘任务操作状态}'!='解挂'    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="TID"]/div/input
+    \    ...    ELSE    log    该项目不可领取
+    [Return]    ${LIST}
+
+单个分配
+    ${rand}    Evaluate    random.randint(1,9)    random
+    Comment    :FOR    ${i}    IN RANGE    ${总数量}
+    log    ${rand}
+    ${获取查勘任务操作状态}    Get Text    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="Fenpei"]/div/a[1]
+    ${获取查勘任务流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="ProjectNo"]/div
+    ${项目状态}    Get Text    xpath=//td[@field="ReportProperty"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="ReportProperty"]/div
+    Run Keyword If    '${获取查勘任务操作状态}'=='任务分配' and '${项目状态}'=='正常'    Run Keywords    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="TID"]/div/input
+    ...    AND    Click Element    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="Fenpei"]/div/a[1]
+    Comment    Exit For Loop If    '${获取查勘任务操作状态}'=='任务分配'

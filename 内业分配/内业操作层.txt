@@ -5,10 +5,11 @@ Resource          ../公共模块.txt
 *** Keywords ***
 内业查询流水号
     ${rand}    Evaluate    random.randint(1,10)    random
-    Sleep    3
+    Sleep    6
     ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    ${报告编号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ReportNo"]/div
     Input Text    id=ProjectNo    ${流水号}
-    [Return]    ${流水号}
+    [Return]    ${流水号}    ${报告编号}
 
 内业分配用户
     Clear Element Text    xpath=.//*[@id='uid']/..//span/input[1]
@@ -19,11 +20,16 @@ Resource          ../公共模块.txt
     Comment    //span[text()="保存"]
 
 进行选择
-    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="Fenpei"]/div/a[2]
-    [Return]    ${i}
+    [Arguments]    ${i}
+    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="TID"]/div/input
 
 内外业查询按钮
     Click Element    //span[text()='查询']
 
 内业重新分配
     Click Element    //td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td/div[1]/a[text()='重新分配']
+
+正确查询立项时间
+
+内业输入流水号
+    Input Text    id=ProjectNo    ${获取查勘任务流水号}

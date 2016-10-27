@@ -15,12 +15,15 @@ Resource          ../组件层/变更审批.txt
     Click Element    //a[contains(text(),'项目变更' ) and @href]
 
 点击查询
-    [Arguments]    ${serial_no}
     等待列表加载完成
-    ${status}    Run Keyword And Return Status    Input Text    //input[@id='ProjectNo']    ${serial_no}
-    Run Keyword If    ${status}==False    Input Text    //input[@id='pno']    ${serial_no}
+    ${rand}    随机点击一条数据
+    ${流水号}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[2]/div
+    ${报告编号}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[3]/div
+    ${status}    Run Keyword And Return Status    Input Text    //input[@id='ProjectNo']    ${流水号}
+    Run Keyword If    ${status}==False    Input Text    //input[@id='pno']    ${流水号}
     Click Element    //span[text()='查询']/../..
     Wait Until Page Contains    成套住宅    10
+    [Return]    ${流水号}    ${报告编号}
 
 等待列表加载完成
     Wait Until Page Contains Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[10]/td[2]/div/../..    60    60s内未加载出来数据
@@ -53,12 +56,17 @@ Resource          ../组件层/变更审批.txt
 点击确定
     Click Element    //span[text()='确定']/../..
 
-随机获取一条未撤销的数据
-    ${rand}    Evaluate    random.randint(1,10)    random
-    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
-    ${return}    Run Keyword If    'status'=='已撤销'    随机获取一条未撤销的数据
+循环获取一条申请中的数据
+    [Arguments]    ${count}
+    Comment    ${rand}    Evaluate    random.randint(1,${count})    random
+    Comment    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
+    Comment    ${return}    Run Keyword If    'status'=='已撤销'    循环获取一条申请中的数据
     ...    ELSE    Set Variable    ${rand}
     Comment    Click Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[2]/div/../..
+    : FOR    ${i}    IN RANGE    ${count}
+    \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
+    \    ${return}    Run Keyword If    '${status}'=='申请中'    Set Variable    ${i+1}
+    \    Exit For Loop If    '${status}'=='申请中'
     [Return]    ${return}
 
 操作
@@ -68,12 +76,19 @@ Resource          ../组件层/变更审批.txt
 等待确定窗口弹出
     Wait Until Page Contains    确定    20
 
-随机点击一条申请中的记录
-    ${rand}    Evaluate    random.randint(1,10)    random
-    ${pno}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[2]/div
-    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
-    Run Keyword If    '${status}'!='申请中'    随机点击一条申请中的记录
+循环审核一条申请中的记录
+    Comment    ${rand}    Evaluate    random.randint(1,10)    random
+    Comment    ${pno}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[2]/div
+    Comment    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
+    Comment    Run Keyword If    '${status}'!='申请中'    循环审核一条申请中的记录
     ...    ELSE    操作    ${rand}    审核
+    Comment
+    : FOR    ${i}    IN RANGE    10
+    \    log    ${i}
+    \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
+    \    Run Keyword If    '${status}'=='申请中'    操作    ${i+1}    审核
+    \    ${pno}    Run Keyword If    '${status}'=='申请中'    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${i+1}]/td[2]/div
+    \    Exit For Loop If    '${status}'=='申请中'
     [Return]    ${pno}
 
 循环选出未通过的项目
@@ -94,7 +109,6 @@ Resource          ../组件层/变更审批.txt
 
 获取table中各列的值
     [Arguments]    ${table_locator}    ${row}    ${col}
-    log    lalallalal
     ${cell_value}    Get Table Cell    ${table_locator}    ${row}    ${col}
     [Return]    ${cell_value}
 
@@ -155,3 +169,8 @@ Resource          ../组件层/变更审批.txt
     ${count}    Findall    共(.*)记录    ${记录}
     ${count}    Evaluate    ${count}[0]
     [Return]    ${count}
+
+获取指定列的值
+    [Arguments]    ${page_index}    ${col_index}    ${tr_no}
+    ${text}    Get Text    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[${tr_no}]/td[${col_index}]/div
+    [Return]    ${text}

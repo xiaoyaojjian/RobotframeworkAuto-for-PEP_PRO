@@ -59,3 +59,6 @@ Resource          ../流程层/流程层.txt
 分配人员
     [Arguments]    ${输入分配人员}    ${路径}
     Run Keyword And Continue On Failure    Input Text    id=${路径}    ${输入分配人员}
+
+保存按钮
+    Click Element    xpath=//a[contains(.,'保存')]

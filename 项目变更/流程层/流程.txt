@@ -6,28 +6,35 @@ Resource          ../组件层/公共.txt
 Resource          ../组件层/添加变更申请.txt
 Resource          ../组件层/变更提交窗口.txt
 Resource          ../组件层/项目变更.txt
+Resource          ../组件层/查询.txt
+Resource          ../组件层/估价作业验证.txt
+Resource          ../../项目受理/项目受理业务层.txt
 
 *** Keywords ***
 申请流程
-    [Arguments]    ${serial_no}
+    [Arguments]    ${项目状态}
     Set Selenium Speed    0.5
     登录
+    Comment    ${pep}    查询项目详情并获取一个pep对象    ${serial_no}
+    Comment    Set Pep Value    ${pep}    旧流水号    ${serial_no}
+    Comment    Set Pep Value    ${pep}    流水号    ${EMPTY}
+    Comment    Set Pep Value    ${pep}    发送份数    10
     点击我的项目
     点击项目变更
     Select Frame    id=ProjectAllot_ChangeApply
     等待列表加载完成
-    点击查询    ${serial_no}
     ${pre_count}    获取列表记录数
     点击添加变更申请
+    Wait Until Element Is Visible    css=.xubox_iframe    10    10s内框架不可见
     Select Frame    css=.xubox_iframe
     等待列表加载完成
-    点击查询    ${serial_no}
+    ${流水号}    ${报告编号}    公共.点击查询
     等待一条记录查询出来
     点击复选框
     点击确定选中
     等待提交窗口数据加载完成
     sleep    5
-    验证流水号是否正确    ${serial_no}
+    验证流水号是否正确    ${流水号}
     Unselect Frame
     Select Frame    id=ProjectAllot_ChangeApply
     ${dict}    获取框架的id名称    xubox_iframe
@@ -36,15 +43,16 @@ Resource          ../组件层/项目变更.txt
     ${num}    Evaluate    ${current}
     Select Frame    id=${name}${num}
     选择变更类型    加出
+    输入加出份数    10
     输入收费金额    100
     选择变更原因    报告内容错误
     修改审批人    ${USER_NAME}
     ${time}    Get Time
     填写备注    ${USER_NAME}在${time}填写了备注
     Click Element    //span[text()='提交']/../..
-    ${status}    Run Keyword And Return Status    等待确定窗口弹出
-    Run Keyword If    ${status}==True    点击确定
-    ...    ELSE    Confirm Action
+    ${status}    Run Keyword And Return Status    Confirm Action
+    Comment    Run Keyword If    ${status}==False    Run Keywords    等待确定窗口弹出
+    ...    AND    点击确定
     等待确定窗口弹出
     点击确定
     Unselect Frame
@@ -52,7 +60,10 @@ Resource          ../组件层/项目变更.txt
     等待列表加载完成
     ${after_count}    获取列表记录数
     Run Keyword And Continue On Failure    Should Not Be Equal    ${after_count}    ${pre_count}    变更申请保存失败    True
-    [Teardown]    Close Browser
+    变更审批通过    ${流水号}
+    变更后估价未领取页面验证    ${流水号}    ${报告编号}    ${项目状态}
+    Comment    Unselect Frame
+    Comment    查询并验证项目详情的值是否正确    ${pep}
 
 撤销流程
     Set Selenium Speed    0.5
@@ -63,7 +74,7 @@ Resource          ../组件层/项目变更.txt
     等待列表加载完成
     ${count}    选择每页显示数量
     ${pre_count}    获取已撤销的总数    ${count}
-    ${rand}    随机获取一条未撤销的数据
+    ${rand}    循环获取一条申请中的数据    ${count}
     ${pno}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[2]/div
     Comment    Click Element    //span[text()='查询']/../..
     操作    ${rand}    撤销
@@ -88,7 +99,7 @@ Resource          ../组件层/项目变更.txt
     Unselect Frame
     Click Element    //*[text()='项目变更' and not(@href)]/..
     Select Frame    id=ProjectAllot_ChangeApply
-    Input Text    //input[@id='pno']    ${pno}
+    Input Text    //input[@id='ProjectNo']    ${pno}
     Click Element    //span[text()='查询']/../..
     Wait Until Page Contains    成套住宅    10
     ${pre_count}    获取未通过的总数
@@ -106,12 +117,14 @@ Resource          ../组件层/项目变更.txt
     Select Frame    id=ProjectAllot_ChangeApply
     等待确定窗口弹出
     点击确定
+    Comment    Wait Until Element Is Enabled    //input[@id='ProjectNo']    30    重新申请点击确定后页面都未加载完成，导致页面无法操作
     Unselect Frame
     Select Frame    id=ProjectAllot_ChangeApply
-    等待列表加载完成
+    Wait Until Page Contains    成套住宅    30    项目变更页面30s内未加载出来
     ${after_count}    获取未通过的总数
     ${compare}    Evaluate    ${after_count}+1
     Run Keyword And Continue On Failure    Should Be Equal    ${compare}    ${pre_count}    重新申请不成功    True
+    log    重新申请操作成功
     [Teardown]    Close Browser
 
 重新选择流程
@@ -125,20 +138,19 @@ Resource          ../组件层/项目变更.txt
     点击添加变更申请
     Select Frame    css=.xubox_iframe
     等待列表加载完成
-    点击查询    ${serial_no}
+    公共.点击查询
     等待一条记录查询出来
     点击复选框
     点击确定选中
-    等待提交窗口数据加载完成
-    sleep    5
     Unselect Frame
     Select Frame    id=ProjectAllot_ChangeApply
     Select Frame    id=xubox_iframe2
+    Wait Until Page Contains    于萌    30    30s内选择项目页面未加载完成
     点击重新选择
-    Comment    等待列表加载完成
     Unselect Frame
     Select Frame    id=ProjectAllot_ChangeApply
     Select Frame    id=xubox_iframe3
+    等待列表加载完成
     ${流水号}    随机选择一条其它数据    ${serial_no}
     点击确定选中
     Unselect Frame
@@ -157,9 +169,10 @@ Resource          ../组件层/项目变更.txt
     等待列表加载完成
     ${rand}    随机点击一条数据
     ${状态}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[11]/div
+    ${新状态}    根据状态重新赋值    ${状态}
     ${时间}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[12]/div
     ${收费金额}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[13]/div
-    ${收费金额}    去除两个小数点    ${收费金额}
+    Comment    ${收费金额}    去除两个小数点    ${收费金额}
     ${申请时间}    获取table中各列的值    css=#TableDetail    2    1
     ${金额}    获取table中各列的值    css=#TableDetail    2    2
     ${申请理由}    获取table中各列的值    css=#TableDetail    2    3
@@ -170,6 +183,10 @@ Resource          ../组件层/项目变更.txt
     ${审核结果}    获取table中各列的值    css=#TableDetail    2    8
     Run Keyword And Continue On Failure    Should Be Equal    ${申请时间}    ${时间}
     Run Keyword And Continue On Failure    Should Be Equal    ${金额}    ${收费金额}
+    Run Keyword And Continue On Failure    Should Be Equal    ${申请人}    ${USER_NAME}
+    Run Keyword And Continue On Failure    Should Be Equal    ${审核人}    ${USER_NAME}
+    Run Keyword And Continue On Failure    Should Be Equal    ${新状态}    ${审核结果}
+    Run Keyword And Continue On Failure    Should Be Equal    ${申请理由}    报告内容错误
 
 通过流水号重新申请
     [Arguments]    ${serial_no}
@@ -180,7 +197,7 @@ Resource          ../组件层/项目变更.txt
     Select Frame    id=ProjectAllot_ChangeApply
     等待列表加载完成
     Input Text    //input[@id='pno']    ${serial_no}
-    点击查询    ${serial_no}
+    公共.点击查询
     Wait Until Page Contains    成套住宅    10
     ${pre_count}    获取未通过的总数
     ${rand}    循环选出未通过的项目
@@ -205,3 +222,51 @@ Resource          ../组件层/项目变更.txt
     ${compare}    Evaluate    ${after_count}+1
     Run Keyword And Continue On Failure    Should Be Equal    ${compare}    ${pre_count}    重新申请不成功    True
     [Teardown]    Close Browser
+
+有效查询
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目变更
+    Select Frame    id=ProjectAllot_ChangeApply
+    等待列表加载完成
+    ${流水号}    随机获取列表中各列的值    2    2
+    有效文本查询模板    2    //input[@id='ProjectNo']    ${流水号}    2
+    ${报告编号}    随机获取列表中各列的值    2    3
+    有效文本查询模板    2    //input[@id='ReportNo']    ${报告编号}    3
+    ${项目地址}    随机获取列表中各列的值    2    4
+    有效文本查询模板    2    //input[@id='Address']    ${项目地址}    4
+    ${小区名称}    随机获取列表中各列的值    2    5
+    有效文本查询模板    2    //input[@id='AreaName']    ${小区名称}    5
+
+无效查询
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目变更
+    Select Frame    id=ProjectAllot_ChangeApply
+    等待列表加载完成
+    无效文本查询模板    2    //input[@id='ProjectNo']    00000000
+    无效文本查询模板    2    //input[@id='ReportNo']    00000000
+    无效文本查询模板    2    //input[@id='Address']    00000000
+    无效文本查询模板    2    //input[@id='AreaName']    00000000
+
+选择项目界面查询
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目变更
+    Select Frame    id=ProjectAllot_ChangeApply
+    等待列表加载完成
+    点击添加变更申请
+    Wait Until Element Is Visible    css=.xubox_iframe    10    10s内框架不可见
+    Select Frame    css=.xubox_iframe
+    等待列表加载完成
+    ${流水号}    随机获取列表中各列的值    2    2
+    有效文本查询模板    2    //input[@id='ProjectNo']    ${流水号}    2
+    ${报告编号}    随机获取列表中各列的值    2    3
+    有效文本查询模板    2    //input[@id='ReportNo']    ${报告编号}    3
+    ${项目地址}    随机获取列表中各列的值    2    5
+    有效文本查询模板    2    //input[@id='Address']    ${项目地址}    5
+    ${小区名称}    随机获取列表中各列的值    2    4
+    有效文本查询模板    2    //input[@id='AreaName']    ${小区名称}    4

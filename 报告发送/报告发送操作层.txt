@@ -185,10 +185,9 @@ Resource          报告发送校验层.txt
     点击查询按钮    0
     Select Checkbox    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]/td[@field="cb"]//input    #选中第一条记录
     等待列表创建完毕
-    ${index}    Set Variable    0
     : FOR    ${pep}    IN ZIP    ${pep_list}
-    \    验证报告发送历史列表指定行数据    ${pep}    ${index}
-    \    ${index}    Evaluate    ${index}+1
+    \    ${row_num}    Get Element Attribute    xpath=.//*[@field="SendPiece"]/div[text()="${pep.get_value(u'已发送份数')}"]/ancestor::tr@datagrid-row-index
+    \    验证报告发送历史列表指定行数据    ${pep}    ${row_num}
 
 报告回收操作
     [Arguments]    ${pep}

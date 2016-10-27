@@ -49,7 +49,7 @@ Resource          预估校验.txt
     log    ${查询类型}
     log    ${路径}
     ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    输入流水号    ${流水号}
+    Comment    内业输入流水号    ${流水号}
     转正查询按钮
     等待列表创建完毕
     ${获取报告打印第一页行数}    预估列表行数    ${路径}
@@ -143,7 +143,7 @@ Resource          预估校验.txt
 
 预估查询选择查询类型
     [Arguments]    ${查询类型}    ${输入参数}    ${路径}
-    Comment    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${输入参数}    ${路径}
+    Comment    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    内业输入流水号    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${输入参数}    ${路径}
@@ -194,7 +194,7 @@ Resource          预估校验.txt
     log    ${查询类型}
     log    ${路径}
     ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    输入流水号    ${流水号}
+    Comment    内业输入流水号    ${流水号}
     ${提示语}    get text    //div[@class='tooltip tooltip-right']
     特殊字符校验提示语    ${查询类型}    ${提示语}
     [Return]    ${总数据量}
@@ -204,7 +204,7 @@ Resource          预估校验.txt
     预估清空输入框内容    ${路径}
     等待列表创建完毕
     ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    输入流水号    ${流水号}
+    Comment    内业输入流水号    ${流水号}
     转正查询按钮
     等待列表创建完毕
     ${新总数}    预估获取页面总数量
@@ -215,7 +215,7 @@ Resource          预估校验.txt
     预估清空输入框内容    ${路径}
     等待列表创建完毕
     ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    输入流水号    ${流水号}
+    Comment    内业输入流水号    ${流水号}
     转正查询按钮
     等待列表创建完毕
     ${获取报告打印第一页行数}    预估列表行数    ${路径}
@@ -227,7 +227,7 @@ Resource          预估校验.txt
     预估清空输入框内容    ${路径}
     等待列表创建完毕
     ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    输入流水号    ${流水号}
+    Comment    内业输入流水号    ${流水号}
     转正查询按钮
     等待列表创建完毕
     ${新总数}    预估获取页面总数量
@@ -238,7 +238,7 @@ Resource          预估校验.txt
     预估清空输入框内容    ${路径}
     等待列表创建完毕
     ${输入参数}    预估查询选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    输入流水号    ${流水号}
+    Comment    内业输入流水号    ${流水号}
     ${获取输入参数最终值}    预估输入参数最终值    ${查询类型}    ${路径}
     ${n}    Get List Count    ${获取输入参数最终值}
     超长字符校验    ${查询类型}    ${n}
@@ -269,11 +269,12 @@ Resource          预估校验.txt
     Select From List By Label    id=IsPositive    未转正
     等待列表创建完毕
     转正查询按钮
+    等待列表创建完毕
     ${总数量}    预估获取页面总数量
-    :FOR    ${i}    in range    ${总数量}
+    : FOR    ${i}    IN RANGE    ${总数量}
     \    log    ${i}
-    \    ${未转正}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[6]
-    \    ${流水号}    Get Text    //form/div[1]/div[1]/div[1]/div[2]/div[2]/div[2]//tbody/tr[${i+1}]/td[1]
+    \    ${未转正}    Get Text    xpath=//td[@field="IsPositive"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="IsPositive"]/div
+    \    ${流水号}    Get Text    xpath=//td[@field="IsPositive"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="IsPositive"]/div
     \    Exit For Loop If    '${未转正}'=='否'or'${未转正}'=='是'
 
 未转正查询
@@ -292,4 +293,4 @@ Resource          预估校验.txt
     ${总数量}    预估获取页面总数量
     Comment    ${行数}    预估获取列表列数    IsPositive
     sleep    5
-    已转正校验    ${总数量}
+    已转正校验

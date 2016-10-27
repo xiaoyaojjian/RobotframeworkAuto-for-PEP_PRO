@@ -13,3 +13,5 @@ Resource          ../../公共模块.txt
     [Arguments]    ${serial_no}
     ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[1]/td[11]/div    #选择最新的一条
     [Return]    ${status}
+
+验证变更后数据的正确性

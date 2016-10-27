@@ -25,13 +25,64 @@ Resource          ..//查勘任务/查勘任务操作层.txt
 
 领取多条数据
     [Arguments]    ${num1}    ${num2}
-    :FOR    ${i}    IN RANGE    ${num1}    ${num2}
+    : FOR    ${i}    IN RANGE    ${num1}    ${num2}
     \    log    ${i}
     \    等待加载完毕
-    \    Click Element    //div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="cb"]/div/input[1]
+    \    Click Element    xpath=//div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="cb"]/div/input[1]
+    \    ${流水号}    Get Text    xpath=//div[@class="panel"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]/div
 
 判断线上业务
     [Arguments]    ${链家}
     Run Keyword If    '${链家}'=='链家测试'
     ...    ELSE IF    填写预约信息
     ...    ELSE IF    弹出提示语
+
+查勘任务领取
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}    ${是否为线上业务}=0
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    询价查询按钮
+    等待列表创建完毕
+    Comment    领取
+    查勘任务操作    ${操作方式}
+    Run Keyword If    ${是否为线上业务}==0    查勘任务非线上业务
+    ...    ELSE    查勘任务线上业务
+    Comment    进行中
+    进行中按钮
+    进行中数据    ${查询类型}    ${输入参数}    ${路径}
+    领取到进行中数据校验    ${查询类型}    ${输入参数}    ${路径}
+
+进行中数据
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    log    ${查询类型}
+    log    ${路径}
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+
+领取到进行中数据校验
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    ${获取报告打印第一页列数}    获取询价列表列数据
+    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+
+批量领取
+    [Arguments]    ${路径}    ${开始位置}    ${结束位置}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    ${LIST}    批量选择操作    ${开始位置}    ${结束位置}    ${获取报告打印第一页行数}
+    ${领取数目}    Return List Count    ${LIST}
+    批量领取按钮
+    浏览器弹出框确定操作
+    等待提示框出现
+    确定按钮
+    进行中按钮
+    批量领取校验    流水号    ProjectNo    ${LIST}    ${领取数目}

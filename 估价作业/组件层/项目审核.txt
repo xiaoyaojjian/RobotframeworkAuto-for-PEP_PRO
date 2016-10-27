@@ -17,4 +17,4 @@ Resource          查勘任务.txt
     Input Text    //input[@id='ProjectNo']    ${pno}
     Click Element    //span[text()='查询']/../..
     Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]    20
-    Page Should Contain    显示1到1,共1记录    WARN
+    Run Keyword And Continue On Failure    Page Should Contain    显示1到1,共1记录    WARN

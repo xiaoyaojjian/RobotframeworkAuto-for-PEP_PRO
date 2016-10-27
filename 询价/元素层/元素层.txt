@@ -153,3 +153,6 @@ Resource          ../流程层/流程层.txt
 
 预估单保存按钮
     Click Element    id=BtnSave
+
+查勘批量领取按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="批量领取"]/..

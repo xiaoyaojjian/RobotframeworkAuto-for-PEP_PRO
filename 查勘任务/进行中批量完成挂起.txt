@@ -8,18 +8,23 @@ Resource          ..//查勘任务/查勘任务业务层.txt
 Resource          ..//项目受理/项目受理业务层.txt
 
 *** Test Cases ***
-领取
+批量完成
     [Documentation]    该用例含有
-    ...    1、立项（线上推送数据）——外业分配完成——领取——进行中验证
-    ...    2、立项（普通）——外业分配完成——领取——进行中数据验证
+    ...    多个项目进行选择批量处理
     ...
     ...    编写人：吕梓清
     [Setup]    登录
-    ${pep}    线上业务进行立项并分配操作
     查勘打开功能模块公共方法
-    查勘任务领取    流水号    ${pep.get_value(u'流水号')}    ProjectNo    领取    1
-    Close Browser
-    登录
+    批量完成操作    ProjectNo    1    2
+    [Teardown]    Close Browser
+
+挂起模式一
+    [Documentation]    该用例含有
+    ...    1、立项（普通）——外业分配完成——领取——进行中——挂起
+    ...    2、立项（普通）——外业分配完成——领取——进行中——解挂
+    ...
+    ...    编写人：吕梓清
+    [Setup]    登录
     Import Library    ${CURDIR}/../TestDataLib.py
     ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
     ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
@@ -30,43 +35,22 @@ Resource          ..//项目受理/项目受理业务层.txt
     ${pep}    立项时直接任务分配操作    ${pep_input}
     查勘打开功能模块公共方法
     查勘任务领取    流水号    ${pep.get_value(u'流水号')}    ProjectNo    领取    0
-    [Teardown]    Close Browser
-
-未领取挂起
-    [Documentation]    该用例含有
-    ...    1、立项（普通）——外业分配完成——挂起
-    ...    2、立项（普通）——外业分配完成——解挂
-    ...
-    ...    编写人：吕梓清
-    [Setup]    登录
-    Import Library    ${CURDIR}/../TestDataLib.py
-    ${pep_input}    Run Keyword By Testdata Return Dict    新立项用例    -1    初始化一个pep对象    客户手机    项目来源
-    ...    估价目的    子物业类型    行政区    物业类型    报告类型    紧急程度
-    ...    贷款机构    贷款支行    发送份数    小区名    小区地址    楼栋号
-    ...    单元号    户号名    建筑面积    土地面积    建成年代    估价委托方
-    ...    收费责任人    市场负责人    内部报单人    预收费用    应收金额    立项备注
-    ...    看房联系人    联系人电话    收取方式
-    ${pep}    立项时直接任务分配操作    ${pep_input}
-    查勘打开功能模块公共方法
+    进行中按钮
     查勘任务挂起    流水号    ${pep.get_value(u'流水号')}    ProjectNo    挂起    1
     查勘任务解挂    流水号    ${pep.get_value(u'流水号')}    ProjectNo    解挂
-    [Teardown]
-
-批量领取
-    [Documentation]    该用例含有
-    ...    多个项目进行选择批量处理
-    ...
-    ...    编写人：吕梓清
-    [Setup]    登录
-    查勘打开功能模块公共方法
-    批量领取    ProjectNo    2    5
     [Teardown]    Close Browser
 
-完成
+挂起模式二
+    [Documentation]    该用例含有
+    ...    1、立项（普通）——外业分配完成——领取——进行中——挂起
+    ...    2、立项（普通）——外业分配完成——领取——进行中——解挂
+    ...
+    ...    编写人：吕梓清
     [Setup]    登录
     ${pep}    线上业务进行立项并分配操作
     查勘打开功能模块公共方法
     查勘任务领取    流水号    ${pep.get_value(u'流水号')}    ProjectNo    领取    1
     进行中按钮
-    查勘任务完成    流水号    ${pep.get_value(u'流水号')}    ProjectNo    完成
-    [Teardown]    Close Browser
+    查勘任务挂起    流水号    ${pep.get_value(u'流水号')}    ProjectNo    挂起    2
+    查勘任务解挂    流水号    ${pep.get_value(u'流水号')}    ProjectNo    解挂
+    [Teardown]

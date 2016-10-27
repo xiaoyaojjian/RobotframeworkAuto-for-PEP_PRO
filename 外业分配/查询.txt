@@ -34,10 +34,10 @@ Resource          外业分配业务层.txt
     [Setup]    登录
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
-    ${总数据量}    询价正确数据查询    报告号    201601102004469    ReportNo
+    ${总数据量}    询价正确数据查询    报告号    201601101000409    ReportNo
     询价错误特殊字符查询    报告号    @$@    ReportNo
     询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
-    询价模糊查询    报告号    1020    ReportNo
+    询价模糊查询    报告号    0409    ReportNo
     询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
     询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
 
@@ -88,17 +88,12 @@ Resource          外业分配业务层.txt
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
     切换到已分配子模块
-    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    486575936688    ${empty}
-    Comment    错误特殊字符查询    流水号    ProjectNo    ProjectNo    多个大范甘迪发    2
-    ...    ${empty}    ${empty}
-    Comment    为空查询    流水号    ProjectNo    ProjectNo    ${总数据量}    ${empty}
-    ...    2    ${empty}    ${empty}
-    Comment    外业分配模糊查询    流水号    ProjectNo    ProjectNo    4865    2
-    ...    ${empty}    ${empty}
-    Comment    错误查询    流水号    ProjectNo    ProjectNo    ${总数据量}    123456789564
-    ...    2    ${empty}    ${empty}
-    Comment    超长字符查询    流水号    ProjectNo    ProjectNo    ${总数据量}    1234567895643
-    ...    2    ${empty}    ${empty}
+    ${总数据量}    询价正确数据查询    流水号    489695540332    ProjectNo
+    询价错误特殊字符查询    流水号    @$@    ProjectNo
+    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    询价模糊查询    流水号    489    ProjectNo
+    询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
+    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
 
 (已)报告号查询
     [Setup]    登录
@@ -138,10 +133,10 @@ Resource          外业分配业务层.txt
     打开功能模块    我的项目    外业分配
     Select Frame    id=ProjectAllot_OutsideAssign
     切换到已分配子模块
-    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=1
-    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=1
-    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=1
-    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=1
+    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=2
+    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=2
+    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=2
+    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=2
 
 (已)查勘人员
     打开功能模块    我的项目    外业分配

@@ -23,10 +23,10 @@ Resource          审核调度业务层.txt
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
-    ${总数据量}    审核调度正确查询    报告号    201601101004352    ReportNo
+    ${总数据量}    审核调度正确查询    报告号    201501107001624    ReportNo
     审核调度特殊字符查询    报告号    @$@    ReportNo
     审核调度为空查询    报告号    ${empty}    ReportNo    ${总数据量}
-    审核调度模糊查询    报告号    20160    ReportNo
+    审核调度模糊查询    报告号    20150    ReportNo
     审核调度错误查询    报告号    234234234234    ReportNo    ${总数据量}
     审核调度超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
 

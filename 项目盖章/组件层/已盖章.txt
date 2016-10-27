@@ -19,3 +19,12 @@ Resource          公共.txt
     ${pageNo}    Get Text    //div[@class='panel']/../div[2]//div[contains(text(),'显示')]
     ${pageNo}    Findall    共(.*)记录    ${pageNo}
     Should Be Equal    ${pageNo}    0    收回失败
+
+对比流程信息和按钮的关系
+    : FOR    ${i}    IN RANGE    10
+    \    点击一条记录    2    ${i+1}
+    \    Click Element    //span[text()='流程信息']/..
+    \    sleep    1
+    \    ${status}    Run Keyword And Return Status    Wait Until Page Contains    流程完成    10
+    \    Run Keyword If    ${status}==False    按钮应该存在    2    ${i+1}    收回
+    \    ...    ELSE    按钮不应该存在    2    ${i+1}    收回

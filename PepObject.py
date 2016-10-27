@@ -33,7 +33,7 @@ class PepObject:
     #    return self.get_value(u'流水号')
 
     def __conf(self):
-        self.__key_set = set([u'流水号', u'报告号'])
+        self.__key_set = set([u'流水号', u'报告号', u'旧流水号', u'旧报告号'])
 
         # 客户信息
         customer_info = [u'客户手机', u'固定电话', u'客户姓名',
@@ -75,7 +75,8 @@ class PepObject:
                         u'询值单价最大', u'询值总价最小', u'询价时间', u'询价来源',
                         u'立项', u'询值总价最大', u'建成年代', u'紧急程度',
                         u'贷款机构', u'贷款支行', u'期贷信息', u'估价委托方',
-                        u'所属部门', u'立项备注', u'线上信息', u'询价添加人']
+                        u'所属部门', u'立项备注', u'线上信息', u'询价添加人',
+                        u'项目推广名', u'竣工日期', u'预估单号']
         self.__key_set.update(project_info)
 
         # 收费信息

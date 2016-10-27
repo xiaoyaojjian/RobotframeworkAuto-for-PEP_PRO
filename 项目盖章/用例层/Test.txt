@@ -18,7 +18,7 @@ Resource          ../流程层/流程.txt
     Run Keyword And Continue On Failure    随机电子盖章
     [Teardown]    Close Browser
 
-随机盖章未收回
+随机未盖章收回
     Run Keyword And Continue On Failure    随机盖章未收回
     [Teardown]    Close Browser
 
@@ -28,4 +28,20 @@ Resource          ../流程层/流程.txt
 
 流程信息校验
     Run Keyword And Continue On Failure    流程信息校验
+    [Teardown]    Close Browser
+
+有效查询
+    Run Keyword And Continue On Failure    有效查询
+    [Teardown]    Close Browser
+
+无效查询
+    Run Keyword And Continue On Failure    无效查询
+    [Teardown]    Close Browser
+
+已盖章信息校验
+    Run Keyword And Continue On Failure    已盖章信息校验
+    [Teardown]    Close Browser
+
+流程完成已盖章不显示回收
+    Run Keyword And Continue On Failure    流程完成已盖章不显示回收
     [Teardown]    Close Browser

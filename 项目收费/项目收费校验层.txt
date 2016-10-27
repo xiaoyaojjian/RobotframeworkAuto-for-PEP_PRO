@@ -26,3 +26,16 @@ Resource          ../公共模块.txt
     Run Keyword If    '${未确认金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="NotConfirmFee"]/div[contains(text(),'${未确认金额}')]    ${表格列数}    表格中的未确认金额：“${未确认金额}”与表格列数不一致
     Run Keyword If    '${免收金额}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="FreePrice"]/div[contains(text(),'${免收金额}')]    ${表格列数}    表格中的免收金额：“${免收金额}”与表格列数不一致
     Run Keyword If    '${收费责任人}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="FinanceEmployeeName"]/div[contains(text(),'${收费责任人}')]    ${表格列数}    表格中的收费责任人：“${收费责任人}”与表格列数不一致
+
+验证项目收费明细数据
+    [Arguments]    ${单据编号}    ${发生金额}=None    ${费用类型}=None    ${付款方式}=None    ${缴费人}=None    ${收费人}=None
+    ...    ${收费确认}=None    ${备注}=None
+    ${row_num}    Get Element Attribute    xpath=//div[@class="datagrid-body"]//td[@field="OrderNo"]/div[text()="${单据编号}"]/ancestor::tr@datagrid-row-index
+    Run Keyword If    '${发生金额}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Fee"]/div    ${发生金额}
+    Run Keyword If    '${费用类型}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="FeeType"]/div    ${费用类型}
+    Run Keyword If    '${付款方式}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="PaymentTerms"]/div    ${付款方式}
+    Run Keyword If    '${单据编号}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="OrderNo"]/div    ${单据编号}
+    Run Keyword If    '${缴费人}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="FeeMan"]/div    ${缴费人}
+    Run Keyword If    '${收费人}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="OperationName"]/div    ${收费人}
+    Run Keyword If    '${收费确认}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="IsComfirm"]/div    ${收费确认}
+    Run Keyword If    '${备注}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Remark"]/div    ${备注}

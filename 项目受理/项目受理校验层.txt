@@ -71,7 +71,7 @@ Resource          ../公共模块.txt
     Run Keyword If    '${项目状态}'!='None'    验证xpath路径匹配的数量    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ReportProperty"]/div[contains(text(),'${项目状态}')]    ${表格列数}    表格中的项目状态：“${项目状态}”与表格列数不一致
 
 验证立项界面的值是否正常
-    [Arguments]    ${pep}    ${是否查看详情}=0    ${跳转来源}=0    # 跳转来源：0没有跳转，1询价跳转，2线上业务跳转，3预估单跳转
+    [Arguments]    ${pep}    ${是否查看详情}=0    ${跳转来源}=0    # 跳转来源：0没有跳转，1询价跳转，2线上业务跳转，3预估单跳转，4项目变革数据验证
     Comment    Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Wait Until Page Contains    ${pep.get_value(u'客户手机')}    30s
     Run Keyword If    '${是否查看详情}'!='1'    等待加载完毕
     验证项目信息是否正常    ${pep}    ${是否查看详情}    ${跳转来源}
@@ -108,7 +108,7 @@ Resource          ../公共模块.txt
     #验证项目信息的值是否正常
     ${项目来源}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ProjectSource']
     ...    ELSE    Get Text    xpath=.//*[@id='ProjectSource']
-    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}!=3    Should Be Equal    ${pep.get_value(u'项目来源')}    ${项目来源}    项目来源不匹配
+    Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}!=3 and ${is_xunjia}!=1    Should Be Equal    ${pep.get_value(u'项目来源')}    ${项目来源}    项目来源不匹配
     ${项目类型}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='ItemType']
     ...    ELSE    Get Text    xpath=.//*[@id='ItemType']
     Run Keyword And Continue On Failure    Run Keyword If    ${is_xunjia}==0    Should Be Equal    ${pep.get_value(u'项目类型')}    ${项目类型}    项目类型不匹配
@@ -132,7 +132,7 @@ Resource          ../公共模块.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'发送份数')}    ${发送份数}    发送份数不匹配
     ${城市}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='CityId']/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id='City']
-    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'城市')}    ${城市}    城市不匹配
+    Run Keyword If    ${is_xunjia}!=2    Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'城市')}    ${城市}    城市不匹配
     ${行政区}    Run Keyword If    ${is_get_text}==0    Get Value    xpath=.//*[@id='DistrictId']/..//input[@type="text"]
     ...    ELSE    Get Text    xpath=.//*[@id='District']
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'行政区')}    ${行政区}    行政区不匹配

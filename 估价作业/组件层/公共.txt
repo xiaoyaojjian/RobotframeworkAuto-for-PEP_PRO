@@ -7,6 +7,7 @@ Resource          未领取.txt
 Resource          进行中.txt
 Resource          项目审核.txt
 Resource          外业分配任务.txt
+Resource          查询.txt
 
 *** Keywords ***
 点击查询
@@ -41,6 +42,8 @@ Resource          外业分配任务.txt
 点击确定
     等待确定窗口弹出
     Click Element    //span[text()='确定']/../..
+    Sleep    10
+    Comment    Click Element    //span[text()='取消']/../..
 
 点击挂起
     [Arguments]    ${page_index}
@@ -72,7 +75,7 @@ Resource          外业分配任务.txt
     Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
 
 等待确定窗口弹出
-    Wait Until Element Is Visible    //span[text()='确定']/../..    30    确定窗口30s内未弹出
+    Wait Until Page Contains Element    //span[text()='确定']    30    确定窗口30s内未弹出
 
 挂起后续操作
     [Arguments]    ${page_index}
@@ -141,9 +144,6 @@ Resource          外业分配任务.txt
     [Arguments]    ${type}
     Run Keyword If    '${type}'=='input'
 
-根据列名随机获取一个列值
-    [Arguments]    ${col_name}
-
 循环获取列表的名称
     [Arguments]    ${table_locator}
     ${type}    Evaluate    sys.getdefaultencoding()    sys
@@ -152,8 +152,26 @@ Resource          外业分配任务.txt
     : FOR    ${i}    IN RANGE    ${cols}-1
     \    ${col_name}    Get Text    ${table_locator}//tr/td[${i+2}]/div/span[1]
     \    ${temp_dict}    Create Dictionary    ${col_name}=${i+2}
-    ${EMPTY}
-    ${EMPTY}
 
 普通查询
     Click Element    //span[text()='查询']/..
+
+验证是否存在一条查询记录
+    [Arguments]    ${locator}    ${input}
+    Input Text    ${locator}    ${input}
+    普通查询
+    Wait Until Page Contains    显示1到1,共1记录    30
+    log    查询成功
+
+按钮应该存在
+    [Arguments]    ${page_index}    ${tr_no}    ${href_name}
+    Element Should Be Visible    //div[@id='tabs']/div[2]/div[${page_index}]//tbody/tr[${tr_no}]//a[text()='${href_name}']
+
+按钮应该不存在
+    [Arguments]    ${page_index}    ${tr_no}    ${href_name}
+    Element Should Not Be Visible    //div[@id='tabs']/div[2]/div[${page_index}]//tbody/tr[${tr_no}]//a[text()='${href_name}']
+
+获取指定列的值
+    [Arguments]    ${page_index}    ${col_index}    ${tr_no}
+    ${text}    Get Text    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[${tr_no}]/td[${col_index}]/div
+    [Return]    ${text}

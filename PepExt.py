@@ -57,3 +57,19 @@ class PepExt:
         """输入框最大输入个数"""
         m = list(str(Heir)).__len__()
         return m
+		
+    	
+    def return_list(self,NO_list,para):
+        """存储随机选择项目的流水号"""
+        NO_list.append(para)
+        return NO_list
+		
+    def return_list_count(self,NO_list):
+        """返回列表个数"""
+        list_count = NO_list.__len__()
+        return list_count
+		
+    def return_string_strip(self,string):
+        """清除字符末尾为空的字符串"""
+        strip_string = string.strip()
+        return strip_string

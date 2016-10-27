@@ -1,0 +1,38 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          公共.txt
+Resource          添加变更申请.txt
+Resource          ../../公共模块.txt
+
+*** Keywords ***
+变更后估价未领取页面验证
+    [Arguments]    ${旧流水号}    ${旧报告编号}    ${项目状态}
+    Unselect Frame
+    Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
+    Select Frame    id=ProjectAllot_ReportAccept
+    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[10]    60    60s未加载出数据
+    Input Text    //input[@id='OldProjectNo']    ${旧流水号}
+    Click Element    //span[text()='查询']/..
+    Wait Until Page Contains    内业未接收    60
+    ${new_pno}    获取指定列的值    1    2    1
+    ${new_rno}    获取指定列的值    1    3    1
+    ${old_pno}    获取指定列的值    1    4    1
+    ${old_rno}    获取指定列的值    1    5    1
+    ${状态}    获取指定列的值    1    11    1
+    Run Keyword And Continue On Failure    Should Be Equal    ${状态}    ${项目状态}
+    Run Keyword If    '${项目状态}'=='加出'    Run Keyword And Continue On Failure    Should Be Equal    ${旧报告编号}    ${new_rno}    变更后报告编号不相等
+    ...    ELSE IF    '${项目状态}'=='正常'    Run Keyword And Continue On Failure    Should Not Be Equal    ${旧报告编号}    ${new_rno}
+    Run Keyword And Continue On Failure    Should Not Be Equal    ${旧流水号}    ${new_pno}    变更后新流水号没变
+    Run Keyword And Continue On Failure    Should Be Equal    ${old_pno}    ${旧流水号}    旧流水号显示错误
+    Run Keyword If    '${项目状态}'=='加出'    Run Keyword And Continue On Failure    Should Be Empty    ${old_rno}    变更后旧报告编号不为空
+    ...    ELSE IF    '${项目状态}'=='正常'    Should Be Equal    ${old_rno}    ${旧报告编号}
+    ${len1}    Get Length    ${new_pno}
+    ${len2}    Get Length    ${new_rno}
+    ${len3}    Get Length    ${old_pno}
+    ${len4}    Get Length    ${old_rno}
+    Run Keyword And Continue On Failure    Should Be Equal As Integers    ${len1}    12    新流水号不应该是${len1}位
+    Run Keyword And Continue On Failure    Should Be Equal As Integers    ${len2}    15    新报告编号不应该是${len2}位
+    Run Keyword And Continue On Failure    Should Be Equal As Integers    ${len3}    12    旧流水号不应该是${len3}位
+    Comment    Run Keyword And Continue On Failure    Should Be Equal As Integers    ${len4}    0    旧流水号不应该是${len3}位
+    log    变更验证成功

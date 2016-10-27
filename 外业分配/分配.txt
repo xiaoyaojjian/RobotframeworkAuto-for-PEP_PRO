@@ -32,7 +32,7 @@ Resource          外业分配业务层.txt
     等待列表创建完毕
     点击查询按钮
     询价获取页面数据总量
-    随机勾选列表数据    4    6
+    多条数据选择    4    6
     分配按钮
     等待弹出窗口出现
     选择外采用户
@@ -144,6 +144,7 @@ Resource          外业分配业务层.txt
     选择外采用户
     选择外采分配pad端
     确定按钮
+    Comment    Wait Until Page Contains Element    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]    100s
     等待提示框出现
     点击提示框中的确定按钮
     Unselect Frame

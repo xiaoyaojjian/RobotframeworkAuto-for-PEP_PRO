@@ -11,7 +11,7 @@ Resource          ../外业分配/外业分配业务层.txt
     select frame    id=ProjectAllot_Audit
     等待列表创建完毕
     Comment    审核流水号    ${流水号}
-    查询流水号
+    ${流水号}    查询流水号
     Comment    项目查询
     等待列表创建完毕
     等待加载完毕
@@ -65,16 +65,17 @@ Resource          ../外业分配/外业分配业务层.txt
     #    Run Keyword And Continue On Failure    等待处理完毕
     Unselect Frame
     select frame    id=ProjectAllot_Audit
-    切换到未审核子模块
+    切换到已审核过子模块
     Comment    sleep    2
-    click Element    xpath=//span[contains(.,'已审核过')]
+    Comment    click Element    xpath=//span[contains(.,'已审核过')]
     Comment    项目审核完
     #    Run Keyword And Continue On Failure    等待处理完毕
-    审核流水号    ${流水号}
+    Comment    审核流水号    ${流水号}
+    Input Text    id=ProjectNo    ${流水号}
     项目查询
     等待加载完毕
     ${已审核流水号}    get text    xpath=//div[@class="panel" and contains(@style,"display: block")]//*[contains(@id,"datagrid-row") ]/td[@field="ProjectNo"]/div
-    项目审核（已）按流水号查询校验    ${已审核流水号}    ${流水号}
+    Comment    项目审核（已）按流水号查询校验    ${已审核流水号}    ${流水号}
     Unselect Frame
     click Element    xpath=//*[@id="framecenter"]/div[1]/ul/li/div[3]
 
@@ -82,7 +83,7 @@ Resource          ../外业分配/外业分配业务层.txt
     ${rand}    Evaluate    random.randint(1,4)    random
     Comment    sleep    5
     Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
-    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
     Input Text    id=ProjectNo    ${流水号}
     点击查询按钮
 

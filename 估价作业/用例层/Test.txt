@@ -39,3 +39,19 @@ Resource          ../流程层/流程.txt
 流程信息校验
     Run Keyword And Continue On Failure    流程信息校验
     [Teardown]    Close Browser
+
+有效查询
+    Run Keyword And Continue On Failure    有效查询
+    [Teardown]    Close Browser
+
+无效查询
+    Run Keyword And Continue On Failure    无效查询
+    [Teardown]    Close Browser
+
+验证已完成列表
+    Run Keyword And Continue On Failure    验证已完成列表
+    [Teardown]    Close Browser
+
+验证查看信息
+    Run Keyword And Continue On Failure    验证查看信息
+    [Teardown]    Close Browser

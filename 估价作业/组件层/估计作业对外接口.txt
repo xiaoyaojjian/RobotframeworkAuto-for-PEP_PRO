@@ -1,0 +1,58 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Resource          公共.txt
+
+*** Keywords ***
+根据勘察状态随机获取一个未领取的流水号
+    [Arguments]    ${流水号}    ${审核阶段}
+    ${rand}    Evaluate    random.randint(1,10)    random
+    Unselect Frame
+    点击估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    等待列表加载完成    1
+    Input Text    //input[@id='ReportNo']    ${流水号}
+    普通查询
+    Wait Until Page Contains    内业未接收    30
+    操作    1    领取
+    点击进行中
+    等待列表加载完成    2
+    Select From List By Label    //select[@id='OuterStatus']    已完成
+    普通查询
+    Wait Until Page Contains    内业进行中    30    进行中页面在选择已完成后点击查询30s没有加载出数据
+    ${pno}    循环获取文本值    //div[@id='tabs']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div
+    Comment    Wait Until Element Is Visible    //div[@id='tabs']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div    10
+    Comment    ${pno}    获取列表中各列的值    2    2
+    生成线上报告
+    点击提交
+    提交审核    ${pno}    ${审核阶段}
+    log    线上报告提交审核成功
+    #验证重新提交审核
+    Unselect Frame
+    点击估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    等待列表加载完成    1
+    点击已完成
+    等待列表加载完成    3
+    Input Text    //input[@id='ProjectNo']    ${pno}
+    普通查询
+    Wait Until Page Contains    显示1到1,共1记录    10
+    重新提交审核操作
+    验证审核列表    ${pno}
+    log    线上报告重新提交审核成功
+
+根据传入的流水号判断未领取页面是否存在该记录
+    [Arguments]    ${流水号}
+    Unselect Frame
+    点击估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    等待列表加载完成    1
+    Input Text    //input[@id='ReportNo']    ${流水号}
+    普通查询
+    Wait Until Page Contains    内业未接收    30
+    Wait Until Element Is Visible    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div    10
+    ${需要验证的流水号}    Get Text    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div
+    ${status}    Run Keyword And Return Status    Should Be Equal    ${需要验证的流水号}    ${流水号}
+    Run Keyword If    ${status}==False    Fail    未领取页面未查询到指定项目信息
+    ...    ELSE    log    未领取页面成功查询到指定

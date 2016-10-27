@@ -7,7 +7,7 @@ Resource          ../组件层/添加变更申请.txt
 
 *** Test Cases ***
 申请流程
-    Run Keyword And Continue On Failure    申请流程    549978253776
+    Run Keyword And Continue On Failure    申请流程    加出
     [Teardown]    Close Browser
 
 重新申请流程
@@ -24,4 +24,16 @@ Resource          ../组件层/添加变更申请.txt
 
 撤销流程
     Run Keyword And Continue On Failure    撤销流程
+    [Teardown]    Close Browser
+
+有效查询
+    Run Keyword And Continue On Failure    有效查询
+    [Teardown]    Close Browser
+
+无效查询
+    Run Keyword And Continue On Failure    无效查询
+    [Teardown]    Close Browser
+
+选择项目界面查询
+    Run Keyword And Continue On Failure    选择项目界面查询
     [Teardown]    Close Browser

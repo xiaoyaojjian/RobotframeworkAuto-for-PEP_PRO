@@ -45,20 +45,21 @@ Resource          未盖章.txt
     点击未盖章
     sleep    3
     Input Text    //input[@id='ProjectNo']    ${serial_no}
+    Wait Until Element Is Visible    //span[text()='查询']/ancestor::tbody/tr[1]//span[text()='查询']/..    10    查询按钮无法点击
     点击查询    1
-    sleep    3
+    Wait Until Page Contains    显示1到1,共1记录    30    30s内未查询出记录
     ${fail_reason}    获取盖章失败的内容
     ${reason1}    Evaluate    '${fail_reason}'.find('最低收费必须大于0')
     ${reason2}    Evaluate    '${fail_reason}'.find('正式报告应收金额必须大于0')
-    ${reason2}    Evaluate    '${fail_reason}'.find('收费责任人未确认')
+    ${reason3}    Evaluate    '${fail_reason}'.find('收费责任人未确认')
     Run Keyword If    ${reason1}!=-1 or ${reason2}!=-1    执行项目收费操作    ${serial_no}
-    Run Keyword If    ${reason2}!=-1    执行确认收费人操作    ${serial_no}
+    Run Keyword If    ${reason3}!=-1    执行确认收费人操作    ${serial_no}
 
 执行项目收费操作
     [Arguments]    ${serial_no}
     Unselect Frame
     Click Element    //span[contains(text(),'财务管理')]
-    Wait Until Page Contains Element    //a[contains(text(),'项目收费' ) and @href]
+    Wait Until Page Contains Element    //a[contains(text(),'项目收费' ) and @href]    10
     Click Element    //a[contains(text(),'项目收费' ) and @href]
     Select Frame    id=Finance_AdvanceCharge
     Wait Until Page Contains    未完成收费项目    60
@@ -76,6 +77,7 @@ Resource          未盖章.txt
     点击确定
     Wait Until Page Contains Element    //a[not(@id='BtnOK')]//span[text()='确定']/..
     Click Element    //a[not(@id='BtnOK')]//span[text()='确定']/..
+    sleep    5
     重复验证盖章    ${serial_no}
 
 切换选项卡
@@ -93,14 +95,15 @@ Resource          未盖章.txt
     Wait Until Page Contains    确认收费责任    60
     Input Text    //input[@id='ProjectNo']    ${serial_no}
     Click Element    //a[@id='BtnSearch']//span[text()='查询']
-    sleep    5
+    Wait Until Page Contains    显示1到1,共1记录    30    确认收费责任人页面无数据
     Click Element    //div[@class='panel' and not(contains(@style,'none'))]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[1]/td[last()]//a[text()='确认']
     Select Frame    css=.xubox_iframe
     Wait Until Page Contains    免收金额    10
     Click Element    //span[text()='确认']/..
     点击确定
-    Wait Until Page Contains Element    //span[text()='确定']    60    60s后都没有弹出确定窗口
+    Wait Until Page Contains    操作成功!    60    确认收费点击倒数第二个确定后没有弹出确定窗口
     点击确定
+    sleep    5
     重复验证盖章    ${serial_no}
 
 重复验证盖章
@@ -115,9 +118,14 @@ Resource          未盖章.txt
 随机选择一条记录
     [Arguments]    ${index}
     ${rand}    Evaluate    random.randint(1,10)    random
-    Wait Until Element Is Visible    //div[@id='tabs']//div[@class='panel']/../div[${index}]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${rand}]/td[2]/div    30
     ${pno}    Get Text    //div[@id='tabs']//div[@class='panel']/../div[${index}]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${rand}]/td[2]/div
     Click Element    //div[@id='tabs']//div[@class='panel']/../div[${index}]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${rand}]/td[2]/div
+    点击流程信息
+    Wait Until Page Contains    完成业务受理    10    10s内流程信息页面未打开
+    #获取操作人是否为李楠
+    ${operator}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[1]/td[1]
+    Run Keyword If    '${operator}'!='李楠'    随机选择一条记录    ${index}
+    点击报告信息
     [Return]    ${pno}
 
 等待列表加载完成
@@ -138,6 +146,18 @@ Resource          未盖章.txt
     \    ${content}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[${i+1}]/div
     \    ${cc}    Set Variable    ${content}${cc}
     \    Should Not Be Empty    ${content}
-    \    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[1]/div
-    \    Should Be Equal    ${操作人}    ${USER_NAME}
+    \    Comment    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[1]/div
+    \    Comment    Should Be Equal    ${操作人}    ${USER_NAME}
     [Return]    ${cc}
+
+按钮应该存在
+    [Arguments]    ${page_index}    ${tr_no}    ${href_name}
+    Element Should Be Visible    //div[@id='tabs']/div[2]/div[${page_index}]//tbody/tr[${tr_no}]//a[text()='${href_name}']
+
+按钮不应该存在
+    [Arguments]    ${page_index}    ${tr_no}    ${href_name}
+    Element Should Not Be Visible    //div[@id='tabs']/div[2]/div[${page_index}]//tbody/tr[${tr_no}]//a[text()='${href_name}']
+
+点击一条记录
+    [Arguments]    ${page_index}    ${tr_no}
+    Click Element    //div[@id='tabs']//div[@class='panel']/../div[${page_index}]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${tr_no}]/td[2]/div

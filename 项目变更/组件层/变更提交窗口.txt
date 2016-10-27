@@ -16,7 +16,7 @@ Resource          ../../公共模块.txt
 
 选择变更类型
     [Arguments]    ${name}
-    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='modifytype']    ${name}
+    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='modifyType']    ${name}
     Run Keyword If    ${status}==False    Select From List By Label    //select[@id='ModifyType']    ${name}
 
 输入收费金额
@@ -25,12 +25,12 @@ Resource          ../../公共模块.txt
 
 修改审批人
     [Arguments]    ${修改审批人}
-    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='approveemptid']    ${修改审批人}
+    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='approveEmpTid']    ${修改审批人}
     Run Keyword If    ${status}==False    Select From List By Label    //select[@id='ApproveEmployeeID']    ${修改审批人}
 
 选择变更原因
     [Arguments]    ${modifyreason}
-    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='modifyreason']    ${modifyreason}
+    ${status}    Run Keyword And Return Status    Select From List By Label    //select[@id='modifyReason']    ${modifyreason}
     Run Keyword If    ${status}==False    Select From List By Label    //select[@id='ApplyReason']    ${modifyreason}
 
 填写备注
@@ -46,3 +46,7 @@ Resource          ../../公共模块.txt
     ${src}    Execute Javascript    return \ src
     ${code}    Evaluate    '${src}'.find('${src}')
     Run Keyword If    ${code}!=-1    log    流水号显示正确
+
+输入加出份数
+    [Arguments]    ${份数}
+    Input Text    //input[@id='additioncopies']    ${份数}

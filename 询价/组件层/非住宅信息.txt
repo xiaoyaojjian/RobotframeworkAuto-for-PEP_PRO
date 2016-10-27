@@ -25,10 +25,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Set Pep Value    ${pep_input}    询价来源    ${询价来源}
     Set Pep Value    ${pep_input}    项目来源    ${询价来源}
     Set Pep Value    ${pep_input}    询值单价最小    ${询值单价最小}
-    Set Pep Value    ${pep_input}    询值单价    ${询值单价最小}
+    Set Pep Value    ${pep_input}    询值单价    0.00
     Set Pep Value    ${pep_input}    询值单价最大    ${询值单价最大}
     Set Pep Value    ${pep_input}    询值总价最小    ${询值总价最小}
-    Set Pep Value    ${pep_input}    询值总价    ${询值总价最小}
+    Set Pep Value    ${pep_input}    询值总价    0.00
     Set Pep Value    ${pep_input}    询值总价最大    ${询值总价最大}
     [Return]    ${pep_input}
 
@@ -85,6 +85,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     询价查询按钮
     等待列表创建完毕
     ${fei_xunjia_info}    获取非住宅询价列表第一行数据
+    log    ${pep_info.get_value(u'项目来源')}
+    log    ${fei_xunjia_info.get_value(u'询价来源')}
+    log    ${pep_info.get_value(u'所属机构')}
+    log    ${fei_xunjia_info.get_value(u'询价机构')}
     Run Keyword If    '${pep_info.get_value(u'项目来源')}'=='${fei_xunjia_info.get_value(u'询价来源')}' and '${pep_info.get_value(u'所属机构')}'=='${fei_xunjia_info.get_value(u'询价机构')}'    log    pass
     ...    ELSE    Fail
     [Return]    ${fei_xunjia_info}
@@ -112,7 +116,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     [Return]    ${fei_xunjia_info}
 
 弹出提示框并关闭提示语
-    Set Selenium Speed    5s
+    Set Selenium Speed    10s
     ${mes}    confirm action
     log    ${mes}
     Comment    Should Be Equal    ${mes}    操作成功

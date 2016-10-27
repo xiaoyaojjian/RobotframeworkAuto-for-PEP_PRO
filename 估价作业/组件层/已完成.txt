@@ -9,10 +9,19 @@ Resource          公共.txt
     Click Element    //span[text()='已完成']/parent::a/parent::li
 
 重新提交审核操作
-    :FOR    ${i}    IN RANGE    10
-    \    ${flag}    Run Keyword And Continue On Failure    Get Text    xpath=html/body/div[1]/form/div[1]/div[2]/div[3]/div/div/div/div/div[2]/div[1]/div[2]/div/table/tbody/tr[${i+1}]/td/div/a
-    \    Run Keyword And Continue On Failure    Run Keyword If    '${flag}'=='重新提交审核'    审核选择    ${i}
-    \    Exit For Loop If    '${flag}'=='重新提交审核'
+    Comment    : FOR    ${i}    IN RANGE    10
+    Comment    \    ${flag}    Run Keyword And Continue On Failure    Get Text    xpath=html/body/div[1]/form/div[1]/div[2]/div[3]/div/div/div/div/div[2]/div[1]/div[2]/div/table/tbody/tr[${i+1}]/td/div/a
+    Comment    \    Run Keyword And Continue On Failure    Run Keyword If    '${flag}'=='重新提交审核'    审核选择    ${i}
+    Comment    \    Exit For Loop If    '${flag}'=='重新提交审核'
+    操作    3    重新提交审核
+    Select Frame    css=.xubox_iframe
+    Wait Until Page Contains    ${USER_NAME}    30    点击重新提交审核后提交审核窗口30s内未打开
+    Click Element    //span[text()='提交']/..
+    点击确定
+    sleep    5
+    Unselect Frame
+    Select Frame    id=ProjectAllot_ReportAccept
+    等待列表加载完成    1
 
 审核选择
     [Arguments]    ${i}
@@ -20,3 +29,13 @@ Resource          公共.txt
     sleep    10
     普通提交
     点击确定
+
+选择50条翻页
+    [Arguments]    ${page_index}
+    Select From List By Label    //div[@id='tabs']/div[2]/div[${page_index}]//select[@class='pagination-page-list']    50
+
+验证流程状态和操作按钮的关系
+    : FOR    ${i}    IN RANGE    10
+    \    ${status}    获取指定列的值    3    8    ${i+1}
+    \    Run Keyword If    '${status}'=='一审未接收'or '${status}'=='二审未接收'or '${status}'=='三审未接收'    按钮应该存在    3    ${i+1}    重新提交审核
+    \    ...    ELSE    按钮应该不存在    3    ${i+1}    重新提交审核

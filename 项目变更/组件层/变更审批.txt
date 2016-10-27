@@ -11,10 +11,29 @@ Resource          ../../公共模块.txt
     Click Element    //a[contains(text(),'变更审批' ) and @href]
     Select Frame    id=ProjectAllot_ChangeApprove
     等待列表加载完成
-    ${pno}    随机点击一条申请中的记录
+    ${pno}    循环审核一条申请中的记录
     Select Frame    css=.xubox_iframe
     Click Element    //input[@value='不同意']
     等待确定窗口弹出
     点击确定
     sleep    2
     [Return]    ${pno}
+
+变更审批通过
+    [Arguments]    ${流水号}
+    Unselect Frame
+    Click Element    //a[contains(text(),'变更审批' ) and @href]
+    Select Frame    id=ProjectAllot_ChangeApprove
+    等待列表加载完成
+    Input Text    //input[@id='ProjectNo']    ${流水号}
+    普通查询
+    Wait Until Page Contains    成套住宅    60
+    操作    1    审核
+    Select Frame    css=.xubox_iframe
+    Wait Until Page Contains Element    //textarea[@id='AuditContext']    10
+    Input Text    //textarea[@id='AuditContext']    同意变更
+    Click Element    //input[@value='同意']
+    等待确定窗口弹出
+    点击确定
+    sleep    5
+    log    审批通过

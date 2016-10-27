@@ -116,6 +116,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Run Keyword If    '${pep.get_value(u'特殊因素')}'!=''    Input Text    xpath=//*[@id='SpecialInfo']//..//input[@type="text"]    ${pep.get_value(u'特殊因素')}
     Run Keyword If    '${pep.get_value(u'询价来源')}'!=''    Input Text    xpath=//*[@id='InquirySource']//..//input[@type="text"]    ${pep.get_value(u'询价来源')}
     Run Keyword If    '${pep.get_value(u'备注')}'!=''    Input Text    id=Remark    ${pep.get_value(u'备注')}
+    Run Keyword If    '${pep.get_value(u'询价地址')}'!=''    Input Text    id=Address    ${pep.get_value(u'询价地址')}
     Run Keyword If    '${pep.get_value(u'修正单价')}'!=''    Input Text    xpath=//*[@id='FeedbackPrice']/../span/input[@type="text"]    ${pep.get_value(u'修正单价')}
     Run Keyword If    '${pep.get_value(u'抵押单价')}'!=''    Input Text    xpath=//*[@id='InquiryPrice']/../span/input[@type="text"]    ${pep.get_value(u'抵押单价')}
     Run Keyword If    '${pep.get_value(u'市场单价')}'!=''    Input Text    xpath=//*[@id='ShiChangPrice']/../span/input[@type="text"]    ${pep.get_value(u'市场单价')}
@@ -146,7 +147,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     [Arguments]    ${客户手机}    ${城市}    ${行政区}    ${小区名称}    ${小区地址}    ${楼栋号}
     ...    ${单元号}    ${户号名}    ${建筑面积}    ${所在楼层}    ${总楼层}    ${朝向}
     ...    ${建成年代}    ${户型}    ${房屋类型}    ${装修情况}    ${特殊因素}    ${询价来源}
-    ...    ${备注}    ${修正单价}    ${抵押单价}    ${抵押总价}    ${市场单价}    ${市场总价}
+    ...    ${备注}    ${询价地址}    ${修正单价}    ${抵押单价}    ${抵押总价}    ${市场单价}
+    ...    ${市场总价}
     ${pep_input}    Create Pep Object
     Set Pep Value    ${pep_input}    客户手机    ${客户手机}
     Set Pep Value    ${pep_input}    城市    ${城市}
@@ -168,6 +170,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Set Pep Value    ${pep_input}    备注    ${备注}
     Set Pep Value    ${pep_input}    询价来源    ${询价来源}
     Set Pep Value    ${pep_input}    项目来源    ${询价来源}
+    Set Pep Value    ${pep_input}    询价地址    ${询价地址}
     Set Pep Value    ${pep_input}    修正单价    ${修正单价}
     Set Pep Value    ${pep_input}    抵押单价    ${抵押单价}
     Set Pep Value    ${pep_input}    询值单价    ${抵押单价}
@@ -179,7 +182,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 添加系统价格校验
     [Arguments]    ${price_range}
-    Run Keyword If    '${price_range.get_value(u'系统价格单价')}'!='' and '${price_range.get_value(u'系统价格总价')}'!='' and '${price_range.get_value(u'抵押价值区间单价最小')}'!='' and '${price_range.get_value(u'抵押价值区间单价最大')}'!='' and '${price_range.get_value(u'抵押价值区间总价最小')}'!='' and '${price_range.get_value(u'抵押价值区间总价最大')}'!=''     log    住宅询价PASS
+    Run Keyword If    '${price_range.get_value(u'系统价格单价')}'!='' and '${price_range.get_value(u'系统价格总价')}'!='' and '${price_range.get_value(u'抵押价值区间单价最小')}'!='' and '${price_range.get_value(u'抵押价值区间单价最大')}'!='' and '${price_range.get_value(u'抵押价值区间总价最小')}'!='' and '${price_range.get_value(u'抵押价值区间总价最大')}'!=''    log    住宅询价PASS
     ...    ELSE    fail
 
 获取添加询价所有数据校验
@@ -280,7 +283,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     案例校验
 
 案例校验
-    ${获取案例来源[1]}    Get Text    xpath=//td[@field="CaseFrom"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
+    sleep    5
+    ${获取案例来源[1]}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CaseFrom"]
     Run Keyword If    '${获取案例来源[1]}'!=''    log    案例成功
     ...    ELSE    fail
 
@@ -308,7 +312,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     添加询价窗口
 
 报告案例独立校验
-    ${获取案例来源}    Get Text    xpath=//*[@id="datagrid-row-r11-2-0"]/td[3]
+    sleep    5
+    ${获取案例来源}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResidentialAreaName"]
     Run Keyword If    '${获取案例来源}'!=''    log    案例成功
     ...    ELSE    fail
 
@@ -321,7 +326,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ...    ELSE    fail
 
 成交案例案例独立校验
-    ${获取案例来源}    Get Text    xpath=//*[@id="datagrid-row-r9-2-0"]/td[1]
+    Sleep    5
+    ${获取案例来源}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ResidentialAreaName"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CaseFrom"]
     Run Keyword If    '${获取案例来源}'!=''    log    案例成功
     ...    ELSE    fail
 

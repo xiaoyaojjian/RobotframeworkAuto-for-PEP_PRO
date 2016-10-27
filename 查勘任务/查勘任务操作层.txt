@@ -23,7 +23,7 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     Click Element    //span[text()="保存"]
 
 批量领取按钮
-    Click Element    .//span[text()='批量领取']
+    Click Element    xpath=.//span[text()='批量领取']
 
 弹出提示语
     Set Selenium Speed    1s
@@ -63,3 +63,213 @@ Resource          ..//查勘任务/查勘任务业务层.txt
 
 查勘任务窗口
     Select Frame    id=ProjectAllot_OutsideAccept
+
+已完成按钮
+    Click Element    xpath=//span[text()="已完成"]/..
+    等待列表创建完毕
+
+进行中按钮
+    Click Element    xpath=//span[text()="进行中"]/..
+    等待列表创建完毕
+
+查勘任务操作
+    [Arguments]    ${操作方式}
+    Click Element    xpath=//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td/div/a[contains(.,'${操作方式}')]
+
+浏览器弹出框确定操作
+    Set Selenium Speed    1s
+    ${mes}    confirm action
+    log    ${mes}
+    Comment    Should Be Equal    ${mes}    操作成功
+    Choose Ok On Next Confirmation
+    Comment    sleep    5
+    Set Selenium Speed    0.5s
+
+浏览器弹出框取消操作
+    Set Selenium Speed    1s
+    ${mes}    confirm action
+    log    ${mes}
+    Comment    Should Be Equal    ${mes}    操作成功
+    Choose Cancel On Next Confirmation
+    Comment    sleep    5
+    Set Selenium Speed    0.5s
+
+查勘任务非线上业务
+    浏览器弹出框取消操作
+    等待加载完毕
+    确定按钮
+
+查勘任务线上业务
+    Select Frame    id=xubox_iframe1
+    ${联系人}    Get Value    id=Contacts
+    ${联系电话}    Get Value    id=Phone
+    Input Text    xpath=//*[@id='inviteTime']//..//input[@type="text"]    2016-10-14 16:18:09
+    Click Element    xpath=//div[@class='datebox-button']/table/tbody/tr/td/a[contains(.,'今天')]
+    ${预约时间}    Get Value    xpath=//*[@id='inviteTime']//..//input[@type="text"]
+    sleep    3
+    Input Text    xpath=//*[@id='remark']//..//textarea[@placeholder='']    桑德菲杰案例就开始对方卡萨丁交付吕卡视角范德萨离开点击发送
+    ${备注}    Get Value    xpath=//*[@id='remark']//..//textarea[@placeholder='']
+    确定按钮
+    sleep    5
+    等待加载完毕
+    Click Element    xpath=/html/body/div[5]/div[2]/div[4]/a
+    Unselect Frame
+    查勘任务窗口
+    [Return]    ${联系人}    ${联系电话}    ${预约时间}    ${备注}
+
+查勘任务挂起
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}    ${挂起状态}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    询价查询按钮
+    等待列表创建完毕
+    Comment    领取
+    查勘任务操作    ${操作方式}
+    挂起操作    ${挂起状态}
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    ${获取挂起状态}    Get Text    xpath=.//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td/div
+    Run Keyword If    '${获取挂起状态}'=='解挂' or '${获取挂起状态}'=='解挂 \ \ 重新预约'    log    pass
+    ...    ELSE    fail
+
+挂起操作
+    [Arguments]    ${参数}=1
+    sleep    10
+    Select Frame    id=xubox_iframe${参数}
+    Input Text    xpath=.//*[@id='info']    无效任务
+    保存按钮
+    sleep    10
+    Unselect Frame
+    查勘任务窗口
+    确定按钮
+
+查勘任务解挂
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    Comment    领取
+    查勘任务操作    ${操作方式}
+    等待提示框出现
+    解挂操作
+    ${获取挂起状态}    Get Text    xpath=.//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr/td/div
+    log    ${获取挂起状态}
+    Run Keyword If    '${获取挂起状态}'=='领取 \ \ 挂起' or '${获取挂起状态}'=='资料补充 \ \ 完成 \ \ 挂起 \ \ 重新预约'or '${获取挂起状态}'=='资料补充 \ \ 完成 \ \ 挂起'    log    pass
+    ...    ELSE    fail
+
+解挂操作
+    确定按钮
+
+批量选择操作
+    [Arguments]    ${开始位置}    ${结束位置}    ${获取报告打印第一页行数}
+    ${LIST}    Run Keyword If    ${结束位置}<=${获取报告打印第一页行数}    随机勾选列表数据    ${开始位置}    ${结束位置}
+    Comment    log    @{LIST}[0]
+    [Return]    ${LIST}
+
+随机选择
+    [Arguments]    ${i}    ${LIST}    ${获取查勘任务流水号}
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="OuterTaskId"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="cb"]/div/input
+    Return List    ${LIST}    ${获取查勘任务流水号}
+
+批量领取校验
+    [Arguments]    ${查询类型}    ${路径}    ${LIST}    ${领取数目}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    log    ${查询类型}
+    log    ${路径}
+    : FOR    ${row}    IN RANGE    ${领取数目}
+    \    log    ${LIST[${row}]}
+    \    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${LIST[${row}]}    ${路径}
+    \    询价查询按钮
+    \    等待列表创建完毕
+    \    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    \    ${获取报告打印第一页列数}    获取询价列表列数据
+    \    log    ${输入参数}
+    \    批量领取查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${LIST[${row}]}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    Comment    询价查询按钮
+    Comment    等待列表创建完毕
+    Comment    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    Comment    ${获取报告打印第一页列数}    获取询价列表列数据
+    Comment    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+
+批量领取查询结果校验
+    [Arguments]    ${行数}    ${查询类型}    ${输入参数}    ${查询条件名}    ${路径}
+    : FOR    ${row}    IN RANGE    1    ${行数}+1
+    \    log    ${row}
+    \    log    ${查询类型}
+    \    ${字段值}    Run Keyword If    '${查询类型}'=='流水号'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='报告号'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='小区名称'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='项目地址'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='预估单编号'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='委托人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='权利人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='评估人员'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='所属机构'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='状态'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='客户名称'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='客户手机'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='收款责任人'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='所属机构1'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='撰写人员'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='查勘人员'    获取询价列表单元格    ${row}    ${路径}
+    \    ...    ELSE IF    '${查询类型}'=='分配人员'    获取询价列表单元格    ${row}    ${路径}
+    \    Run Keyword If    '${字段值}'=='${输入参数}'    log    领取成功
+    \    ...    ELSE    Fail
+
+批量完成操作
+    [Arguments]    ${路径}    ${开始位置}    ${结束位置}
+    等待列表创建完毕
+    进行中按钮
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    ${LIST}    批量选择操作    ${开始位置}    ${结束位置}    ${获取报告打印第一页行数}
+    ${领取数目}    Return List Count    ${LIST}
+    批量完成按钮
+    等待提示框出现
+    确定按钮
+    已完成按钮
+    批量领取校验    流水号    ProjectNo    ${LIST}    ${领取数目}
+
+批量完成按钮
+    Click Element    xpath=.//span[text()='批量完成']
+
+已完成标题按钮
+    Click Element    xpath=//span[text()="已完成"]/..
+    等待列表创建完毕
+
+查勘任务完成
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    询价查询按钮
+    等待列表创建完毕
+    Comment    领取
+    查勘任务操作    ${操作方式}
+    等待提示框出现
+    确定按钮
+    已完成按钮
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    输入流水号    ${流水号}
+    询价查询按钮
+    等待列表创建完毕
+    领取到进行中数据校验    ${查询类型}    ${输入参数}    ${路径}

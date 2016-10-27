@@ -52,6 +52,8 @@ Resource          项目收费校验层.txt
     文本框清空并输入    //*[@name="AdjustFee"]/../input[@type="text"]    ${应收金额}
     Click Element    xpath=.//*[@id='BtnOK']    #点击确定按钮
     等待提示框出现
+    ${msg}    获取提示框的提示信息
+    Should Be Equal    ${msg}    操作成功！    msg=修改金额失败！
     点击提示框中的确定按钮
     Unselect Frame
     Select Frame    id=Finance_AdvanceCharge
@@ -62,4 +64,49 @@ Resource          项目收费校验层.txt
     点击查询按钮
     等待列表创建完毕
     验证项目收费查询数据    ${流水号}    最低收费=${最低收费}    应收金额=${应收金额}
+    Unselect Frame
+
+添加项目收费流程
+    [Arguments]    ${子模块名称}    ${流水号}    ${发生金额}    ${费用类型}=评估费    ${付款方式}=现金
+    打开功能模块    财务管理    项目收费
+    Select Frame    id=Finance_AdvanceCharge
+    等待列表创建完毕
+    切换到${子模块名称}子模块
+    等待列表创建完毕
+    输入项目收费查询条件    ${流水号}
+    点击查询按钮
+    等待列表创建完毕
+    ${未确认金额}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="NotConfirmFee"]/div
+    点击列表中的添加按钮
+    等待弹出窗口出现
+    文本框清空并输入    .//*[@name="Fee"]/../input[@type="text"]    ${发生金额}
+    ${单据编号}    获取当前时间
+    文本框清空并输入    .//*[@id='OrderNo']    ${单据编号}
+    文本框清空并输入    .//*[@id='FeeMan']    ${USER_NAME}    #输入缴费人
+    Select From List By Label    xpath=.//*[@id='FeeType']    ${费用类型}
+    Select From List By Label    xpath=.//*[@id='PaymentTerms']    ${付款方式}
+    ${当前时间}    获取当前时间    %Y-%m-%d %H:%M:%S.%f
+    文本框清空并输入    .//*[@id='Remark']    ${USER_NAME}在${当前时间}进行了${费用类型}的缴费，金额为：${发生金额}，单号为：${单据编号}
+    Click Element    xpath=//span[text()="确定"]/ancestor::a    #点击确定按钮
+    等待提示框出现
+    ${msg}    获取提示框的提示信息
+    Should Contain    ${msg}    ${发生金额}    msg=提示框中金额错误
+    Should Contain    ${msg}    ${费用类型}    msg=提示框中费用类型错误
+    点击提示框中的确定按钮
+    等待提示框出现
+    ${msg}    获取提示框的提示信息
+    Should Be Equal    ${msg}    操作成功！    msg=添加金额失败！
+    点击提示框中的确定按钮
+    Unselect Frame
+    Select Frame    id=Finance_AdvanceCharge
+    等待列表创建完毕
+    切换到${子模块名称}子模块
+    等待列表创建完毕
+    输入项目收费查询条件    ${流水号}
+    点击查询按钮
+    等待列表创建完毕
+    ${最新的未确认金额}    Evaluate    ${未确认金额}+${发生金额}
+    验证项目收费查询数据    ${流水号}    未确认金额=${最新的未确认金额}
+    验证项目收费明细数据    ${单据编号}    发生金额=${发生金额}    费用类型=${费用类型}    付款方式=${付款方式}    备注=${USER_NAME}在${当前时间}进行了${费用类型}的缴费，金额为：${发生金额}，单号为：${单据编号}    缴费人=${USER_NAME}
+    ...    收费人=${USER_NAME}    收费确认=否
     Unselect Frame

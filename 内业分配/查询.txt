@@ -1,4 +1,5 @@
 *** Settings ***
+Test Setup        登录
 Resource          ..//公共模块.txt
 Resource          ../变更审批/流程层/流程层.txt
 Resource          ../询价/元素层/元素层.txt
@@ -97,11 +98,6 @@ Resource          ..//外业分配/外业分配业务层.txt
     询价错误查询    撰写人员    232收到罚单是打发反反    ReportCreatorName    ${总数据量}
     询价超长字符查询    撰写人员    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ReportCreatorName    ${总数据量}
 
-(未)内业立项时间查询
-    打开功能模块    我的项目    内业分配
-    Select Frame    id=ProjectAllot_ReportAssign
-    等待列表创建完毕
-
 (已)内业流水号查询
     [Setup]    登录
     打开功能模块    我的项目    内业分配
@@ -171,10 +167,10 @@ Resource          ..//外业分配/外业分配业务层.txt
     Select Frame    id=ProjectAllot_ReportAssign
     切换到已分配子模块
     等待列表创建完毕
-    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=1
-    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=1
-    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=1
-    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=1
+    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=2
+    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=2
+    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=2
+    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=2
 
 (已)内业撰写人员查询
     [Setup]    登录
@@ -188,9 +184,3 @@ Resource          ..//外业分配/外业分配业务层.txt
     询价模糊查询    撰写人员    米    ReportCreatorName
     询价错误查询    撰写人员    232收到罚单是打发反反    ReportCreatorName    ${总数据量}
     询价超长字符查询    撰写人员    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ReportCreatorName    ${总数据量}
-
-(已)内业立项时间查询
-    打开功能模块    我的项目    内业分配
-    Select Frame    id=ProjectAllot_ReportAssign
-    切换到已分配子模块
-    等待列表创建完毕

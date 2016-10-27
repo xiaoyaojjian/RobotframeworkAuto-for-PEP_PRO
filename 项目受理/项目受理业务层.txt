@@ -120,15 +120,22 @@ Resource          ../询价/组件层/住宅信息.txt
     打开功能模块    询价立项管理    项目受理
     Select Frame    id=InquiryAndProject_ProjectAccept
     切换到已立项子模块
-    输入已立项查询条件    ${pep.get_value(u'流水号')}
+    等待列表创建完毕
+    ${查询_流水号}    Set Variable If    '${pep.get_value(u'旧流水号')}'!=''    ${EMPTY}    ${pep.get_value(u'流水号')}
+    输入已立项查询条件    ${查询_流水号}    ${pep.get_value(u'报告号')}
     点击查询按钮
     等待加载完毕
     等待列表创建完毕
+    ${流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]/td[@field="ProjectNo"]/div
+    Run Keyword If    '${pep.get_value(u'旧流水号')}'!=''    Should Not Be Equal    ${流水号}    ${pep.get_value(u'旧流水号')}
+    Run Keyword If    '${pep.get_value(u'旧流水号')}'!=''    Set Pep Value    ${pep}    流水号    ${流水号}
+    Comment    验证已立项查询数据    流水号=${查询_流水号}    报告号=${pep.get_value(u'报告号')}    旧流水号=${pep.get_value(u'旧流水号')}
     点击列表中的查看按钮
     Unselect Frame
     Wait Until Page Contains Element    xpath=//iframe[contains(@id,'${pep.get_value(u'流水号')}')]
     Select Frame    xpath=//iframe[contains(@id,'${pep.get_value(u'流水号')}')]
-    验证立项界面的值是否正常    ${pep}    1
+    ${是否项目变更}    Set Variable If    '${pep.get_value(u'旧流水号')}'!=''    4    0
+    验证立项界面的值是否正常    ${pep}    1    ${是否项目变更}
     Unselect Frame
     关闭功能模块    项目详细-${pep.get_value(u'流水号')}
 
@@ -375,4 +382,22 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=View_OnlineBusiness
     ${pep}    Create Pep Object
     将线上业务的信息写入pep对象    ${pep}
+    [Return]    ${pep}
+
+线上业务进行立项并分配操作
+    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托
+    Click Element    xpath=.//span[text()="受理"]/ancestor::a
+    Unselect Frame
+    Select Frame    id=create_project_
+    验证立项界面的值是否正常    ${pep}    跳转来源=2
+    ${pep_new}    Create Pep Object
+    Set Pep Value    ${pep_new}    市场负责人    ${USER_NAME}
+    Set Pep Value    ${pep_new}    收费责任人    ${USER_NAME}
+    Set Pep Value    ${pep_new}    内部报单人    ${USER_NAME}
+    ${time}    获取当前时间    %Y-%m-%d %H:%M:%S
+    Set Pep Value    ${pep_new}    立项备注    这是${time}进行处理的线上业务数据
+    填写立项界面的信息    ${pep_new}
+    将立项界面的信息写入pep对象    ${pep}    是否清空列表数据=1
+    进行任务分配操作    ${pep}
+    查询并验证项目详情的值是否正确    ${pep}
     [Return]    ${pep}

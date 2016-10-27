@@ -82,5 +82,5 @@ Resource          ../../项目受理/项目受理业务层.txt
     Unselect Frame
     Select Frame    xpath=//iframe[@name="立项"]
     等待加载完毕
-    验证立项界面的值是否正常    ${price_range}    跳转来源=0
+    验证立项界面的值是否正常    ${price_range}    跳转来源=1
     [Teardown]    Close Browser
