@@ -3,7 +3,9 @@
 
 
 from PepObject import PepObject
+import time,datetime
 import sys
+
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -68,8 +70,21 @@ class PepExt:
         """返回列表个数"""
         list_count = NO_list.__len__()
         return list_count
+<<<<<<< HEAD
 		
     def return_string_strip(self,string):
         """清除字符末尾为空的字符串"""
         strip_string = string.strip()
         return strip_string
+    
+    def get_now_time(self):
+        """获取当前时间"""
+        starttime = time.mktime(datetime.datetime.now().timetuple())
+        return starttime
+
+    def return_After_computing_time(self,transactionName,nowtime,lasttime):
+        """计算时间差，以秒为单位返回"""
+        computingtime = (lasttime-nowtime)
+        return computingtime,transactionName,nowtime,lasttime
+=======
+>>>>>>> b25b406de2fbb9d30820073abfe08952069f5877

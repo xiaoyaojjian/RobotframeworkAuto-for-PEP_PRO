@@ -10,5 +10,6 @@ Resource          ../流程层/流程层.txt
     [Documentation]    装订未完成（装订完成）——打印打开（校验报告是否有打印打开按钮）
     ...
     ...    编写人：吕梓清
+    [Setup]    登录
     报告打开打印
     [Teardown]    Close Browser

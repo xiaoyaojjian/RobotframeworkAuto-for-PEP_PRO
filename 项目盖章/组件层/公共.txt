@@ -123,8 +123,8 @@ Resource          未盖章.txt
     点击流程信息
     Wait Until Page Contains    完成业务受理    10    10s内流程信息页面未打开
     #获取操作人是否为李楠
-    ${operator}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[1]/td[1]
-    Run Keyword If    '${operator}'!='李楠'    随机选择一条记录    ${index}
+    ${操作人状态}    循环判断操作人的状态
+    Run Keyword If    '${操作人状态}'=='False'    随机选择一条记录    ${index}
     点击报告信息
     [Return]    ${pno}
 
@@ -146,8 +146,8 @@ Resource          未盖章.txt
     \    ${content}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[${i+1}]/div
     \    ${cc}    Set Variable    ${content}${cc}
     \    Should Not Be Empty    ${content}
-    \    Comment    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[1]/div
-    \    Comment    Should Be Equal    ${操作人}    ${USER_NAME}
+    \    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${j+1}]/td[1]/div
+    \    Should Be Equal    ${操作人}    ${USER_NAME}
     [Return]    ${cc}
 
 按钮应该存在
@@ -161,3 +161,14 @@ Resource          未盖章.txt
 点击一条记录
     [Arguments]    ${page_index}    ${tr_no}
     Click Element    //div[@id='tabs']//div[@class='panel']/../div[${page_index}]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${tr_no}]/td[2]/div
+
+循环判断操作人的状态
+    ${rows}    Get Matching Xpath Count    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr
+    ${count}    Set Variable    0
+    :FOR    ${i}    in range    ${rows}
+    \    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${i+1}]/td[1]
+    \    ${count}    Evaluate    ${count}+1
+    \    Exit For Loop If    '${操作人}'!='${USER_NAME}'
+    ${status}    Run Keyword If    '${count}'=='${rows}'    Set Variable    True
+    ...    ELSE    Set Variable    False
+    [Return]    ${status}

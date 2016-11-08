@@ -39,13 +39,9 @@ Library           ../../ReportRequests.py
     ${text}    Get Text    //div[@class='datagrid-view']/div[${page_index}]/div[2]//tbody/tr[1]/td[${col_index}]/div
     ${text1}    Run Keyword If    '${text}'==''    随机获取列表中各列的值    ${page_index}    ${col_index}
     ...    ELSE    Get Text    //div[@class='datagrid-view']/div[${page_index}]/div[2]//tbody/tr[1]/td[${col_index}]/div
-    ${list}    Evaluate    list(u'${text1}')
-    ${len}    Get Length    ${list}
-    : FOR    ${i}    IN RANGE    ${len}
-    \    ${boolean}    Evaluate    ${list}[${i}].isspace()
-    \    ${result}    Run Keyword If    ${boolean}==True    随机获取列表中各列的值    ${page_index}    ${col_index}
-    \    ...    ELSE    Set Variable    ${text1}
-    \    Exit For Loop If    ${boolean}==True
+    ${boolean}    Evaluate    '${text1}'.isspace()
+    ${result}    Run Keyword If    ${boolean}==True    随机获取列表中各列的值    ${page_index}    ${col_index}
+    ...    ELSE    Set Variable    ${text1}
     [Return]    ${result}
 
 循环获取列表中各列的值

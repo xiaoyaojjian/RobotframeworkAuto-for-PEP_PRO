@@ -28,3 +28,20 @@ Resource          公共模块.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     ${class}    Get Element Attribute    xpath=.//*[@id='bscode']@class
     log    ${class}
+
+测试002
+    ${a}    Get Now Time
+    sleep    2
+    ${b}    Get Now Time
+    ${c}    Return After Computing Time    吕    ${a}    ${b}
+    ${a}    Get Now Time
+    sleep    5
+    ${b}    Get Now Time
+    ${c}    Return After Computing Time    清    ${a}    ${b}
+    ${a}    Get Now Time
+    sleep    10
+    ${b}    Get Now Time
+    ${c}    Return After Computing Time    吕只清    ${a}    ${b}
+    log    A事务开始
+    sleep    10
+    log    A事务结束

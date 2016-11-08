@@ -1,0 +1,23 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Library           re
+Resource          公共.txt
+
+*** Keywords ***
+根据盖章状态获取流水号
+    [Arguments]    ${盖章状态}
+    ${rand}    Evaluate    random.randint(1,10)    random
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    等待列表加载完成    1
+    ${流水号}    Run Keyword If    '${盖章状态}'=='未盖章'    Get Text    //div[@id='tabs']//div[@class='panel']/../div[1]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${rand}]/td[2]/div
+    ...    ELSE    获取已盖章流水号    ${rand}
+    [Return]    ${流水号}
+
+获取已盖章流水号
+    [Arguments]    ${rand}
+    点击已盖章
+    等待列表加载完成    2
+    ${流水号}    Get Text    //div[@id='tabs']//div[@class='panel']/../div[2]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[${rand}]/td[2]/div
+    [Return]    ${流水号}

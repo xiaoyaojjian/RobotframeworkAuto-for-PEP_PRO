@@ -17,12 +17,12 @@ Resource          ..//询价/元素层/元素层.txt
 挂起
     点击挂起按钮
     挂起原因
-    点击保存
+    内业点击保存
     等待提示框出现
     点击提示框中的确定按钮
 
 挂起原因
-    Wait Until Page Contains Element    xpath=.//div[contains(@class,"panel window") and contains(@style,"display: block")]    60s
+    Wait Until Page Contains Element    xpath=.//div[contains(@class,"panel window") and contains(@style,"display: block")]    80s
     Input Text    xpath=//textarea[not(@id)]    噜啦啦啦噜啦啦
 
 内业解挂
