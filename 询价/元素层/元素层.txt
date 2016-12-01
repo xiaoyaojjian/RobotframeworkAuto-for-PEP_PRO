@@ -31,7 +31,7 @@ Resource          ../流程层/流程层.txt
 
 条件参数
     [Arguments]    ${输入流水号}    ${路径}
-    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']    ${输入流水号}
+    Run Keyword And Continue On Failure    Input Text    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//*[@id='${路径}']    ${输入流水号}
 
 询价获取页面数据总量
     ${列表总共数据数}    Get Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//div[@class='pagination-info']
@@ -74,14 +74,15 @@ Resource          ../流程层/流程层.txt
     Wait Until Page Contains    客户信息
 
 展开显示框按钮
-    Click Element    xpath=.//a[@class='panel-tool-collapse panel-tool-expand']
+    Click Element    id=btn_toggle
 
 询价按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="询价"]/..
+    Comment    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="询价"]/..
+    Click Element    xpath=.//*[@id='BtnSearch']//span[text()="询价"]/.
     等待加载完毕
 
 转立项按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="转立项"]/..
+    Click Element    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//span[text()="转立项"]/..
     等待加载完毕
 
 报盘案例按钮
@@ -101,10 +102,11 @@ Resource          ../流程层/流程层.txt
 
 不限按钮
     sleep    2
-    Click Element    xpath=.//*[@id='SearchArea']//*/a[text()='不限']
+    Click Element    xpath=.//*[@id='SearchArea1']//*/a[text()='不限']
 
 询价保存按钮
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="保存"]/..
+    Comment    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="保存"]/..
+    Click Element    xpath=.//*[@id='BtnSave']//span[text()="保存"]/.
 
 下拉选项框条件输入参数
     [Arguments]    ${输入条件}    ${路径}
@@ -136,7 +138,8 @@ Resource          ../流程层/流程层.txt
 
 下拉选项框条件参数
     [Arguments]    ${输入流水号}    ${路径}
-    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']/../span/input    ${输入流水号}
+    Comment    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']/../span/input    ${输入流水号}
+    Click Element    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//div//div[contains(.,'${输入流水号}')]
 
 点击新建预估单
     Click Element    id=AddPredictPrice
@@ -156,3 +159,41 @@ Resource          ../流程层/流程层.txt
 
 查勘批量领取按钮
     Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="批量领取"]/..
+
+编辑可输入下拉框
+    [Arguments]    ${路劲}    ${参数}
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路劲}']/../span/span/a
+    Comment    sleep    3
+    ${a}    Get Text    xpath=.//div[@class="panel combo-p" and contains(@style,"display: block")]//*[@class='combo-panel panel-body panel-body-noheader']
+    下拉选项框条件输入参数    ${参数}    ${路劲}
+    Comment    Run Keyword If
+
+点击空白处
+    Comment    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="询价"]/..
+    Click Element    xpath=.//*[@id='Decoration']/..//span//*[@class='textbox-icon combo-arrow']
+
+成交案例不限按钮
+    sleep    2
+    Click Element    xpath=.//*[@id='SearchArea2']//*/a[text()='不限']
+
+报盘案例不限按钮
+    sleep    2
+    Click Element    xpath=.//*[@id='SearchArea1']//*/a[text()='不限']
+
+报告案例不限按钮
+    sleep    2
+    Click Element    xpath=.//*[@id='SearchArea3']//*/a[text()='不限']
+
+下拉选项框条件参数1
+    [Arguments]    ${输入流水号}    ${路径}
+    Run Keyword And Continue On Failure    Input Text    xpath=.//div[contains(@class,"panel")and contains(@style,"display: block")]//*[@id='${路径}']/../span/input    ${输入流水号}
+    sleep    1
+    Comment    Click Element    .//div[contains(@class,"panel") and contains(@style,"display: block")]//*[@id='${路径}']/../span/*/a
+    Comment    Click Element    xpath=.//div[contains(@class,"combo-panel panel-body panel-body-noheader")]//div[contains(.,'${输入流水号}')]
+
+下拉选项框条件输入参数1
+    [Arguments]    ${输入条件}    ${路径}
+    log    ${输入条件}
+    log    ${路径}
+    下拉选项框条件参数1    ${输入条件}    ${路径}
+    [Return]    ${输入条件}

@@ -118,11 +118,8 @@ Resource          项目受理业务层.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    等待列表创建完毕    打开暂存项目模块
+    点击立项按钮进入立项界面
     填写立项界面的信息    ${pep_input}
     将立项界面的信息写入pep对象    ${pep_input}
     进行询价操作    ${pep_input}
@@ -142,10 +139,7 @@ Resource          项目受理业务层.txt
     等待列表创建完毕
     切换到暂存项目子模块
     等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    点击立项按钮进入立项界面
     通过手机号码获取客户信息    ${pep_input}
     Click Element    xpath=//img[@onclick="SyncBank()"]    #点击自动获取按钮
     等待加载完毕
@@ -165,10 +159,7 @@ Resource          项目受理业务层.txt
     等待列表创建完毕
     切换到暂存项目子模块
     等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    点击立项按钮进入立项界面
     通过手机号码获取客户信息    ${pep}
     填写收件信息    ${pep}
     将收件信息写入pep对象    ${pep}
@@ -217,11 +208,7 @@ Resource          项目受理业务层.txt
     点击查询按钮
     验证暂存项目查询数据    ${pep.get_value(u'流水号')}    ${pep.get_value(u'项目地址')}    ${pep.get_value(u'小区名')}    ${pep.get_value(u'项目分类')}    ${pep.get_value(u'物业类型')}    ${pep.get_value(u'估价目的')}
     ...    ${pep.get_value(u'报告类型')}    ${pep.get_value(u'业务来源')}    ${pep.get_value(u'客户姓名')}    ${pep.get_value(u'估价委托方')}
-    点击列表中的编辑按钮
-    Unselect Frame
-    Wait Until Page Contains Element    xpath=.//iframe[contains(@id,'create_project_')]
-    Select Frame    xpath=.//iframe[contains(@id,'create_project_')]
-    等待加载完毕
+    点击列表的编辑按钮进入审核项目
     验证立项界面的值是否正常    ${pep}
     进行立项操作    ${pep}
     查询并验证项目详情的值是否正确    ${pep}

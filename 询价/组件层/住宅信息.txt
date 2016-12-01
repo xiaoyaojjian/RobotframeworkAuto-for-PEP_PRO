@@ -62,6 +62,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='询价机构'    输入询价机构    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    输入询价人(客户名称)    ${输入参数}    ${路径}
+    log    ${查询类型}
     ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='报告号'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='项目地址'    条件输入参数    ${输入参数}    ${路径}
@@ -75,8 +76,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ...    ELSE IF    '${查询类型}'=='委托人'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='委托人估价人'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='评估人员'    条件输入参数    ${输入参数}    ${路径}
-    ...    ELSE IF    '${查询类型}'=='所属机构'    下拉选项框条件输入参数    ${输入参数}    ${路径}
-    ...    ELSE IF    '${查询类型}'=='状态'    下拉选项框条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构'    下拉选项框条件输入参数1    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='状态'    下拉选项框条件输入参数1    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='所属机构1'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='撰写人员'    条件输入参数    ${输入参数}    ${路径}
     ...    ELSE IF    '${查询类型}'=='查勘人员'    条件输入参数    ${输入参数}    ${路径}
@@ -97,6 +98,8 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     [Arguments]    ${pep}
     ${城市}    Get Value    xpath=.//*[@id='CityName']//..//input[@name="CityName"]
     Run Keyword If    '${城市}'=='${pep.get_value(u'城市')}' and '${城市}'!=''    log    pass
+    ...    ELSE IF    '${城市}'== '${pep.get_value(u'城市')}' and '${pep.get_value(u'城市')}'!=''    编辑可输入下拉框    CityName    ${pep.get_value(u'城市')}
+    Comment    Run Keyword If    '${城市}'=='${pep.get_value(u'城市')}' and '${城市}'!=''    log    pass
     ...    ELSE IF    '${城市}'=='' and '${pep.get_value(u'城市')}'!=''    Input Text    xpath=.//*[@id='CityName']//..//input[@name="CityName"]    ${pep.get_value(u'城市')}
     Comment    Run Keyword If    '${pep.get_value(u'城市')}'!=''    Input Text    xpath=.//*[@id='CityName']//..//input[@name="CityName"]    ${pep.get_value(u'城市')}
     Run Keyword If    '${pep.get_value(u'行政区')}'!=''    Input Text    id=DistrictName    ${pep.get_value(u'行政区')}
@@ -278,7 +281,7 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 报盘案例校验
     报盘案例按钮
-    不限按钮
+    报盘案例不限按钮
     等待加载完毕
     案例校验
 
@@ -290,13 +293,13 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 成交案例校验
     成交案例按钮
-    不限按钮
+    成交案例不限按钮
     等待加载完毕
     成交案例案例独立校验
 
 报告案例校验
     报告案例按钮
-    不限按钮
+    报告案例不限按钮
     等待加载完毕
     报告案例独立校验
 

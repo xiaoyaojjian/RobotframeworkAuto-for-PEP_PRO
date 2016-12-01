@@ -5,6 +5,8 @@
 import MySQLdb
 import sys
 import random
+import socket
+import datetime
 from robot.libraries.BuiltIn import BuiltIn
 
 
@@ -21,9 +23,24 @@ class TestDataLib:
             print e
             sys.exit()
         self.cursor = self.conn.cursor()
+        self.transaction_start_dict = {}
 
     def _query(self, sql):
         return self.cursor.execute(sql)
+
+    def _dml_sql(self, sql):
+        try:
+            # 执行sql语句
+            # print sql
+            self.cursor.execute(sql)
+            rowid = int(self.cursor.lastrowid)
+            # 提交到数据库执行
+            self.conn.commit()
+            return rowid
+        except Exception, e:
+            # 发生错误时回滚
+            print str(e)
+            self.conn.rollback()
 
     def _show(self):
         return self.cursor.fetchall()
@@ -140,6 +157,21 @@ class TestDataLib:
                 else:
                     args.append(dataNameList[j] + '=None')
             bi.run_keyword_and_continue_on_failure(keywordName, *args)
+
+    def transaction_start(self, transactionName):
+        start_time = datetime.datetime.now()
+        self.transaction_start_dict[transactionName] = start_time
+
+    def transaction_end(self, transactionName):
+        if transactionName not in self.transaction_start_dict:
+            BuiltIn().log(u"\"%s\"没有设置事务开始事件，无法进行计算"%(transactionName,), level='ERROR')
+            return 0
+        end_time = datetime.datetime.now()
+        host_name = socket.gethostname()
+        ip_list = socket.gethostbyname_ex(host_name)
+        strsql = 'insert into transactions(transaction_name,start_time,end_time,elapsed,host_name) values(\'%s\',\'%s\',\'%s\',%s,\"%s\")' % (transactionName, self.transaction_start_dict[transactionName], end_time, 'TIMESTAMPDIFF(SECOND,start_time,end_time)', ip_list[0]+'(\''+'\',\''.join(ip_list[2])+'\')')
+        # BuiltIn().log(strsql)
+        self._dml_sql(strsql)
 
 
 if __name__ == '__main__':

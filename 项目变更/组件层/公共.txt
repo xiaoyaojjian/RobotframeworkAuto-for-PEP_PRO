@@ -8,11 +8,10 @@ Resource          ../组件层/变更审批.txt
 
 *** Keywords ***
 点击我的项目
-    Click Element    //span[contains(text(),'我的项目')]
-    Wait Until Page Contains Element    //a[contains(text(),'项目变更' ) and @href]
+    log    关键字作废
 
 点击项目变更
-    Click Element    //a[contains(text(),'项目变更' ) and @href]
+    打开功能模块    我的项目    项目变更
 
 点击查询
     等待列表加载完成

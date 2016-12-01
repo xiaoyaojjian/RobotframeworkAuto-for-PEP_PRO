@@ -3,14 +3,14 @@ Library           Selenium2Library
 Library           Collections
 Library           re
 Resource          未盖章.txt
+Resource          ../../公共模块.txt
 
 *** Keywords ***
 点击我的项目
-    Click Element    //span[contains(text(),'我的项目')]
-    Wait Until Page Contains Element    //a[contains(text(),'项目盖章' ) and @href]
+    log    关键字作废
 
 点击项目盖章
-    Click Element    //a[contains(text(),'项目盖章' ) and @href]
+    打开功能模块    我的项目    项目盖章
 
 操作
     [Arguments]    ${href_name}
@@ -165,7 +165,7 @@ Resource          未盖章.txt
 循环判断操作人的状态
     ${rows}    Get Matching Xpath Count    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr
     ${count}    Set Variable    0
-    :FOR    ${i}    in range    ${rows}
+    : FOR    ${i}    IN RANGE    ${rows}
     \    ${操作人}    Get Text    //div[@id='tabsinfo']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tr[${i+1}]/td[1]
     \    ${count}    Evaluate    ${count}+1
     \    Exit For Loop If    '${操作人}'!='${USER_NAME}'

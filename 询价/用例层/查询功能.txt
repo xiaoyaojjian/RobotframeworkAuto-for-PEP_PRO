@@ -236,4 +236,4 @@ Resource          ../组件层/预估单信息.txt
     Comment    询价模糊查询    所属机构    中    CustomerType
     Comment    询价错误查询    所属机构    232收到罚单是打发反反    CustomerType    ${总数据量}
     Comment    询价超长字符查询    所属机构    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerType    ${总数据量}
-    [Teardown]    Close Browser
+    [Teardown]

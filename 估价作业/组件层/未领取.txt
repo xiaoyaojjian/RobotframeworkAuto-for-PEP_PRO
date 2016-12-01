@@ -14,6 +14,6 @@ Resource          公共.txt
     ...    0表示未领取页面
     ...    1表示进行中页面
     ...    2表示已完成页面
-    ${serialNo}    Get Text    //div[@id='tabs']/div[2]/div[${tab_index}]//td[@field='ProjectNo' and not(node()/span) and not(@style)]/div
-    ${reportId}    Get Text    //div[@id='tabs']/div[2]/div[${tab_index}]//td[@field='ReportNo' and not(node()/span) and not(@style)]/div
+    ${serialNo}    Get Text    //div[@id='tabs']/div[2]/div[${tab_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]
+    ${reportId}    Get Text    //div[@id='tabs']/div[2]/div[${tab_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[3]
     [Return]    ${serialNo}    ${reportId}

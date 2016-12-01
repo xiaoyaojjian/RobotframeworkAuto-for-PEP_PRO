@@ -1,6 +1,7 @@
 *** Settings ***
 Default Tags      test
 Resource          公共模块.txt
+Library           TestDataLib.py
 
 *** Test Cases ***
 测试
@@ -22,12 +23,10 @@ Resource          公共模块.txt
     log    ${PEP.get_value(u'流水号')}    #指定获取某个值
     log    ${PEP.get_value(u'小区名')}
 
-测试001
-    登录
-    打开功能模块    询价立项管理    项目受理
-    Select Frame    id=InquiryAndProject_ProjectAccept
-    ${class}    Get Element Attribute    xpath=.//*[@id='bscode']@class
-    log    ${class}
+事务时间测试Demo
+    Transaction Start    事务名称1    #事务开始
+    sleep    10
+    Transaction End    事务名称1    #事务结束
 
 测试002
     ${a}    Get Now Time

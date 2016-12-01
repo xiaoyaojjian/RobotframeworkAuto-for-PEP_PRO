@@ -8,6 +8,7 @@ Resource          进行中.txt
 Resource          项目审核.txt
 Resource          外业分配任务.txt
 Resource          查询.txt
+Resource          ../../公共模块.txt
 
 *** Keywords ***
 点击查询
@@ -25,7 +26,7 @@ Resource          查询.txt
     Click Element    //div[@id='tabs']/div[2]/div[${page_index}]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='${href_name}']
 
 生成线上报告
-    ${seriNo}    ${reportId}    获取流水号和报告号    2
+    ${seriNo}    ${reportId}    获取流水号和报告号    1
     Create Session    ${USER_NAME}    http://reporttest2.yunfangdata.com:81/
     Write Report    ${seriNo}    ${reportId}
 
@@ -68,11 +69,10 @@ Resource          查询.txt
     Click Element    //span[text()='提交']/..
 
 点击我的项目
-    Click Element    //span[contains(text(),'我的项目')]
-    Wait Until Page Contains Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']    10
+    log    作废
 
 点击估价作业
-    Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
+    打开功能模块    我的项目    估价作业
 
 等待确定窗口弹出
     Wait Until Page Contains Element    //span[text()='确定']    30    确定窗口30s内未弹出
@@ -88,7 +88,7 @@ Resource          查询.txt
 
 等待列表加载完成
     [Arguments]    ${page­_index}
-    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[${page­_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[10]    60    60s未加载出数据
+    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[${page­_index}]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]    60    60s未加载出数据
 
 解挂后续操作
     [Arguments]    ${page_index}

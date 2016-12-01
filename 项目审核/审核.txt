@@ -55,3 +55,37 @@ Resource          ../审核调度/审核调度操作层.txt
     Comment    select frame    id=ProjectAllot_Audit
     Comment    等待提示框出现
     Comment    Click Element    //span[text()='确定']/../..
+
+一审到三审流程
+    [Tags]    test
+    打开功能模块    我的项目    估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    等待列表创建完毕
+    勘察状态
+    点击查询按钮
+    ${流水号}    随机选择一条数据
+    点击领取估价作业
+    切换到进行中子模块
+    进行中点击线下报告
+    切换选项卡    估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    点击提交
+    提交审核中的信息
+    Comment    提交审核    ${pno}    一审
+    Unselect Frame
+    切换到已完成子模块
+    Select Frame    id=ProjectAllot_ReportAccept
+    ${已完成流水号}    Get Text    //div[@id="tabs"]/div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ProjectNo"]/div
+    Run Keyword If    '${已完成流水号}'=='${流水号}'    log    pass    else    Fail
+    Unselect Frame
+    打开功能模块    我的项目    项目审核
+    等待列表创建完毕
+    Input Text    id=ProjectNo    ${流水号}
+    点击查询按钮
+    审核接收
+    等待提示框出现
+    点击提示框中的确定按钮
+    切换到审核中子模块
+    等待列表创建完毕
+    点击审核报告按钮
+    审核报告

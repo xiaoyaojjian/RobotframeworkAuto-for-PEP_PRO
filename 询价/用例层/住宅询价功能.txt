@@ -38,7 +38,7 @@ Resource          ../../项目受理/项目受理业务层.txt
     ...    400000.00    4000.00
     ${price_range1}    询价完成到住宅信息校验    ${price_range}
     询价查看信息校验    ${price_range1}
-    [Teardown]    Close Browser
+    [Teardown]
 
 编辑
     [Documentation]    该用例描述
@@ -128,4 +128,4 @@ Resource          ../../项目受理/项目受理业务层.txt
     报告案例校验
     旧系统报告记录校验
     旧系统询价记录校验
-    [Teardown]
+    [Teardown]    Close Browser

@@ -9,10 +9,7 @@ Resource          ../询价/组件层/住宅信息.txt
     ${pep}    查询项目详情并获取一个pep对象    ${流水号}
     打开功能模块    询价立项管理    项目受理
     Select Frame    id=InquiryAndProject_ProjectAccept
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    点击立项按钮进入立项界面
     进行提取信息操作    ${pep.get_value(u'流水号')}
     验证立项界面的值是否正常    ${pep}
     ${pep_new}    Create Pep Object
@@ -24,14 +21,13 @@ Resource          ../询价/组件层/住宅信息.txt
     [Arguments]    ${input_pep}
     [Documentation]    新项目立项操作，只需要传入一个初始化的pep对象，该方法会将该对象里的值填写到立项界面上，改方法使用各种数据录入，最后会返回一个新的pep对象
     打开功能模块    询价立项管理    项目受理
+    Transaction Start    打开项目受理页面
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
+    Transaction End    打开项目受理页面
     切换到暂存项目子模块
-    等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    等待列表创建完毕    打开暂存项目模块
+    点击立项按钮进入立项界面
     填写立项界面的信息    ${input_pep}
     ${pep}    Create Pep Object    #将界面上的信息写入一个新的pep对象
     将立项界面的信息写入pep对象    ${pep}
@@ -42,11 +38,7 @@ Resource          ../询价/组件层/住宅信息.txt
     [Arguments]    ${input_pep}
     [Documentation]    先做暂存操作，再做立项操作
     ${pep}    暂存并查询结果流程    ${input_pep}
-    点击列表中的编辑按钮
-    Unselect Frame
-    Wait Until Page Contains Element    xpath=.//iframe[contains(@id,'create_project_')]
-    Select Frame    xpath=.//iframe[contains(@id,'create_project_')]
-    等待加载完毕
+    点击列表的编辑按钮进入审核项目
     验证立项界面的值是否正常    ${pep}
     进行任务分配操作    ${pep}
     [Return]    ${pep}
@@ -55,11 +47,7 @@ Resource          ../询价/组件层/住宅信息.txt
     [Arguments]    ${input_pep}
     [Documentation]    先做暂存操作，再做立项操作
     ${pep}    暂存并查询结果流程    ${input_pep}
-    点击列表中的编辑按钮
-    Unselect Frame
-    Wait Until Page Contains Element    xpath=.//iframe[contains(@id,'create_project_')]
-    Select Frame    xpath=.//iframe[contains(@id,'create_project_')]
-    等待加载完毕
+    点击列表的编辑按钮进入审核项目
     验证立项界面的值是否正常    ${pep}
     进行立项操作    ${pep}
     查询并验证项目详情的值是否正确    ${pep}
@@ -72,11 +60,8 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    等待列表创建完毕    打开暂存项目模块
+    点击立项按钮进入立项界面
     通过手机号码获取客户信息    ${input_pep}
     填写项目信息    ${input_pep}
     填写收费信息    ${input_pep}
@@ -90,6 +75,7 @@ Resource          ../询价/组件层/住宅信息.txt
     切换到暂存项目子模块
     输入暂存项目查询条件    ${pep.get_value(u'流水号')}
     点击查询按钮
+    等待列表创建完毕    暂存项目查询
     验证暂存项目查询数据    ${pep.get_value(u'流水号')}    ${pep.get_value(u'项目地址')}    ${pep.get_value(u'小区名')}    ${pep.get_value(u'项目分类')}    ${pep.get_value(u'物业类型')}    ${pep.get_value(u'估价目的')}
     ...    ${pep.get_value(u'报告类型')}    ${pep.get_value(u'业务来源')}    ${pep.get_value(u'客户姓名')}    ${pep.get_value(u'估价委托方')}
     [Return]    ${pep}
@@ -171,11 +157,8 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    等待列表创建完毕    打开暂存项目模块
+    点击立项按钮进入立项界面
     ${pep_list}    Create List
     : FOR    ${input_pep}    IN    @{pep_object_list}
     \    通过手机号码获取客户信息    ${input_pep}
@@ -198,11 +181,8 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
-    点击立项按钮
-    Unselect Frame
-    Select Frame    id=create_project_
-    等待加载完毕
+    等待列表创建完毕    打开暂存项目模块
+    点击立项按钮进入立项界面
     通过手机号码获取客户信息    ${input_pep}
     填写项目信息    ${input_pep}
     填写收费信息    ${input_pep}
@@ -229,11 +209,7 @@ Resource          ../询价/组件层/住宅信息.txt
     [Arguments]    ${input_pep}
     [Documentation]    做两次暂存操作，并返回一个pep对象
     ${pep}    暂存并查询结果流程    ${input_pep}
-    点击列表中的编辑按钮
-    Unselect Frame
-    Wait Until Page Contains Element    xpath=.//iframe[contains(@id,'create_project_')]
-    Select Frame    xpath=.//iframe[contains(@id,'create_project_')]
-    等待加载完毕
+    点击列表的编辑按钮进入审核项目
     验证立项界面的值是否正常    ${pep}
     进行暂存操作    ${pep}
     Select Frame    id=InquiryAndProject_ProjectAccept
@@ -255,7 +231,7 @@ Resource          ../询价/组件层/住宅信息.txt
     输入线上业务查询条件    ${交易编号}    ${项目流水号}    ${小区名称}    ${物业地址}    ${项目来源}    ${是否已受理}
     ...    ${是否已终止}    ${业务类型}
     点击查询按钮
-    等待列表创建完毕
+    等待列表创建完毕    线上业务查询
     验证线上业务查询数据    交易编号=${交易编号}    是否受理=${是否已受理}    项目来源=${项目来源}    是否终止=${是否已终止}    业务类型=${业务类型}    小区名=${小区名称}
     ...    小区地址=${物业地址}    流水号=${项目流水号}
     Comment    清空线上业务查询条件
@@ -285,11 +261,11 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开暂存项目模块
     输入暂存项目查询条件    ${流水号}    ${项目地址}    ${小区名称}    ${估价委托方}    ${项目分类}    ${物业类型}
     ...    ${估价目的}    ${业务来源}    ${开始时间}    ${结束时间}
     点击查询按钮
-    等待列表创建完毕
+    等待列表创建完毕    暂存项目查询
     验证暂存项目查询数据    流水号=${流水号}    项目地址=${项目地址}    小区名称=${小区名称}    项目分类=${项目分类}    物业类型=${物业类型}    估价目的=${估价目的}
     ...    业务来源=${业务来源}    估价委托方=${估价委托方}
     Comment    清空暂存项目查询条件
@@ -302,7 +278,7 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开暂存项目模块
     输入暂存项目查询条件    ${流水号}    ${项目地址}    ${小区名称}    ${估价委托方}    ${项目分类}    ${物业类型}
     ...    ${估价目的}    ${业务来源}    ${开始时间}    ${结束时间}
     点击查询按钮
@@ -317,15 +293,17 @@ Resource          ../询价/组件层/住宅信息.txt
     ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
     ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
     打开功能模块    询价立项管理    项目受理
+    Transaction Start    打开项目受理页面
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
+    Transaction End    打开项目受理页面
     切换到已立项子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开已立项界面
     输入已立项查询条件    ${流水号}    ${报告编号}    ${项目地址}    ${小区名称}    ${估价目的}    ${报告类型}
     ...    ${业务来源}    ${物业类型}    ${受理人}    ${受理开始时间}    ${受理结束时间}    ${估价委托方}
     ...    ${客户姓名}    ${客户手机}    ${看房联系人电话}    ${资料是否齐全}    ${收费责任人}    ${外业是否完成}
     点击查询按钮
-    等待列表创建完毕
+    等待列表创建完毕    已立项-查询
     验证已立项查询数据    流水号=${流水号}    报告号=${报告编号}    项目地址=${项目地址}    小区名称=${小区名称}    报告类型=${报告类型}    物业类型=${物业类型}
     ...    估价目的=${估价目的}    业务来源=${业务来源}    资料齐全=${资料是否齐全}    客户姓名=${客户姓名}    受理人=${受理人}    估价委托方=${估价委托方}
     Comment    清空已立项查询条件
@@ -336,10 +314,12 @@ Resource          ../询价/组件层/住宅信息.txt
     ...    ${业务来源}=None    ${物业类型}=None    ${受理人}=None    ${受理开始时间}=None    ${受理结束时间}=None    ${估价委托方}=None
     ...    ${客户姓名}=None    ${客户手机}=None    ${看房联系人电话}=None    ${资料是否齐全}=None    ${收费责任人}=None    ${外业是否完成}=None
     打开功能模块    询价立项管理    项目受理
+    Transaction Start    打开项目受理页面
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
+    Transaction End    打开项目受理页面
     切换到已立项子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开已立项界面
     输入已立项查询条件    ${流水号}    ${报告编号}    ${项目地址}    ${小区名称}    ${估价目的}    ${报告类型}
     ...    ${业务来源}    ${物业类型}    ${受理人}    ${受理开始时间}    ${受理结束时间}    ${估价委托方}
     ...    ${客户姓名}    ${客户手机}    ${看房联系人电话}    ${资料是否齐全}    ${收费责任人}    ${外业是否完成}
@@ -356,10 +336,10 @@ Resource          ../询价/组件层/住宅信息.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到已立项子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开已立项模块
     输入已立项查询条件    ${流水号}
     点击查询按钮
-    等待列表创建完毕
+    等待列表创建完毕    已立项-查询
     点击列表中的查看按钮
     Unselect Frame
     Wait Until Page Contains Element    xpath=//iframe[contains(@id,'${流水号}')]

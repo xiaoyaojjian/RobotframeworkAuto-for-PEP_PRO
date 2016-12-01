@@ -1,3 +1,6 @@
+*** Settings ***
+Library           Selenium2Library
+
 *** Keywords ***
 项目审核（已）按流水号查询校验
     [Arguments]    ${项目审核流水号}    ${流水号}
@@ -5,3 +8,11 @@
     ...    ELSE    Capture Page Screenshot    项目审核按流水号查询获取数据失败.png
     run keyword if    ${项目审核流水号}==${流水号}    log    pass
     ...    ELSE    Fail
+
+验证报告文件是否存在
+    ${完成报告}    Get Text    //form[@id="form1"]//div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ResourceName"]/div
+    ${光大银行}    Get Text    //form[@id="form1"]//div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ReportEnum"]/div
+    ${计算表}    Get Text    //form[@id="form1"]//div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[2]/td[@field="ResourceName"]/div
+    ${计算表EXE}    Get Text    //form[@id="form1"]//div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[2]/td[@field="ReportEnum"]/div
+    Run Keyword If    '${光大银行}'=='光大银行.doc '    log    pass    else    Fail
+    Run Keyword If    '${计算表EXE}'=='计算表.xlsx '    log    pass    else    Fail

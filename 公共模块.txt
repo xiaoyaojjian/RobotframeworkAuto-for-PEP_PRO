@@ -4,6 +4,7 @@ Library           DateTime
 Library           PepExt.py
 Library           re
 Library           Collections
+Library           TestDataLib.py
 
 *** Variables ***
 ${PEP_URL}        http://inworktest.yunfangdata.com:82/    # 评E评URL地址
@@ -30,7 +31,10 @@ ${PASSWORD}       123456    # 登录密码
     Wait Until Page Contains Element    xpath=//*[@id="load_Tips" and contains(@style,"display: none")]    timeout=30s
 
 等待列表创建完毕
+    [Arguments]    ${transaction_name}=None    # 事务名称
+    Run Keyword If    '${transaction_name}'!='None'    Transaction Start    ${transaction_name}
     Wait Until Page Does Not Contain Element    xpath=//*[@class="datagrid-mask" and contains(@style,"display:block")]    timeout=30s
+    Run Keyword If    '${transaction_name}'!='None'    Transaction End    ${transaction_name}
 
 等待提示框出现
     Wait Until Page Contains Element    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]    100s
@@ -42,8 +46,8 @@ ${PASSWORD}       123456    # 登录密码
 打开功能模块
     [Arguments]    ${主模块}    ${子模块}
     Set Selenium Speed    0.5s
-    ${count}    Get Matching Xpath Count    //span[contains(.,'${主模块}')]/../span[@class="arrow down"]
-    Run Keyword If    '${count}'=='1'    Click Element    xpath=//span[contains(.,'${主模块}')]
+    ${count}    Get Matching Xpath Count    //div[contains(.,'${主模块}')]/span[@class="arrow down"]
+    Run Keyword If    '${count}'=='1'    Click Element    xpath=//div[contains(.,'${主模块}')]/span[2]
     Wait Until Page Does Not Contain Element    xpath=.//ul[@class="menu" and @style="display: none;"]//a[text()="${子模块}"]    timeout=10s
     Click Element    //a[contains(.,'${子模块}')]
 
@@ -80,7 +84,7 @@ ${PASSWORD}       123456    # 登录密码
     ...    如果参数is_panle不为1时，可以应用在一个页面没有多个查询按钮的情况。
     Run Keyword If    ${is_panel}==1    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="查询"]/ancestor::a
     ...    ELSE    Click Element    xpath=.//span[text()="查询"]/ancestor::a
-    等待列表创建完毕
+    #等待列表创建完毕
 
 点击列表中的${buttun_name}按钮
     ${is_panel}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//tr[@datagrid-row-index="0"]//a[text()="${buttun_name}"]

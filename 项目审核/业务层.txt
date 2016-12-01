@@ -86,11 +86,20 @@ Resource          ../外业分配/外业分配业务层.txt
     ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
     Input Text    id=ProjectNo    ${流水号}
     点击查询按钮
+    [Return]    ${流水号}
 
 随机选择一条查看详情
     ${rand}    Evaluate    random.randint(1,4)    random
     Comment    sleep    5
     Wait Until Page Contains Element    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
     ${流水号}    Get Text    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=ProjectNo    ${流水号}
+    点击查询按钮
+
+估价作业随机选择流水号
+    ${rand}    Evaluate    random.randint(1,4)    random
+    Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
+    ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    ${勘察转态}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
     Input Text    id=ProjectNo    ${流水号}
     点击查询按钮

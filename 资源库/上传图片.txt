@@ -1,0 +1,30 @@
+*** Settings ***
+Library           ../repositoryimage.py
+
+*** Test Cases ***
+上传图片
+    Comment    Respository Run    ${CURDIR}\\Chrysanthemum.jpg    ${CURDIR}    http://123.57.20.27
+    Comment    Respository Run    ${CURDIR}\\Chrysanthemum.jpg    ${CURDIR}    http://123.57.70.121
+    Comment    Respository Run    ${CURDIR}\\Chrysanthemum.jpg    ${CURDIR}    http://123.57.92.168
+    Comment    Respository Run    ${CURDIR}\\Chrysanthemum.jpg    ${CURDIR}    http://123.56.118.10
+    Comment    Respository Run    ${CURDIR}\\Chrysanthemum.jpg    ${CURDIR}    http://101.200.221.235
+    Comment    Respository Run    ${CURDIR}\\Chrysanthemum.jpg    ${CURDIR}    http://123.56.235.177
+    : FOR    ${i}    IN RANGE    2
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.57.20.27    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.57.20.27    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.56.235.177    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.56.235.177    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.57.70.121    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.57.70.121    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.57.92.168    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.57.92.168    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.56.118.10    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.56.118.10    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://101.200.221.235    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://101.200.221.235    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat

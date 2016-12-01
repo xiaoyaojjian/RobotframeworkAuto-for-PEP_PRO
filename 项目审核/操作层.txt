@@ -1,5 +1,8 @@
 *** Settings ***
 Library           Selenium2Library
+Resource          ..//估价作业/组件层/进行中.txt
+Resource          ..//公共模块.txt
+Resource          审核验证.txt
 
 *** Keywords ***
 审核流水号
@@ -52,3 +55,68 @@ Library           Selenium2Library
 
 点击查看详细
     Click Element    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[1]
+
+勘察状态
+    Select From List By Label    id=OuterStatus    已完成
+
+点击领取估价作业
+    Click Element    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()='领取']
+
+进行中点击线下报告
+    点击线下报告
+    点击报告上传
+    Unselect Frame
+    Select Frame    id=offline_report
+    汇总数据新建或编辑
+    Comment    填写汇总数据    6    云房土地评估项目    为确定估价对象抵押贷款额度提供参考依据而评估房地产抵押价值    广东省    广州市
+    ...    增城市    天天家园    12    12    12    房地产评估项目
+    ...    北京云房    北京仁达    中国银行    一年    李文    ${USER_NAME}
+    ...    李伟    微微    直接估算    混合估算    50000    555555
+    ...    234235    44444    20160421    234234    23424    123334
+    ...    12312    费所得到的    程序徐翠翠是多少方法    234234    234324    是
+    ...    水电费加快递费邓丽君手动阀的说法反反复复反复反复反复    时间段发扣水电费就    手动阀放大顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶大地的    钢筋结构    90    12
+    ...    13    12/13    士大夫的    23423sdfsdsd234234    米兰    200
+    ...    商用住宅    精装    商品房    70    69    ${USER_NAME}
+    ...    手动阀    出让    100    234234sdsdf    dssd324    89
+    ...    24234gsdsdg    双方都大幅度发方法    李文    440892993423242341    A级    9527
+    ...    经办单位
+    点击保存
+    等待确定窗口弹出
+    点击确定
+
+提交审核中的信息
+    等待弹出窗口出现
+    Select From List By Label    id=nextTask    一审
+    Wait Until Element Contains    附加信息    20s
+    Select From List By Label    id=ReceiverId    李楠
+    Wait Until Element Contains    审核人员    20s
+    Input Text    xpath=//td[@id="td_ReportType"]//input[2]    发大厦法费
+    Click Element    xpath=//span[text()='提交']
+    等待提示框出现
+    点击提示框中的确定按钮
+    等待提示框出现
+    点击提示框中的确定按钮
+
+审核报告
+    Select Frame    id=audit_report
+    Input Text    id=TotalScore    69
+    验证报告文件是否存在
+    展开按钮
+    click Element    xpath=//span[text()="添加错误记录"]/ancestor::a
+    Input Text    xpath=//*[contains(@id,"datagrid-row")]/td[1]/div/table/tbody/tr/td/span/input[1]    低级错误
+    Input Text    xpath=//*[contains(@id,"datagrid-row")]/td[2]/div/table/tbody/tr/td/input    不符合规范，请返回修改
+    Click Element    xpath=//td[@field="TaskName"]/div/a[text()='保存']
+    展开按钮
+
+点击审核报告按钮
+    Click Element    //div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[text()='审核报告']
+
+展开按钮
+    Click Element    xpath=//div[@class="panel-tool"]/a
+
+添加错误记录（其他）
+    Click Element    id=//span[text()='上传文件']
+    等待弹出窗口出现
+    Choose File    id=Uploadfile    ${CURDIR}/计算表.xlsx
+    Click Element    id=BtnSave
+    Unselect Frame

@@ -12,13 +12,13 @@ Resource          查勘任务.txt
     Click Element    //span[text()='进行中']/../..
 
 点击提交
-    操作    2    提交
+    操作    1    提交
 
 点击查看
-    操作    2    查看
+    操作    1    查看
 
 点击线下报告
-    操作    2    线下报告
+    操作    1    线下报告
 
 点击线上报告
     操作    2    线上报告
@@ -64,7 +64,6 @@ Resource          查勘任务.txt
     ${报告年度}    get value    xpath=//*[@id="ReportYear"]
     ${报告月度}    get value    xpath=//*[@id="ReportMonth"]
     ${估价目的}    get value    xpath=//*[@id="EvalGoal"]
-    Comment    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Company']
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Company']    ${所属公司}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Department']
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Department']    ${所属部门}

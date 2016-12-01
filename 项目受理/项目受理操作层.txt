@@ -446,7 +446,9 @@ Resource          ../公共模块.txt
 进行任务分配操作
     [Arguments]    ${pep}    ${是否下发到PAD}=否    ${加急金额}=None
     点击立项页面中的任务分配按钮
+    Transaction Start    立项-打开任务分配窗口
     等待弹出窗口出现
+    Transaction End    立项-打开任务分配窗口
     ${下拉框是否禁用}    Get Matching Xpath Count    .//*[@id='outtask' and @disabled="disabled"]
     Run Keyword If    '${pep.get_value(u'是否勘查')}'=='是'    Should Be Equal    ${下拉框是否禁用}    0
     ...    ELSE IF    '${pep.get_value(u'是否勘查')}'=='否'    Should Be Equal    ${下拉框是否禁用}    1
@@ -461,9 +463,11 @@ Resource          ../公共模块.txt
     Run Keyword If    '${加急金额}'=='None'    Input Text    xpath=.//input[@name="QuickPrice"]/../input[@type="text"]    ${加急金额}
     Set Pep Value    ${pep}    加急金额    ${加急金额}
     Click Element    xpath=//span[text()='确定']/ancestor::a
+    Transaction Start    提交任务分配表单
     Unselect Frame
     Select Frame    //iframe[contains(@id,"create_project_")]
     等待提示框出现
+    Transaction End    提交任务分配表单
     ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
     Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'
     ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
@@ -476,22 +480,28 @@ Resource          ../公共模块.txt
 进行提取信息操作
     [Arguments]    ${流水号}
     点击立项页面中的提取信息按钮
+    Transaction Start    打开提取信息窗口
     等待弹出窗口出现
+    Transaction End    打开提取信息窗口
     输入提取信息查询条件    ${流水号}
     Click Element    xpath=.//*[@id='BtnSearch']    #点击查询按钮
-    等待列表创建完毕
+    等待列表创建完毕    查询提取信息列表
     Select Checkbox    xpath=.//tr[@datagrid-row-index="0"]//td[@field="cb"]//input    #选中第一条记录
     Click Element    xpath=.//*[@id='BtnChose']    #点击确认选中按钮
+    Transaction Start    提取项目信息到立项界面
     Unselect Frame
     Select Frame    id=create_project_
     等待加载完毕
+    Transaction End    提取项目信息到立项界面
     Unselect Frame
     Select Frame    id=create_project_
 
 进行暂存操作
     [Arguments]    ${pep}
     点击立项页面中的暂存按钮
+    Transaction Start    保存暂存项目
     等待提示框出现
+    Transaction End    保存暂存项目
     ${是否暂存成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'暂存成功')]
     ${是否操作成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'保存成功')]
     Run Keyword If    '${是否暂存成功}'=='0' and '${是否操作成功}'=='0'    FAIL    msg='暂存失败'
@@ -504,7 +514,9 @@ Resource          ../公共模块.txt
 进行立项并继续操作
     [Arguments]    ${pep}
     点击立项页面中的立项并继续按钮
+    Transaction Start    立项并继续
     等待提示框出现
+    Transaction End    立项并继续
     ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
     Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'
     ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
@@ -516,7 +528,9 @@ Resource          ../公共模块.txt
 进行立项操作
     [Arguments]    ${pep}
     点击立项页面中的立项按钮
+    Transaction Start    进行立项
     等待提示框出现
+    Transaction Start    进行立项
     ${是否成功}    Get Matching Xpath Count    .//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
     Run Keyword If    '${是否成功}'=='0'    FAIL    msg='立项失败'
     ${msg}    Get Text    xpath=.//div[contains(@class,"messager-window") and contains(@style,"display: block")]//div[contains(text(),'成功')]
@@ -542,7 +556,9 @@ Resource          ../公共模块.txt
     [Arguments]    ${pep}
     Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Input Text    xpath=.//*[@id='MobileNumber']    ${pep.get_value(u'客户手机')}
     Run Keyword If    '${pep.get_value(u'客户手机')}'!=''    Click Element    xpath=//span[text()='查询']/..    #点击查询按钮
+    Transaction Start    通过手机号获取客户信息
     等待加载完毕
+    Transaction End    通过手机号获取客户信息
 
 遍历快递信息到pep对象
     [Arguments]    ${row_count}    ${pep}
@@ -754,3 +770,20 @@ Resource          ../公共模块.txt
     Set Pep Value    ${pep}    是否已终止    ${是否已终止}
     Set Pep Value    ${pep}    终止原因    ${终止原因}
     Set Pep Value    ${pep}    线上备注    ${备注};贷款银行:${pep.get_value(u'贷款银行')};中台姓名:${pep.get_value(u'中台姓名')};中台电话:${pep.get_value(u'中台电话')}
+
+点击列表的编辑按钮进入审核项目
+    点击列表中的编辑按钮
+    Transaction Start    编辑暂存项目
+    Unselect Frame
+    Wait Until Page Contains Element    xpath=.//iframe[contains(@id,'create_project_')]
+    Select Frame    xpath=.//iframe[contains(@id,'create_project_')]
+    等待加载完毕
+    Transaction End    编辑暂存项目
+
+点击立项按钮进入立项界面
+    点击立项按钮
+    Transaction Start    打开立项添加界面
+    Unselect Frame
+    Select Frame    id=create_project_
+    等待加载完毕
+    Transaction End    打开立项添加界面

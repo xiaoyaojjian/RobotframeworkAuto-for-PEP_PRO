@@ -77,7 +77,7 @@ Resource          ../../询价/元素层/元素层.txt
     Comment    Select From List By Label    .//*[@class='combo-panel panel-body panel-body-noheader']    李楠
 
 分配按钮
-    click Element    xpath=//span[text()="分配任务"]/..
+    click Element    xpath=//span[text()="批量分配"]/..
 
 回收按钮
     [Arguments]    ${row}=1

@@ -21,7 +21,7 @@ Resource          项目受理业务层.txt
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
     切换到暂存项目子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开暂存项目模块
     Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']    1234567890123456
     ${流水号}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ProjectNo']
     Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012    没有做字符长度校验，流水号超出12位

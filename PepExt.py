@@ -59,8 +59,7 @@ class PepExt:
         """输入框最大输入个数"""
         m = list(str(Heir)).__len__()
         return m
-		
-    	
+		   	
     def return_list(self,NO_list,para):
         """存储随机选择项目的流水号"""
         NO_list.append(para)
@@ -70,7 +69,6 @@ class PepExt:
         """返回列表个数"""
         list_count = NO_list.__len__()
         return list_count
-<<<<<<< HEAD
 		
     def return_string_strip(self,string):
         """清除字符末尾为空的字符串"""
@@ -86,5 +84,3 @@ class PepExt:
         """计算时间差，以秒为单位返回"""
         computingtime = (lasttime-nowtime)
         return computingtime,transactionName,nowtime,lasttime
-=======
->>>>>>> b25b406de2fbb9d30820073abfe08952069f5877

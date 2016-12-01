@@ -92,7 +92,7 @@ Resource          ../../项目受理/项目受理操作层.txt
     ${a}    Get Now Time
     等待列表创建完毕
     ${b}    Get Now Time
-    ${c}    Return After Computing Time    ${b}    ${a}
+    Comment    ${c}    Return After Computing Time    ${b}    ${a}
     ${总数据量}    获取页面显示总数据量
     添加询价按钮
     Unselect Frame
@@ -106,6 +106,8 @@ Resource          ../../项目受理/项目受理操作层.txt
     通过手机号码获取客户信息    ${pep_input}
     将客户信息写入PEP对象    ${pep_input}    is_xunjia=1
     估值信息参数    ${pep_input}
+    sleep    2
+    Click Element    xpath=.//*[@id='areapricetotal']
     询价按钮
     ${price_range}    获取询价系统价格    ${pep_input}
     添加系统价格校验    ${price_range}
@@ -148,6 +150,7 @@ Resource          ../../项目受理/项目受理操作层.txt
     通过手机号码获取客户信息    ${new_pep_input}
     将客户信息写入PEP对象    ${new_pep_input}    is_xunjia=1
     估值信息参数    ${new_pep_input}
+    点击空白处
     询价按钮
     等待加载完毕
     ${price_range}    获取询价系统价格    ${new_pep_input}

@@ -20,10 +20,12 @@ Resource          项目受理业务层.txt
 
 查询条件错误提示
     打开功能模块    询价立项管理    项目受理
+    Transaction Start    打开项目受理页面
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕
+    Transaction End    打开项目受理页面
     切换到已立项子模块
-    等待列表创建完毕
+    等待列表创建完毕    打开已立项界面
     Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    1234567890123456789
     ${流水号}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']
     Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012345    没有做字符长度校验，报告号超出15位

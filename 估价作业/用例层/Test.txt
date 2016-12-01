@@ -17,14 +17,6 @@ Library           DatabaseLibrary
     Run Keyword And Continue On Failure    线上报告
     [Teardown]    Close Browser
 
-未领取挂起
-    Run Keyword And Continue On Failure    未领取挂起
-    [Teardown]    Close Browser
-
-未领取解挂
-    Run Keyword And Continue On Failure    未领取解挂
-    [Teardown]    Close Browser
-
 进行中挂起
     Run Keyword And Continue On Failure    进行中挂起
     [Teardown]    Close Browser
@@ -47,10 +39,6 @@ Library           DatabaseLibrary
 
 无效查询
     Run Keyword And Continue On Failure    无效查询
-    [Teardown]    Close Browser
-
-验证已完成列表
-    Run Keyword And Continue On Failure    验证已完成列表
     [Teardown]    Close Browser
 
 验证查看信息
