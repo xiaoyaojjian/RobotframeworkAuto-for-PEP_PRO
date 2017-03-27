@@ -28,3 +28,24 @@ Library           ../repositoryimage.py
     \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
     \    ...    http://101.200.221.235    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
     \    Show Upload Result    http://101.200.221.235    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileFormat
+
+123.56.118.10
+    [Tags]    Resources
+    : FOR    ${i}    IN RANGE    2
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.56.118.10    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.56.118.10    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileURL
+
+123.56.235.177
+    [Tags]    Resources
+    : FOR    ${i}    IN RANGE    2
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://123.56.235.177    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://123.56.235.177    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileURL
+
+101.200.221.235
+    [Tags]    Resources
+    : FOR    ${i}    IN RANGE    2
+    \    ${m}    ${n}    Upload Pictures    ${CURDIR}/Chrysanthemum.jpg    ${i}    ${CURDIR}
+    \    ...    http://101.200.221.235    :8082/ResourcesPoolWrite/ExtAPI/extend/Create?title=测试&format=jpg&belongPID=2&belongDesc=2&systemName=内业系统&belongID=2
+    \    Show Upload Result    http://101.200.221.235    :8081/ResourcesPoolRead/ExtAPI/extend/    ${n}    /GetFileURL

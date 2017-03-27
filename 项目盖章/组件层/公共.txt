@@ -58,7 +58,8 @@ Resource          ../../公共模块.txt
 执行项目收费操作
     [Arguments]    ${serial_no}
     Unselect Frame
-    Click Element    //span[contains(text(),'财务管理')]
+    Comment    Click Element    //span[contains(text(),'财务管理')]
+    打开功能模块    财务管理    项目收费
     Wait Until Page Contains Element    //a[contains(text(),'项目收费' ) and @href]    10
     Click Element    //a[contains(text(),'项目收费' ) and @href]
     Select Frame    id=Finance_AdvanceCharge
@@ -88,7 +89,8 @@ Resource          ../../公共模块.txt
 执行确认收费人操作
     [Arguments]    ${serial_no}
     Unselect Frame
-    Click Element    //span[contains(text(),'市场管理')]
+    Comment    Click Element    //span[contains(text(),'市场管理')]
+    打开功能模块    市场管理    确认收费责任
     Wait Until Page Contains Element    //a[contains(text(),'确认收费责任' ) and @href]
     Click Element    //a[contains(text(),'确认收费责任' ) and @href]
     Select Frame    id=Market_ChargeConfirm
@@ -96,7 +98,7 @@ Resource          ../../公共模块.txt
     Input Text    //input[@id='ProjectNo']    ${serial_no}
     Click Element    //a[@id='BtnSearch']//span[text()='查询']
     Wait Until Page Contains    显示1到1,共1记录    30    确认收费责任人页面无数据
-    Click Element    //div[@class='panel' and not(contains(@style,'none'))]//div[@class='datagrid-view2']//div[@class='datagrid-body']//tbody/tr[1]/td[last()]//a[text()='确认']
+    Click Element    //div[@class='panel']//div[@class='datagrid-view']//div[@class='datagrid-body']//tbody/tr[1]/td[last()]//a[text()='确认']
     Select Frame    css=.xubox_iframe
     Wait Until Page Contains    免收金额    10
     Click Element    //span[text()='确认']/..

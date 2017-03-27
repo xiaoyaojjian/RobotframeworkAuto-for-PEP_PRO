@@ -61,8 +61,8 @@ Resource          ../../项目受理/项目受理业务层.txt
     等待提示框出现
     确定按钮
     ${fei_xunjia_info}    询价完成到非住宅信息校验    ${price_range}
-    非住宅信息回复查询校验    ${fei_xunjia_info}    ${price_range}    非住宅询价回复功能校验
-    [Teardown]
+    Comment    非住宅信息回复查询校验    ${fei_xunjia_info}    ${price_range}    非住宅询价回复功能校验
+    [Teardown]    Close Browser
 
 转立项
     [Documentation]    该用例含有

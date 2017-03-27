@@ -3,9 +3,6 @@ Library           Selenium2Library
 Library           Collections
 Library           re
 Resource          公共.txt
-Library           ../../ReportRequests.py
-Resource          未领取.txt
-Resource          查勘任务.txt
 
 *** Keywords ***
 点击进行中

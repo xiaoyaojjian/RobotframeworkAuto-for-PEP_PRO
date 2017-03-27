@@ -7,6 +7,7 @@ Library           TestDataLib.py
 测试
     ${text}    Set Variable    中指评估系统(13811446949)
     log    ${text}
+    Breakpoint
     ${看房联系人_list}    Split    [(]|[)]    ${text}
     ${看房联系人_list}    Evaluate    re.findall('(.*)[(]([0-9]*)[)]','${text}')    re
     ${看房联系人_list}    Findall    (.*)[(](.*)[)]    ${text}
@@ -44,3 +45,21 @@ Library           TestDataLib.py
     log    A事务开始
     sleep    10
     log    A事务结束
+
+HTTP请求Demo
+    Import Library    RequestsLibrary
+    Import Library    OperatingSystem
+    Create Session    uploadUrl_118    http://123.56.118.10:8082
+    ${params}    Create Dictionary    title=测试    format=png    belongPID=2    belongDesc=2    systemName=内业系统
+    ...    belongID=2
+    ${file_data}    Get Binary File    D:/log.png
+    &{files}    Create Dictionary    \ file=${file_data}
+    ${request}    Post Request    uploadUrl_118    /ResourcesPoolWrite/ExtAPI/extend/Create    params=${params}    files=${files}
+    log    ${request.text}
+
+测试003
+    登录
+    打开功能模块    我的项目    审核调度
+    Select Frame    id=ProjectAllot_AuditAssign
+    验证模糊查询后的列表数据    3    0
+    Close Browser

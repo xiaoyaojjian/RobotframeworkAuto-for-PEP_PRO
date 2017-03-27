@@ -76,14 +76,7 @@ Resource          ../组件层/变更审批.txt
     Wait Until Page Contains    确定    20
 
 循环审核一条申请中的记录
-    Comment    ${rand}    Evaluate    random.randint(1,10)    random
-    Comment    ${pno}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${rand}]/td[2]/div
-    Comment    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${rand}]/td[11]/div
-    Comment    Run Keyword If    '${status}'!='申请中'    循环审核一条申请中的记录
-    ...    ELSE    操作    ${rand}    审核
-    Comment
     : FOR    ${i}    IN RANGE    10
-    \    log    ${i}
     \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
     \    Run Keyword If    '${status}'=='申请中'    操作    ${i+1}    审核
     \    ${pno}    Run Keyword If    '${status}'=='申请中'    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody//tr[${i+1}]/td[2]/div
@@ -93,8 +86,10 @@ Resource          ../组件层/变更审批.txt
 循环选出未通过的项目
     ${记录}    Get Text    //div[contains(text(),'显示')]
     ${count}    Findall    共(.*)记录    ${记录}
+    ${ranges}    Run Keyword If    ${count}>=10    Set Variable    10
+    ...    ELSE    Set Variable    ${count}
     ${count}    Evaluate    ${count}[0]
-    : FOR    ${i}    IN RANGE    ${count}
+    : FOR    ${i}    IN RANGE    ${ranges}
     \    ${status}    Get Text    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[${i+1}]/td[11]/div
     \    ${index}    Run Keyword And Return If    '${status}'=='未通过'    Set Variable    ${i+1}
     \    Exit For Loop If    '${status}'=='未通过'

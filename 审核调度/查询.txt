@@ -7,37 +7,30 @@ Resource          ../询价/组件层/住宅信息.txt
 Resource          审核调度业务层.txt
 
 *** Test Cases ***
-调度流水号查询
+有效查询
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
     等待列表创建完毕
-    ${总数据量}    审核调度正确查询    流水号    569818783458    ProjectNo
-    审核调度特殊字符查询    流水号    @$@    ProjectNo
-    审核调度为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
-    审核调度模糊查询    流水号    551    ProjectNo
-    审核调度错误查询    流水号    234234234234    ProjectNo    ${总数据量}
-    审核调度超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
+    流水号查询
+    报告号查询
+    项目地址查询    #项目地址
+    [Teardown]    Close Browser
 
-调度报告号查询
-    [Setup]    登录
-    打开功能模块    我的项目    审核调度
-    Select Frame    id=ProjectAllot_AuditAssign
-    ${总数据量}    审核调度正确查询    报告号    201501107001624    ReportNo
-    审核调度特殊字符查询    报告号    @$@    ReportNo
-    审核调度为空查询    报告号    ${empty}    ReportNo    ${总数据量}
-    审核调度模糊查询    报告号    20150    ReportNo
-    审核调度错误查询    报告号    234234234234    ReportNo    ${总数据量}
-    审核调度超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
-
-调度项目地址查询
+无效查询
     [Setup]    登录
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
     等待列表创建完毕
-    ${总数据量}    审核调度正确查询    项目地址    北京市通州区远洋东方公馆(远洋东方公馆20160924010009)远洋东方公馆96号1单元1502    address
-    审核调度特殊字符查询    项目地址    @$@    address
-    审核调度为空查询    项目地址    ${empty}    address    ${总数据量}
-    审核调度模糊查询    项目地址    远洋东方公馆    address
-    审核调度错误查询    项目地址    232收到罚单是打发反反    address    ${总数据量}
-    审核调度超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅    address    ${总数据量}
+    无效查询    #无效查询
+    [Teardown]    Close Browser
+
+模糊查询
+    [Setup]    登录
+    打开功能模块    我的项目    审核调度
+    Select Frame    id=ProjectAllot_AuditAssign
+    等待列表创建完毕
+    审核流水号模糊查询    ProjectNo    05222    0    cb
+    审核报告号模糊查询    ReportNo    00414    0    cb
+    审核项目地址模糊查询    address    天天家园    0    cb    #模糊查询
+    [Teardown]    Close Browser

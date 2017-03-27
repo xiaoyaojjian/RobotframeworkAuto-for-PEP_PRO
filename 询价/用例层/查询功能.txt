@@ -19,12 +19,15 @@ Resource          ../组件层/预估单信息.txt
     ...    编写人：吕梓清
     [Setup]    登录
     询价打开模块公共方法
+    Comment    询价错误特殊字符查询    小区名称    @$@    ResidentialAreaName
+    Comment    询价为空查询    小区名称    ${empty}    ResidentialAreaName    ${总数据量}
+    Comment    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ResidentialAreaName    ${总数据量}
+    Comment    正确数据查询
     ${总数据量}    询价正确数据查询    小区名称    五栋大楼    ResidentialAreaName
-    询价错误特殊字符查询    小区名称    @$@    ResidentialAreaName
-    询价为空查询    小区名称    ${empty}    ResidentialAreaName    ${总数据量}
-    询价模糊查询    小区名称    盘古    ResidentialAreaName
-    询价错误查询    小区名称    232收到罚单是打发反反    ResidentialAreaName    ${总数据量}
-    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    ResidentialAreaName    ${总数据量}
+    Comment    模糊查询
+    ${总数据量}    询价正确数据查询    小区名称    盘古    ResidentialAreaName
+    Comment    错误查询
+    ${总数据量}    询价正确数据查询    小区名称    232收到罚单是打发反反    ResidentialAreaName
     [Teardown]    Close Browser
 
 住宅项目地址查询
@@ -39,11 +42,11 @@ Resource          ../组件层/预估单信息.txt
     [Setup]    登录
     询价打开模块公共方法
     ${总数据量}    询价正确数据查询    项目地址    北京市西城区    Address
-    询价错误特殊字符查询    项目地址    @$@    Address
-    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
+    Comment    询价错误特殊字符查询    项目地址    @$@    Address
+    Comment    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
     询价模糊查询    项目地址    盘古    Address
     询价错误查询    项目地址    232收到罚单是打发反反    Address    ${总数据量}
-    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
+    Comment    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
     [Teardown]    Close Browser
 
 住宅询价机构查询
@@ -58,11 +61,11 @@ Resource          ../组件层/预估单信息.txt
     [Setup]    登录
     询价打开模块公共方法
     ${总数据量}    询价正确数据查询    询价机构    中国银行    CustomerTypeName
-    询价错误特殊字符查询    询价机构    @$@    CustomerTypeName
-    询价为空查询    询价机构    ${empty}    CustomerTypeName    ${总数据量}
+    Comment    询价错误特殊字符查询    询价机构    @$@    CustomerTypeName
+    Comment    询价为空查询    询价机构    ${empty}    CustomerTypeName    ${总数据量}
     询价模糊查询    询价机构    银行    CustomerTypeName
     询价错误查询    询价机构    232收到罚单是打发反反    CustomerTypeName    ${总数据量}
-    询价超长字符查询    询价机构    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerTypeName    ${总数据量}
+    Comment    询价超长字符查询    询价机构    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerTypeName    ${总数据量}
     [Teardown]    Close Browser
 
 住宅询价人(客户名称)查询
@@ -77,11 +80,11 @@ Resource          ../组件层/预估单信息.txt
     [Setup]    登录
     询价打开模块公共方法
     ${总数据量}    询价正确数据查询    询价人(客户名称)    时永文    CustomerName
-    询价错误特殊字符查询    询价人(客户名称)    @$@    CustomerName
-    询价为空查询    询价人(客户名称)    ${empty}    CustomerName    ${总数据量}
+    Comment    询价错误特殊字符查询    询价人(客户名称)    @$@    CustomerName
+    Comment    询价为空查询    询价人(客户名称)    ${empty}    CustomerName    ${总数据量}
     询价模糊查询    询价人(客户名称)    张    CustomerName
     询价错误查询    询价人(客户名称)    232收到罚单是打发反反    CustomerName    ${总数据量}
-    询价超长字符查询    询价人(客户名称)    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerName    ${总数据量}
+    Comment    询价超长字符查询    询价人(客户名称)    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerName    ${总数据量}
     [Teardown]    Close Browser
 
 非住宅项目地址查询
@@ -97,11 +100,11 @@ Resource          ../组件层/预估单信息.txt
     询价打开模块公共方法
     非住宅信息按钮
     ${总数据量}    询价正确数据查询    项目地址    北京市大兴区天华北街3号    Address
-    询价错误特殊字符查询    项目地址    @$@    Address
-    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
+    Comment    询价错误特殊字符查询    项目地址    @$@    Address
+    Comment    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
     询价模糊查询    项目地址    朝阳区芳园里    Address
     询价错误查询    项目地址    232收到罚单是打发反反    Address    ${总数据量}
-    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
+    Comment    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
     [Teardown]    Close Browser
 
 非住宅询价机构查询
@@ -117,11 +120,11 @@ Resource          ../组件层/预估单信息.txt
     询价打开模块公共方法
     非住宅信息按钮
     ${总数据量}    询价正确数据查询    询价机构    中国银行    CustomerTypeName
-    询价错误特殊字符查询    询价机构    @$@    CustomerTypeName
-    询价为空查询    询价机构    ${empty}    CustomerTypeName    ${总数据量}
+    Comment    询价错误特殊字符查询    询价机构    @$@    CustomerTypeName
+    Comment    询价为空查询    询价机构    ${empty}    CustomerTypeName    ${总数据量}
     询价模糊查询    询价机构    银行    CustomerTypeName
     询价错误查询    询价机构    232收到罚单是打发反反    CustomerTypeName    ${总数据量}
-    询价超长字符查询    询价机构    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerTypeName    ${总数据量}
+    Comment    询价超长字符查询    询价机构    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerTypeName    ${总数据量}
     [Teardown]    Close Browser
 
 非住宅询价人(客户名称)查询
@@ -137,11 +140,11 @@ Resource          ../组件层/预估单信息.txt
     询价打开模块公共方法
     非住宅信息按钮
     ${总数据量}    询价正确数据查询    询价人(客户名称)    黄远阜    CustomerName
-    询价错误特殊字符查询    询价人(客户名称)    @$@    CustomerName
-    询价为空查询    询价人(客户名称)    ${empty}    CustomerName    ${总数据量}
+    Comment    询价错误特殊字符查询    询价人(客户名称)    @$@    CustomerName
+    Comment    询价为空查询    询价人(客户名称)    ${empty}    CustomerName    ${总数据量}
     询价模糊查询    询价人(客户名称)    张    CustomerName
     询价错误查询    询价人(客户名称)    232收到罚单是打发反反    CustomerName    ${总数据量}
-    询价超长字符查询    询价人(客户名称)    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerName    ${总数据量}
+    Comment    询价超长字符查询    询价人(客户名称)    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerName    ${总数据量}
     [Teardown]    Close Browser
 
 预估单编号查询
@@ -158,10 +161,10 @@ Resource          ../组件层/预估单信息.txt
     预估单信息按钮
     ${总数据量}    询价正确数据查询    预估单编号    2016546730    TicktNo
     Comment    询价错误特殊字符查询    预估单编号    @$@    TicktNo
-    询价为空查询    预估单编号    ${empty}    TicktNo    ${总数据量}
+    Comment    询价为空查询    预估单编号    ${empty}    TicktNo    ${总数据量}
     询价模糊查询    预估单编号    2016    TicktNo
     询价错误查询    预估单编号    232收到罚单是打发反反    TicktNo    ${总数据量}
-    询价超长字符查询    预估单编号    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    TicktNo    ${总数据量}
+    Comment    询价超长字符查询    预估单编号    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    TicktNo    ${总数据量}
     [Teardown]    Close Browser
 
 评估人员查询
@@ -178,10 +181,10 @@ Resource          ../组件层/预估单信息.txt
     预估单信息按钮
     ${总数据量}    询价正确数据查询    评估人员    苑北京6663333333333333333333333666666666666666666666666666666666666666666666666666666666666    EvaluatePeople
     Comment    询价错误特殊字符查询    预估单编号    @$@    BelongPeople
-    询价为空查询    评估人员    ${empty}    EvaluatePeople    ${总数据量}
+    Comment    询价为空查询    评估人员    ${empty}    EvaluatePeople    ${总数据量}
     询价模糊查询    评估人员    是非    EvaluatePeople
     询价错误查询    评估人员    232收到罚单是打发反反    EvaluatePeople    ${总数据量}
-    询价超长字符查询    评估人员    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    EvaluatePeople    ${总数据量}
+    Comment    询价超长字符查询    评估人员    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    EvaluatePeople    ${总数据量}
     [Teardown]    Close Browser
 
 预估单项目地址查询
@@ -198,10 +201,10 @@ Resource          ../组件层/预估单信息.txt
     预估单信息按钮
     ${总数据量}    询价正确数据查询    项目地址    北京市昌平区望都新地    AreaAddress
     Comment    询价错误特殊字符查询    预估单编号    @$@    BelongPeople
-    询价为空查询    项目地址    ${empty}    AreaAddress    ${总数据量}
+    Comment    询价为空查询    项目地址    ${empty}    AreaAddress    ${总数据量}
     询价模糊查询    项目地址    文件    AreaAddress
     询价错误查询    项目地址    232收到罚单是打发反反    AreaAddress    ${总数据量}
-    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaAddress    ${总数据量}
+    Comment    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaAddress    ${总数据量}
     [Teardown]    Close Browser
 
 预估单所属机构查询
@@ -229,11 +232,28 @@ Resource          ../组件层/预估单信息.txt
     [Setup]    登录
     询价打开模块公共方法
     预估单信息按钮
-    ${总数据量}    询价正确数据查询    状态    已立项    IsToProject
-    ${总数据量}    询价正确数据查询    状态    未立项    IsToProject
+    ${总数据量}    高级查询下拉框    状态    已立项    IsToProject
+    高级查询按钮
+    ${总数据量}    高级查询下拉框    状态    未立项    IsToProject
     Comment    询价错误特殊字符查询    预估单编号    @$@    BelongPeople
     Comment    下拉选项为空查询    所属机构    ${empty}    CustomerType    ${总数据量}
     Comment    询价模糊查询    所属机构    中    CustomerType
     Comment    询价错误查询    所属机构    232收到罚单是打发反反    CustomerType    ${总数据量}
     Comment    询价超长字符查询    所属机构    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    CustomerType    ${总数据量}
     [Teardown]
+
+询价时间查询
+    [Setup]    登录
+    询价打开模块公共方法
+    询价高级查询按钮
+    Comment    Click Element    xpath=.//*[@id='CreatedDate1']
+    sleep    5
+    Comment    Unselect Frame
+    Comment    Select Frame    id=InquiryAndProject_Residential
+    Comment    ${a}    Get Text    /html/body/div[9]/div[1]/div[3]
+    Comment    log    ${a}
+    Comment    Input Text    xpath=//div[@class='date-picker-wrapper no-shortcuts no-gap two-months' and contains(@style,'display: block')]//div[@class='normal-top']/b[1]    2017-01-20
+    Comment    Input Text    xpath=.//*[@id='CreatedDate1']    2017-01-20 至 2017-02-18
+    时间选择    2017-01-15 至 2017-01-20    2017-01-15    2017-01-20
+    询价查询按钮
+    [Teardown]    Close Browser

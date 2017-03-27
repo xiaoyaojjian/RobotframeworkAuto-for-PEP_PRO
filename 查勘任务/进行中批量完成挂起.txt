@@ -11,7 +11,7 @@ Resource          ..//项目受理/项目受理业务层.txt
 批量完成
     [Setup]    登录
     查勘打开功能模块公共方法
-    批量完成操作    ProjectNo    1    2
+    批量完成操作    ProjectNo    7    8
     [Teardown]    Close Browser
 
 挂起模式一
@@ -49,4 +49,4 @@ Resource          ..//项目受理/项目受理业务层.txt
     进行中按钮
     查勘任务挂起    流水号    ${pep.get_value(u'流水号')}    ProjectNo    挂起    2
     查勘任务解挂    流水号    ${pep.get_value(u'流水号')}    ProjectNo    解挂
-    [Teardown]
+    [Teardown]    Close Browser

@@ -26,12 +26,14 @@ Resource          项目受理业务层.txt
     Transaction End    打开项目受理页面
     切换到已立项子模块
     等待列表创建完毕    打开已立项界面
-    Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    1234567890123456789
-    ${流水号}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']
-    Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012345    没有做字符长度校验，报告号超出15位
-    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo' and contains(@class,"validatebox-invalid")]    报告号没有特殊字符校验
-    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address' and contains(@class,"validatebox-invalid")]    项目地址没有特殊字符校验
-    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName' and contains(@class,"validatebox-invalid")]    小区名字没有特殊字符校验
-    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate' and contains(@class,"validatebox-invalid")]    估价委托方没有特殊字符校验
+    ${是否展开高级查询}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//div[@class="advancedQueryWrap" and contains(@style,"display: block;")]
+    Run Keyword If    ${是否展开高级查询}==0    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="高级查询"]/ancestor::a
+    Comment    Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    1234567890123456789
+    Comment    ${流水号}    Get Value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']
+    Comment    Run Keyword And Continue On Failure    Should Be Equal    ${流水号}    123456789012345    没有做字符长度校验，报告号超出15位
+    Comment    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='ReportNo' and contains(@class,"validatebox-invalid")]    报告号没有特殊字符校验
+    Comment    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='Address' and contains(@class,"validatebox-invalid")]    项目地址没有特殊字符校验
+    Comment    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='AreaName' and contains(@class,"validatebox-invalid")]    小区名字没有特殊字符校验
+    Comment    往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='PriceDelegate' and contains(@class,"validatebox-invalid")]    估价委托方没有特殊字符校验
     往输入框输入特殊字符并验证它是否出现警告    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName']    .//div[@class="panel" and contains(@style,"display: block")]//*[@id='CreatorName' and contains(@class,"validatebox-invalid")]    受理人没有特殊字符校验
     Unselect Frame

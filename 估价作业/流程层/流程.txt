@@ -14,9 +14,12 @@ Resource          ../../公共模块.txt
     点击我的项目
     点击估价作业
     Select Frame    id=ProjectAllot_ReportAccept
+    Transaction Start    估价作业-进行中
     等待列表加载完成    1
+    Transaction End    估价作业-进行中
     Comment    点击进行中
     Comment    等待列表加载完成    2
+    Click Element    //span[text()='高级查询']/..
     Select From List By Label    //select[@id='OuterStatus']    已完成
     普通查询
     Wait Until Page Contains    内业进行中    30    选择查勘状态点击查询后数据在30s内未加载出来
@@ -50,12 +53,12 @@ Resource          ../../公共模块.txt
     Select Frame    id=ProjectAllot_ReportAccept
     等待列表加载完成    1
     点击已完成
+    Transaction Start    估价作业-已完成
     等待列表加载完成    2
-    Input Text    //input[@id='ProjectNo']    ${pno}
+    Transaction End    估价作业-已完成
+    Input Text    //input[@id='filter']    ${pno}
     普通查询
     Wait Until Page Contains    显示1到1,共1记录    10
-    Comment    重新提交审核操作
-    Comment    验证审核列表    ${pno}
     [Teardown]    Close Browser
 
 线上报告
@@ -65,10 +68,7 @@ Resource          ../../公共模块.txt
     点击估价作业
     Select Frame    id=ProjectAllot_ReportAccept
     等待列表加载完成    1
-    Comment    ${status}    Run Keyword And Return Status    Page Should Contain Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view1']/div[2]//tbody/tr[1]/td/div/a[text()='领取']    不存在领取按钮
-    Comment    Run Keyword If    ${status}==True    操作    1    领取
-    Comment    点击进行中
-    Comment    等待列表加载完成    2
+    Click Element    //span[text()='高级查询']/..
     Select From List By Label    //select[@id='OuterStatus']    已完成
     普通查询
     Wait Until Page Contains    内业进行中    30    进行中页面在选择已完成后点击查询30s没有加载出数据
@@ -77,7 +77,7 @@ Resource          ../../公共模块.txt
     Comment    ${pno}    获取列表中各列的值    2    2
     生成线上报告
     点击提交
-    提交审核    ${pno}    一审
+    提交审核    ${pno}    三审
     log    线上报告提交审核成功
     #验证重新提交审核
     Unselect Frame
@@ -86,12 +86,9 @@ Resource          ../../公共模块.txt
     等待列表加载完成    1
     点击已完成
     等待列表加载完成    2
-    Input Text    //input[@id='ProjectNo']    ${pno}
+    Input Text    //input[@id='filter']    ${pno}
     普通查询
     Wait Until Page Contains    显示1到1,共1记录    10
-    Comment    重新提交审核操作
-    Comment    验证审核列表    ${pno}
-    Comment    log    线上报告重新提交审核成功
 
 查看
     Set Selenium Speed    0.3
@@ -217,18 +214,19 @@ Resource          ../../公共模块.txt
     点击估价作业
     Select Frame    id=ProjectAllot_ReportAccept
     等待列表加载完成    1
+    Click Element    //span[text()='高级查询']/..
     ${流水号}    随机获取列表中各列的值    1    2
-    有效文本查询模板    1    //input[@id='ProjectNo']    ${流水号}    2
+    有效文本查询模板    1    //input[@id='filter']    ${流水号}    2
     ${报告编号}    随机获取列表中各列的值    1    3
-    有效文本查询模板    1    //input[@id='ReportNo']    ${报告编号}    3
-    有效文本查询模板    1    //input[@id='OldProjectNo']    560774525450    4    #旧流水号
-    有效文本查询模板    1    //input[@id='OldReportNo']    201601101003251    5    #旧报告编号
+    有效文本查询模板    1    //input[@id='filter']    ${报告编号}    3
+    有效文本查询模板    1    //input[@id='OldProjectNo']    520999977127    4    #旧流水号
+    有效文本查询模板    1    //input[@id='OldReportNo']    201601101005813    5    #旧报告编号
     ${项目地址}    随机获取列表中各列的值    1    6
-    有效文本查询模板    1    //input[@id='Address']    ${项目地址}    6
+    有效文本查询模板    1    //input[@id='filter']    ${项目地址}    6
     ${小区地址}    随机获取列表中各列的值    1    7
-    有效文本查询模板    1    //input[@id='AreaName']    ${小区地址}    7
-    有效下拉查询模板    1    //select[@id='PriorityLevel']    紧急    10
-    有效下拉查询模板    1    //select[@id='OuterStatus']    已完成    12
+    有效文本查询模板    1    //input[@id='filter']    ${小区地址}    7
+    有效下拉查询模板    1    //select[@id='PriorityLevel']    紧急    11
+    有效下拉查询模板    1    //select[@id='OuterStatus']    已完成    13
     [Teardown]    Close Browser
 
 无效查询
@@ -238,11 +236,12 @@ Resource          ../../公共模块.txt
     点击估价作业
     Select Frame    id=ProjectAllot_ReportAccept
     等待列表加载完成    1
-    无效文本查询模板    1    //input[@id='ProjectNo']    00000000
-    无效文本查询模板    1    //input[@id='ReportNo']    00000000
+    Click Element    //span[text()='高级查询']/..
+    无效文本查询模板    1    //input[@id='filter']    00000000
+    无效文本查询模板    1    //input[@id='filter']    00000000
+    无效文本查询模板    1    //input[@id='filter']    00000000
     无效文本查询模板    1    //input[@id='OldProjectNo']    00000000
-    无效文本查询模板    1    //input[@id='Address']    00000000
-    无效文本查询模板    1    //input[@id='AreaName']    00000000
+    无效文本查询模板    1    //input[@id='OldReportNo']    00000000
 
 验证已完成列表
     Set Selenium Speed    0.3

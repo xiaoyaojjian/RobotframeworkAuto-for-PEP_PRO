@@ -2,13 +2,13 @@
 Library           Selenium2Library
 Library           Collections
 Library           re
-Library           requests
 Resource          未领取.txt
 Resource          进行中.txt
 Resource          项目审核.txt
 Resource          外业分配任务.txt
 Resource          查询.txt
 Resource          ../../公共模块.txt
+Library           ../../OnlineReport.py
 
 *** Keywords ***
 点击查询
@@ -27,8 +27,8 @@ Resource          ../../公共模块.txt
 
 生成线上报告
     ${seriNo}    ${reportId}    获取流水号和报告号    1
-    Create Session    ${USER_NAME}    http://reporttest2.yunfangdata.com:81/
-    Write Report    ${seriNo}    ${reportId}
+    Init Info    ${seriNo}    ${reportId}    http://reporttest2.yunfangdata.com:81/WebService/PeacockReportWS.asmx?WSDL    ${USER_NAME}    ${EXECDIR}/xmlFile    /usr/java/jdk1.6.0_45
+    Create Report    create_report.xml
 
 点击保存
     ${status}    Run Keyword And Return Status    Click Element    //span[text()='保存']/..

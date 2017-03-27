@@ -39,6 +39,7 @@ Resource          审核验证.txt
     select frame    id=audit_report
 
 添加错误记录
+    Wait Until Page Contains Element    xpath=//a[@id='']    10s
     click Element    xpath=//span[text()="添加错误记录"]/ancestor::a
 
 操作成功提示语
@@ -51,10 +52,11 @@ Resource          审核验证.txt
     Set Selenium Speed    0.5s
 
 项目审核选择审核人
-    Select From List By Label    id=userId    李楠
+    [Arguments]    ${审核人员}
+    Select From List By Label    id=ReceiverId    ${审核人员}
 
 点击查看详细
-    Click Element    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[1]
+    Click Element    //form[@id="form1"]//div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[1]
 
 勘察状态
     Select From List By Label    id=OuterStatus    已完成
@@ -109,10 +111,11 @@ Resource          审核验证.txt
     展开按钮
 
 点击审核报告按钮
-    Click Element    //div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[text()='审核报告']
+    Click Element    xpath=.//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="CurrentName"]/div/a[text()='审核报告']
 
 展开按钮
-    Click Element    xpath=//div[@class="panel-tool"]/a
+    Wait Until Page Contains Element    xpath=//form[@id="form1"]/div/div[5]//div/div[@class="panel-header"]/div[2]    50s
+    Click Element    xpath=//form[@id="form1"]/div/div[5]//div[@class="panel-tool"]
 
 添加错误记录（其他）
     Click Element    id=//span[text()='上传文件']

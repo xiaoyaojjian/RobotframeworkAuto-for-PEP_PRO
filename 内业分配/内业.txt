@@ -14,13 +14,8 @@ Resource          内业业务层.txt
     [Setup]    登录
     打开功能模块    我的项目    内业分配
     Select Frame    id=ProjectAllot_ReportAssign
-    Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    562623135314
     等待列表创建完毕
-    Comment    单个分配按钮
-    Comment    分配按钮
     单个分配
-    Comment    点击查询按钮
-    Comment    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[1]
     等待弹出窗口出现
     内业分配用户
     审核点击提交
@@ -30,6 +25,7 @@ Resource          内业业务层.txt
     Select Frame    id=ProjectAllot_ReportAssign
     切换到已分配子模块
     Comment    判断是否分配成功
+    Comment    判断是否分配成功
 
 多条任务分配
     [Setup]    登录
@@ -38,7 +34,7 @@ Resource          内业业务层.txt
     等待列表创建完毕
     点击查询按钮
     询价获取页面数据总量
-    选择多条数据    4    8
+    选择多条数据    4    6
     分配按钮
     等待弹出窗口出现
     内业分配用户
@@ -49,36 +45,16 @@ Resource          内业业务层.txt
     Select Frame    id=ProjectAllot_ReportAssign
     切换到已分配子模块
 
-挂起
-    [Setup]    登录
-    打开功能模块    我的项目    内业分配
-    Select Frame    id=ProjectAllot_ReportAssign
-    等待列表创建完毕
-    Comment    判断是否有挂起
-    Comment    ${流水号}    内业查询流水号
-    Comment    点击查询按钮
-    Comment    等待列表创建完毕
-    ${总数量}    询价获取页面数据总量
-    挂起校验
-    Comment    点击查询按钮
-    Comment    等待列表创建完毕
-    Comment    点击挂起按钮
-    挂起原因
-    内业点击保存
-    等待加载完毕
-    等待提示框出现
-    点击提示框中的确定按钮
-
 内业重新分配
     [Setup]    登录
     打开功能模块    我的项目    内业分配
     Select Frame    id=ProjectAllot_ReportAssign
     等待列表创建完毕
-    ${流水号}    ${报告编号}    内业查询流水号
+    ${流水号}    ${报告编号}    内业查询流水号    filter
     点击查询按钮
-    等待加载完毕
+    等待列表创建完毕
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[1]
-    等待加载完毕
+    等待列表创建完毕
     等待弹出窗口出现
     内业分配用户
     审核点击提交
@@ -90,31 +66,45 @@ Resource          内业业务层.txt
     判断是否分配成功    ${流水号}
     等待列表创建完毕
     内业重新分配
-    等待加载完毕
+    等待列表创建完毕
     等待弹出窗口出现
     内业分配用户
     审核点击提交
-    等待加载完毕
+    等待列表创建完毕
     等待提示框出现
     点击提示框中的确定按钮
     Unselect Frame
     Select Frame    id=ProjectAllot_ReportAssign
     切换到已分配子模块
     判断是否分配成功    ${流水号}
+    Comment    判断是否分配成功    ${流水号}
+
+挂起
+    [Setup]    登录
+    打开功能模块    我的项目    内业分配
+    Select Frame    id=ProjectAllot_ReportAssign
+    等待列表创建完毕
+    ${总数量}    询价获取页面数据总量
+    ${获取查勘任务流水号}    挂起校验
+    内业挂起原因
+    内业点击保存
+    等待列表创建完毕
+    等待提示框出现
+    点击提示框中的确定按钮
+    Input Text    id=filter    ${获取查勘任务流水号}
+    点击查询按钮
+    等待列表创建完毕    挂起的查询的响应时间
+    ${a}    Get Text    xpath=//td[@field="Fenpei"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[1]
+    Run Keyword If    '${a}'=='解挂'    log    pass
+    ...    ELSE    Fail
 
 解挂
     [Setup]    登录
     打开功能模块    我的项目    内业分配
     Select Frame    id=ProjectAllot_ReportAssign
     等待列表创建完毕
-    Comment    判断是否有挂起
-    ${流水号}    ${报告编号}    内业查询流水号
-    点击查询按钮
+    ${流水号}    ${报告编号}    内业查询流水号    filter
+    Click Element    xpath=.//span[text()="查询"]/ancestor::a
     判断是挂起还是解挂
-    Comment    挂起
-    Comment    挂起原因
-    Comment    内业点击保存
-    Comment    等待提示框出现
-    Comment    点击提示框中的确定按钮
-    等待加载完毕
+    等待列表创建完毕
     ${流水号}    内业解挂

@@ -11,6 +11,8 @@ Resource          外业分配业务层.txt
     Select Frame    id=ProjectAllot_OutsideAssign
     Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    473345151004
     查询流水号
+    Click Element    xpath=//span[text()='查询']
+    等待列表创建完毕
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     Comment    等待列表创建完毕
     Comment    单个分配按钮
@@ -53,9 +55,12 @@ Resource          外业分配业务层.txt
     Comment    单个分配按钮
     Comment    分配按钮
     查询流水号
+    Click Element    xpath=//span[text()='查询']
+    等待列表创建完毕
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     等待弹出窗口出现
     选择外采用户
+    选择外采分配pad端
     确定按钮
     等待提示框出现
     点击提示框中的确定按钮
@@ -79,6 +84,8 @@ Resource          外业分配业务层.txt
     Comment    单个分配按钮
     Comment    分配按钮
     查询流水号
+    Click Element    xpath=//span[text()='查询']
+    等待列表创建完毕
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     等待弹出窗口出现
     选择外采用户
@@ -110,6 +117,10 @@ Resource          外业分配业务层.txt
     点击查询按钮
     询价获取页面数据总量
     查询流水号
+    Click Element    xpath=//span[text()='查询']
+    等待列表创建完毕
+    Click Element    xpath=//span[text()='查询']
+    等待列表创建完毕
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     Comment    Click Element    xpath=//td[@field="OuterTaskId"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[3]/td[@field="cb"]/div/input
     Comment    等待列表创建完毕
@@ -150,4 +161,5 @@ Resource          外业分配业务层.txt
     Unselect Frame
     Select Frame    id=ProjectAllot_OutsideAssign
     切换到已分配子模块
+    等待列表创建完毕
     [Teardown]    Close Browser

@@ -1,0 +1,32 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SOAP-ENV:Body>
+    <tns:WSMethod xmlns:tns="http://tempuri.org/">
+      <tns:inputDTOXML><![CDATA[
+      <WSInputDTO>
+    <Command>
+        <CommandName>GenerateReport</CommandName>
+        <IsAsynchronous>false</IsAsynchronous>
+    </Command>
+    <Paging>
+        <IsPaging>false</IsPaging>
+        <PageIndex>1</PageIndex>
+        <Pages>0</Pages>
+        <PageSize>10</PageSize>
+        <RecordCount>0</RecordCount>
+    </Paging>
+    <Parameter>
+        <File />
+        <Params>
+            <pid>2783</pid>
+            <rid>%s</rid>
+        </Params>
+    </Parameter>
+    <Security>
+        <Content>b0lN</Content>
+        <IsAuthenticated>false</IsAuthenticated>
+    </Security>
+</WSInputDTO>
+      ]]></tns:inputDTOXML>
+    </tns:WSMethod>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

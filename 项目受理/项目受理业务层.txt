@@ -10,7 +10,10 @@ Resource          ../询价/组件层/住宅信息.txt
     打开功能模块    询价立项管理    项目受理
     Select Frame    id=InquiryAndProject_ProjectAccept
     点击立项按钮进入立项界面
+    ${所属部门}    Get Value    xpath=.//*[@id='Department']
+    ${所属部门}    Get Text    xpath=.//*[@id='Department']/option[@value='${所属部门}']
     进行提取信息操作    ${pep.get_value(u'流水号')}
+    Set Pep Value    ${pep}    所属部门    ${所属部门}
     验证立项界面的值是否正常    ${pep}
     ${pep_new}    Create Pep Object
     将立项界面的信息写入pep对象    ${pep_new}
@@ -87,6 +90,7 @@ Resource          ../询价/组件层/住宅信息.txt
     切换到已立项子模块
     输入已立项查询条件    ${流水号}
     点击查询按钮
+    等待列表创建完毕    已立项查询
     点击列表中的编辑按钮
     Unselect Frame
     Select Frame    xpath=//iframe[contains(@id,"create_project_")]
@@ -110,7 +114,7 @@ Resource          ../询价/组件层/住宅信息.txt
     ${查询_流水号}    Set Variable If    '${pep.get_value(u'旧流水号')}'!=''    ${EMPTY}    ${pep.get_value(u'流水号')}
     输入已立项查询条件    ${查询_流水号}    ${pep.get_value(u'报告号')}
     点击查询按钮
-    等待加载完毕
+    #等待加载完毕
     等待列表创建完毕
     ${流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]/td[@field="ProjectNo"]/div
     Run Keyword If    '${pep.get_value(u'旧流水号')}'!=''    Should Not Be Equal    ${流水号}    ${pep.get_value(u'旧流水号')}
@@ -216,6 +220,7 @@ Resource          ../询价/组件层/住宅信息.txt
     切换到暂存项目子模块
     输入暂存项目查询条件    ${pep.get_value(u'流水号')}
     点击查询按钮
+    等待列表创建完毕
     验证暂存项目查询数据    ${pep.get_value(u'流水号')}    ${pep.get_value(u'项目地址')}    ${pep.get_value(u'小区名')}    ${pep.get_value(u'项目分类')}    ${pep.get_value(u'物业类型')}    ${pep.get_value(u'估价目的')}
     ...    ${pep.get_value(u'报告类型')}    ${pep.get_value(u'业务来源')}    ${pep.get_value(u'客户姓名')}    ${pep.get_value(u'估价委托方')}
     [Return]    ${pep}
@@ -232,8 +237,10 @@ Resource          ../询价/组件层/住宅信息.txt
     ...    ${是否已终止}    ${业务类型}
     点击查询按钮
     等待列表创建完毕    线上业务查询
-    验证线上业务查询数据    交易编号=${交易编号}    是否受理=${是否已受理}    项目来源=${项目来源}    是否终止=${是否已终止}    业务类型=${业务类型}    小区名=${小区名称}
-    ...    小区地址=${物业地址}    流水号=${项目流水号}
+    ${模糊查询关键字}    Set Variable If    "${交易编号}"!="None"    ${交易编号}    "${项目流水号}"!="None"    ${项目流水号}    "${小区名称}"!="None"
+    ...    ${小区名称}    "${物业地址}"!="None"    ${物业地址}    ${EMPTY}
+    Run Keyword If    "${模糊查询关键字}"!="None"    验证模糊查询后的列表数据    ${模糊查询关键字}
+    验证线上业务查询数据    是否受理=${是否已受理}    项目来源=${项目来源}    是否终止=${是否已终止}    业务类型=${业务类型}
     Comment    清空线上业务查询条件
     Unselect Frame
 
@@ -266,8 +273,10 @@ Resource          ../询价/组件层/住宅信息.txt
     ...    ${估价目的}    ${业务来源}    ${开始时间}    ${结束时间}
     点击查询按钮
     等待列表创建完毕    暂存项目查询
-    验证暂存项目查询数据    流水号=${流水号}    项目地址=${项目地址}    小区名称=${小区名称}    项目分类=${项目分类}    物业类型=${物业类型}    估价目的=${估价目的}
-    ...    业务来源=${业务来源}    估价委托方=${估价委托方}
+    ${模糊查询关键字}    Set Variable If    "${流水号}"!="None"    ${流水号}    "${项目地址}"!="None"    ${项目地址}    "${小区名称}"!="None"
+    ...    ${小区名称}    "${估价委托方}"!="None"    ${估价委托方}    ${EMPTY}
+    Run Keyword If    "${模糊查询关键字}"!="None"    验证模糊查询后的列表数据    ${模糊查询关键字}
+    验证暂存项目查询数据    项目分类=${项目分类}    物业类型=${物业类型}    估价目的=${估价目的}    业务来源=${业务来源}
     Comment    清空暂存项目查询条件
     Unselect Frame
 
@@ -304,8 +313,11 @@ Resource          ../询价/组件层/住宅信息.txt
     ...    ${客户姓名}    ${客户手机}    ${看房联系人电话}    ${资料是否齐全}    ${收费责任人}    ${外业是否完成}
     点击查询按钮
     等待列表创建完毕    已立项-查询
-    验证已立项查询数据    流水号=${流水号}    报告号=${报告编号}    项目地址=${项目地址}    小区名称=${小区名称}    报告类型=${报告类型}    物业类型=${物业类型}
-    ...    估价目的=${估价目的}    业务来源=${业务来源}    资料齐全=${资料是否齐全}    客户姓名=${客户姓名}    受理人=${受理人}    估价委托方=${估价委托方}
+    ${模糊查询关键字}    Set Variable If    "${流水号}"!="None"    ${流水号}    "${报告编号}"!="None"    ${报告编号}    "${项目地址}"!="None"
+    ...    ${项目地址}    "${小区名称}"!="None"    ${小区名称}    ${EMPTY}
+    Run Keyword If    "${模糊查询关键字}"!="None"    验证模糊查询后的列表数据    ${模糊查询关键字}
+    验证已立项查询数据    报告类型=${报告类型}    物业类型=${物业类型}    估价目的=${估价目的}    资料齐全=${资料是否齐全}    客户姓名=${客户姓名}    受理人=${受理人}
+    ...    估价委托方=${估价委托方}    业务来源=${业务来源}
     Comment    清空已立项查询条件
     Unselect Frame
 
@@ -365,7 +377,7 @@ Resource          ../询价/组件层/住宅信息.txt
     [Return]    ${pep}
 
 线上业务进行立项并分配操作
-    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托
+    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托    小区名称=链家
     Click Element    xpath=.//span[text()="受理"]/ancestor::a
     Unselect Frame
     Select Frame    id=create_project_

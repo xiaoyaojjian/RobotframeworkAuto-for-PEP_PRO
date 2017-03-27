@@ -16,13 +16,14 @@ Resource          ..//询价/元素层/元素层.txt
 
 挂起
     点击挂起按钮
-    挂起原因
+    内业挂起原因
     内业点击保存
     等待提示框出现
     点击提示框中的确定按钮
 
-挂起原因
-    Wait Until Page Contains Element    xpath=.//div[contains(@class,"panel window") and contains(@style,"display: block")]    80s
+内业挂起原因
+    Comment    Wait Until Element Contains    .//div[contains(@class,"panel window") and contains(@style,"display: block")]    10s
+    Wait Until Element Contains    id=winHang    挂起原因    30s
     Input Text    xpath=//textarea[not(@id)]    噜啦啦啦噜啦啦
 
 内业解挂
@@ -34,7 +35,7 @@ Resource          ..//询价/元素层/元素层.txt
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
 
 点击挂起按钮
-    Click Element    xpath=//form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
+    Click Element    xpath=//td[@field="Fenpei"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[2]
 
 内业批量领取
     [Arguments]    ${路径}    ${开始位置}    ${结束位置}
@@ -75,6 +76,400 @@ Resource          ..//询价/元素层/元素层.txt
     ${获取查勘任务操作状态}    Get Text    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="Fenpei"]/div/a[1]
     ${获取查勘任务流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="ProjectNo"]/div
     ${项目状态}    Get Text    xpath=//td[@field="ReportProperty"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="ReportProperty"]/div
+    等待列表创建完毕    获取字段值
     Run Keyword If    '${获取查勘任务操作状态}'=='任务分配' and '${项目状态}'=='正常'    Run Keywords    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="TID"]/div/input
     ...    AND    Click Element    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="Fenpei"]/div/a[1]
-    Comment    Exit For Loop If    '${获取查勘任务操作状态}'=='任务分配'
+
+正确查询
+    打开功能模块    我的项目    内业分配
+    Select Frame    id=ProjectAllot_ReportAssign
+    等待列表创建完毕
+    点击高级查询按钮
+    随机选择某条数据
+
+点击高级查询按钮
+    Click Element    xpath=.//span[text()='高级查询']
+
+随机选择某条数据
+    输入正确的流水号    1
+    输入正确的报告编号    1
+    输入正确的项目地址    1    ResidentialAreaAddress
+    输入正确的小区名称    1    ResidentialAreaName
+    内业紧急程度查询    1
+    未分配内业物业类型查询
+
+输入值
+    [Arguments]    ${pno}
+    Input Text    id=filter    ${pno}
+
+清空输入框
+    Clear Element Text    id=filter
+
+全局数量变量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[1]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Set Global Variable    ${count}
+
+输入正确的流水号
+    [Arguments]    ${q}
+    全局数量变量
+    Comment    Comment    Run Keyword If    '${count}'>1 or '${count}'==2    证明有数据存在
+    ...    ELSE    Fail
+    Comment    判断是否有流水号    ${q}
+    Run Keyword And Return If    '${count}'>1 or '${count}'==2    判断是否有流水号    ${q}
+
+判断是否有流水号
+    [Arguments]    ${q}
+    ${i}    Evaluate    random.randint(1,${count})    random
+    ${PNO}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${q}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]/div
+    输入值    ${PNO}
+    点击查询按钮
+    获取页面总数量
+    Should Be Equal    ${PNO}    ${PNO}    相等流水号
+    清空输入框
+    点击查询按钮
+    获取页面总数量
+
+输入正确的报告编号
+    [Arguments]    ${u}
+    全局数量变量
+    Comment    Run Keyword If    '${count}'>2 or '${count}'==2    判断是否有报告号
+    ...    ELSE    Fail
+    Run Keyword And Return If    '${count}'>1 or '${count}'==2    判断是否有报告号    ${u}
+
+判断是否有报告号
+    [Arguments]    ${u}
+    ${i}    Evaluate    random.randint(1,${count})    random
+    等待列表创建完毕
+    ${RNO}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${u}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ReportNo"]/div
+    输入值    ${RNO}
+    点击查询按钮
+    获取页面总数量
+    Should Be Equal    ${RNO}    ${RNO}    相等报告编号
+    清空输入框
+    点击查询按钮
+    获取页面总数量
+
+输入正确的项目地址
+    [Arguments]    ${t}    ${字段值}
+    全局数量变量
+    Comment    Run Keyword If    '${count}'>2 or '${count}'==2    判断是否有项目地址
+    ...    ELSE    Fail
+    Run Keyword And Return If    '${count}'>1 or '${count}'==2    判断是否有项目地址    ${t}    ${字段值}
+
+判断是否有项目地址
+    [Arguments]    ${t}    ${字段值}
+    ${i}    Evaluate    random.randint(1,${count})    random
+    等待列表创建完毕
+    ${ResidentialAreaAddress}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${t}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="${字段值}"]/div
+    输入值    ${ResidentialAreaAddress}
+    点击查询按钮
+    获取页面总数量
+    Should Be Equal    ${ResidentialAreaAddress}    ${ResidentialAreaAddress}    相等项目地址
+    清空输入框
+    点击查询按钮
+    获取页面总数量
+
+输入正确的小区名称
+    [Arguments]    ${v}    ${小区名称}
+    全局数量变量
+    Comment    Run Keyword If    '${count}'>1 or '${count}'==2    判断是否有小区名称
+    ...    ELSE    Fail
+    Run Keyword And Return If    '${count}'>1 or '${count}'==2    判断是否有小区名称    ${v}    ${小区名称}
+
+判断是否有小区名称
+    [Arguments]    ${v}    ${小区名称}
+    ${i}    Evaluate    random.randint(1,${count})    random
+    等待列表创建完毕
+    ${ResidentialAreaName}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${v}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="${小区名称}"]/div
+    输入值    ${ResidentialAreaName}
+    点击查询按钮
+    获取页面总数量
+    Should Be Equal    ${ResidentialAreaName}    ${ResidentialAreaName}    相等小区名称
+    清空输入框
+    点击查询按钮
+    获取页面总数量
+
+获取页面总数量
+    ${列表总共数据数}    Get Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//div[@class='pagination-info']
+    ${显示第}    Findall    显示(.*)到    ${列表总共数据数}
+    ${到第}    Findall    到(.*),共    ${列表总共数据数}
+    ${总共多少条}    Findall    共(.*)记录    ${列表总共数据数}
+    log    ${总共多少条}
+    [Return]    ${总共多少条}
+
+已分配紧急程度查询
+    普通查询    2    普通
+    紧急查询    2    紧急
+    加急查询    2    加急
+    选择全部    2
+
+内业紧急程度查询
+    [Arguments]    ${b}
+    普通查询    ${b}    普通
+    紧急查询    ${b}    紧急
+    加急查询    ${b}    加急
+    选择全部    ${b}
+
+普通查询
+    [Arguments]    ${b}    ${类型}
+    Select From List By Label    id=PriorityLevel    ${类型}
+    点击查询按钮
+    等待列表创建完毕
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${b}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Comment    Run Keyword If    ${count}>1    Run Keyword And Return If    程度类型    ${count}    ${类型}
+    Run Keyword And Return If    ${count}>1    程度类型    ${count}    ${类型}    ${b}
+
+紧急查询
+    [Arguments]    ${b}    ${类型}
+    Select From List By Label    id=PriorityLevel    ${类型}
+    点击查询按钮
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${b}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Comment    Run Keyword If    ${count}>1    Run Keyword And Return If    程度类型    ${count}    ${类型}
+    ...    ${b}
+    Run Keyword And Return If    ${count}>1    程度类型    ${count}    ${类型}    ${b}
+
+加急查询
+    [Arguments]    ${b}    ${类型}
+    Select From List By Label    id=PriorityLevel    ${类型}
+    点击查询按钮
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${b}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Comment    Run Keyword If    ${count}>1    Run Keyword And Return If    程度类型    ${count}    ${类型}
+    ...    ${b}
+    Run Keyword And Return If    ${count}>1    程度类型    ${count}    ${类型}    ${b}
+
+程度类型
+    [Arguments]    ${count}    ${类型}    ${b}
+    : FOR    ${n}    IN RANGE    ${count}
+    \    ${a}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${b}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectNo"]/div
+    \    ${bb}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${b}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="PriorityLevel"]/div
+    \    Run Keyword If    ${n}>${count}    Exit For Loop
+    Run Keyword If    '${bb}'=='${类型}'    log    pass
+    ...    ELSE    Fail
+
+选择全部
+    [Arguments]    ${n}
+    Select From List By Label    id=PriorityLevel    ${EMPTY}
+    点击查询按钮
+    等待列表创建完毕
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${n}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    : FOR    ${m}    IN RANGE    ${count}
+    \    ${a}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${n}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${m+1}]/td[@field="ProjectNo"]/div
+    \    ${bb}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${n}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${m+1}]/td[@field="PriorityLevel"]/div
+    \    Run Keyword If    ${m}>${count}    Exit For Loop
+
+未分配内业物业类型查询
+    成套住宅查询    1    成套住宅
+    成套商业查询    1    成套商业
+    成套办公查询    1    成套办公
+
+已分配物业类型查询
+    成套住宅查询    2    成套住宅
+    成套商业查询    2    成套商业
+    成套办公查询    2    成套办公
+
+成套住宅查询
+    [Arguments]    ${ef}    ${物业类型}
+    Select From List By Label    id=ProjectType    成套住宅
+    点击查询按钮
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${ef}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Run Keyword And Return If    ${count}>1    物业类型    ${count}    ${物业类型}    ${ef}
+
+成套商业查询
+    [Arguments]    ${ef}    ${物业类型}
+    Select From List By Label    id=ProjectType    成套商业
+    点击查询按钮
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${ef}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Run Keyword And Return If    ${count}>1    物业类型    ${count}    ${物业类型}    ${ef}
+
+成套办公查询
+    [Arguments]    ${ef}    ${物业类型}
+    Select From List By Label    id=ProjectType    成套办公
+    点击查询按钮
+    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${ef}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Run Keyword And Return If    ${count}>1    物业类型    ${count}    ${物业类型}    ${ef}
+
+物业类型
+    [Arguments]    ${count}    ${物业类型}    ${ef}
+    : FOR    ${n}    IN RANGE    ${count}
+    \    ${a}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${ef}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectNo"]/div
+    \    ${b}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${ef}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectType"]/div
+    \    Run Keyword If    ${n}>${count}    Exit For Loop
+    Run Keyword If    '${b}'=='${物业类型}'    log    pass
+    ...    ELSE    log    Fail
+
+商业类型
+    [Arguments]    ${count}
+    : FOR    ${n}    IN RANGE    ${count}
+    \    ${a}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${ef}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectNo"]/div
+    \    ${b}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${ef}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectType"]/div
+    \    Run Keyword If    ${n}==10    Exit For Loop
+    Run Keyword If    '${b}'=='成套商业'    log    pass
+    ...    ELSE    Fail
+
+办公类型
+    [Arguments]    ${count}    ${ef}
+    : FOR    ${n}    IN RANGE    ${count}
+    \    ${a}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${ef}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectNo"]/div
+    \    ${b}    Get Text    xpath=.//div[@id="tabs"]/div[2]/div[${ef}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${n+1}]/td[@field="ProjectType"]/div
+    \    Run Keyword If    ${n}==10    Exit For Loop
+    Run Keyword If    '${b}'=='成套办公'    log    pass
+    ...    ELSE    Fail
+
+撰写人员查询
+    [Arguments]    ${h}
+    Input Text    id=ReportCreatorName    李楠
+    ${p}    Get Value    id=ReportCreatorName
+    log    ${p}
+    点击查询按钮
+    等待列表创建完毕    撰写人员查询响应时间
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${h}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Run Keyword If    ${count}>1    撰写人员验证    ${h}
+
+撰写人员验证
+    [Arguments]    ${h}
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${h}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    : FOR    ${i}    IN RANGE    ${count}
+    \    ${ReportCreatorName}    Get Text    //div[@id="tabs"]/div[2]/div[${h}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="ReportCreatorName"]/div
+    \    ${pno}    Get Text    //div[@id="tabs"]/div[2]/div[${h}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="ProjectNo"]/div
+    Run Keyword If    '${ReportCreatorName}'=='李楠'    log    pass
+    ...    ELSE    log    Fail
+
+查勘人员
+    [Arguments]    ${h}
+    Input Text    id=TaskOwner    李楠
+    ${p}    Get Value    id=TaskOwner
+    log    ${p}
+    点击查询按钮
+    等待列表创建完毕    查勘人员查询响应时间
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${h}]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Run Keyword If    ${count}>1    查勘人员验证    ${h}
+
+查勘人员验证
+    [Arguments]    ${h}
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[1]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    : FOR    ${i}    IN RANGE    ${count}
+    \    ${ReportCreatorName}    Get Text    //div[@id="tabs"]/div[2]/div[${h}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="TaskOwner"]/div
+    \    ${pno}    Get Text    //div[@id="tabs"]/div[2]/div[${h}]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="ProjectNo"]/div
+    Run Keyword If    '${ReportCreatorName}'=='李楠'    log    pass
+    ...    ELSE    log    Fail
+
+分配人员
+    Input Text    id=assignuser    李楠
+    ${p}    Get Value    id=assignuser
+    log    ${p}
+    点击查询按钮
+    等待列表创建完毕
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[1]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    : FOR    ${i}    IN RANGE    ${count}
+    \    ${ReportCreatorName}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="AssignUser"]/div
+    \    ${pno}    Get Text    //div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="ProjectNo"]/div
+    Run Keyword If    ${count}>1    log    pass
+    ...    ELSE IF    '${ReportCreatorName}'=='${p}'    log    pass
+    ...    ELSE IF    LOG    Fail
+
+输入不正确的字符串
+    [Arguments]    ${是否分配}    ${count}==1
+    输入值    飞洒发大厦发大厦发大厦
+    点击查询按钮
+    ${总共多少条}    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${是否分配} ]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Run Keyword If    ${count}==1    log    pass
+    ...    ELSE    Fail
+
+输入不正确的数字
+    [Arguments]    ${是否分配}    ${count}==1
+    ${str}    Evaluate    string.digits    string
+    ${len}    Evaluate    len('${str}')
+    ${num}    Set Variable    15
+    ${newstr}    Set Variable    ${EMPTY}
+    : FOR    ${index}    IN RANGE    ${num}
+    \    ${i}    Evaluate    random.randint(0,int(${len})-1)    random
+    \    ${temp}    Set Variable    ${str[int(${i})-1]}
+    \    ${newstr}    Set Variable    ${newstr}${temp}
+    log    ${newstr}
+    输入值    ${newstr}
+    点击查询按钮
+    ${总共多少条}    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${是否分配} ]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Run Keyword If    ${count}==1    log    pass
+    ...    ELSE    Fail
+
+输入无效的特殊字符
+    输入值    !@#$%^&*()_
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确内容（不含特殊字符和空格）
+
+输入无效的空格
+    输入值    ${SPACE}
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确内容（不含特殊字符和空格）
+
+输入超长字符
+    [Arguments]    ${是否分配}    ${count}==1
+    ${str}    Evaluate    string.ascii_letters    string
+    ${len}    Evaluate    len('${str}')
+    ${num}    Set Variable    30
+    ${newstr}    Set Variable    ${EMPTY}
+    : FOR    ${index}    IN RANGE    ${num}
+    \    ${i}    Evaluate    random.randint(0,int(${len})-1)    random
+    \    ${temp}    Set Variable    ${str[int(${i})-1]}
+    \    ${newstr}    Set Variable    ${newstr}${temp}
+    log    ${newstr}
+    输入值    ${newstr}
+    点击查询按钮
+    ${总共多少条}    获取页面总数量
+    ${count}    Get Matching Xpath Count    .//div[@id="tabs"]/div[2]/div[${是否分配} ]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Run Keyword If    ${count}==1    log    pass
+    ...    ELSE    Fail
+
+流水号模糊查询
+    [Arguments]    ${查询关键字}    ${选择框ID}
+    输入值    ${查询关键字}
+    点击查询按钮
+    等待列表创建完毕
+    获取页面总数量
+    验证模糊查询后的列表数据    ${查询关键字}    选择框ID=${选择框ID}
+    清空输入框
+
+报告号模糊查询
+    [Arguments]    ${查询关键字}    ${选择框ID}
+    输入值    ${查询关键字}
+    点击查询按钮
+    等待列表创建完毕
+    获取页面总数量
+    验证模糊查询后的列表数据    ${查询关键字}    选择框ID=${选择框ID}
+    清空输入框
+
+项目地址模糊查询
+    [Arguments]    ${查询关键字}    ${选择框ID}
+    输入值    ${查询关键字}
+    点击查询按钮
+    等待列表创建完毕
+    获取页面总数量
+    验证模糊查询后的列表数据    ${查询关键字}    选择框ID=${选择框ID}
+    清空输入框
+
+小区名称模糊查询
+    [Arguments]    ${查询关键字}    ${选择框ID}
+    输入值    ${查询关键字}
+    点击查询按钮
+    等待列表创建完毕
+    获取页面总数量
+    验证模糊查询后的列表数据    ${查询关键字}    选择框ID=${选择框ID}
+    清空输入框
+
+证明有数据存在
+    [Arguments]    ${q}
+    判断是否有流水号    2

@@ -13,7 +13,7 @@ Resource          ../内业分配/内业操作层.txt
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
     Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
-    内业查询流水号
+    内业查询流水号    ProjectNo
     审核调度点击查询
     等待列表创建完毕
     点击转发按钮
@@ -36,7 +36,7 @@ Resource          ../内业分配/内业操作层.txt
     打开功能模块    我的项目    审核调度
     Select Frame    id=ProjectAllot_AuditAssign
     Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    541007926186
-    内业查询流水号
+    内业查询流水号    ProjectNo
     审核调度点击查询
     等待列表创建完毕
     点击退回任务

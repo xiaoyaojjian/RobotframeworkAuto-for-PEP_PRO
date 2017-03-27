@@ -81,6 +81,7 @@ Resource          ../../询价/元素层/元素层.txt
 
 回收按钮
     [Arguments]    ${row}=1
+    等待加载完毕
     Click Element    xpath=//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td/div[1]/a[2]
 
 重新分配

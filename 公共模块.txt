@@ -18,8 +18,8 @@ ${PASSWORD}       123456    # 登录密码
     Input Text    xpath=//*[@id="password"]    ${PASSWORD}
     click Button    xpath=//button[contains(.,'登录')]
     Wait Until Page Contains    修改密码    30
-    ${用户名}    get text    xpath=.//i[contains(@class,'user-name')]/..
-    should Be Equal    ${用户名}    ${USER_NAME}
+    Comment    ${用户名}    get text    xpath=.//i[contains(@class,'user-name')]/..
+    Comment    should Be Equal    ${用户名}    ${USER_NAME}
 
 打开网页
     Open Browser    ${PEP_URL}    chrome
@@ -122,3 +122,94 @@ ${PASSWORD}       123456    # 登录密码
 获取提示框的提示信息
     ${msg}    Get Text    xpath=//div[contains(@class,"messager-body")]/div[2]
     [Return]    ${msg}
+
+设置查询时间
+    [Arguments]    ${input_date}    ${DropBtn_xpath}
+    [Documentation]    输入：
+    ...
+    ...    1、${input_date}：输入的日期参数，格式为2016-2-3 ，个位数不补0，不能写为2016-02-03
+    ...
+    ...    2、${dropBtn_xpath}:日期控件的下拉按钮xpath路径
+    Set Selenium Speed    0.5
+    ${prevAndAfter}    Set Variable    0    #0表示向前翻，1表示向后翻
+    ${base_path}    Set Variable    //div[@class='panel combo-p' and contains(@style,'display: block')]
+    ${dict}    Create Dictionary    1=一月    2=二月    3=三月    4=四月    5=五月
+    ...    6=六月    7=七月    8=八月    9=九月    10=十月    11=十一月
+    ...    12=十二月
+    ${prev_month}    Set Variable    ${base_path}//div[contains(@class,'calendar-prevmonth')]    #点击上一个月
+    ${prev_year}    Set Variable    ${base_path}//div[contains(@class,'calendar-prevyear')]
+    ${next_year}    Set Variable    ${base_path}//div[contains(@class,'calendar-nextyear')]
+    ${next_month}    Set Variable    ${base_path}//div[contains(@class,'calendar-nextmonth')]
+    ${input_date}    Set Variable    '${input_date}'.split('-')
+    ${start_abbr}    Evaluate    ','.join(${input_date})    #匹配要点击开始哪天的abbr属性
+    ${s_year}    Evaluate    ${input_date}[0]
+    ${s_month}    Evaluate    ${input_date}[1]
+    ${s_day}    Evaluate    ${input_date}[2]
+    ${startDayPath}    Set Variable    ${base_path}//td[text()=${s_day} and @abbr='${start_abbr}']    #需要点击的开始day
+    ${s_year}    Evaluate    int('${s_year}')
+    ${s_month}    Evaluate    int('${s_month}')
+    ${s_day}    Evaluate    int('${s_day}')
+    Click Element    ${DropBtn_xpath}    #点击开始时间下拉按钮
+    ${current_ym}    Set Variable    ${base_path}//div[contains(@class,'calendar-title')]/span    #当前年月
+    ${yearAndMonthStr}    Get Text    ${current_ym}
+    ${yearAndMonthArr}    Evaluate    u'${yearAndMonthStr}'.split(' ')
+    ${current_year}    Evaluate    ${yearAndMonthArr}[1]
+    ${current_month}    Evaluate    ${yearAndMonthArr}[0]
+    ${year_no}    Evaluate    int('${current_year}')    #当前年份
+    ${keys}    Get Dictionary Keys    ${dict}
+    ${values}    Get Dictionary Values    ${dict}
+    ${v_len}    Evaluate    len(${values})
+    : FOR    ${i}    IN RANGE    ${v_len}
+    \    ${temp}    Evaluate    ${values}[${i}]
+    \    ${month_no}    Run Keyword If    '${current_month}'=='${temp}'    Evaluate    ${keys}[${i}]
+    \    Exit For Loop If    '${current_month}'=='${temp}'
+    ${month_no}    Evaluate    int('${month_no}')    #当前月份
+    #确定要翻几年
+    ${yearTurnCount}    Evaluate    ${s_year}-${year_no}
+    ${prevAndAfter1}    Run Keyword If    ${yearTurnCount}>0    Set Variable    1
+    ...    ELSE    Set Variable    0
+    ${yearTurnCount}    Evaluate    abs(${yearTurnCount})
+    #确定要翻几月
+    ${monthTurnCount}    Evaluate    ${s_month}-${month_no}
+    ${prevAndAfter2}    Run Keyword If    ${monthTurnCount}>0    Set Variable    1
+    ...    ELSE    Set Variable    0
+    ${monthTurnCount}    Evaluate    abs(${monthTurnCount})
+    : FOR    ${i}    IN RANGE    ${yearTurnCount}
+    \    Run Keyword If    ${prevAndAfter1}==0    Click Element    ${prev_year}
+    \    ...    ELSE    Click Element    ${next_year}
+    : FOR    ${i}    IN RANGE    ${monthTurnCount}
+    \    Run Keyword If    ${prevAndAfter2}==0    Click Element    ${prev_month}
+    \    ...    ELSE    Click Element    ${next_month}
+    Click Element    ${startDayPath}
+
+清空选择的日期
+    [Arguments]    ${dropBtn_xpath}
+    [Documentation]    输入：
+    ...    1、${dropBtn_xpath}:日期控件的下拉按钮xpath路径
+    Click Element    ${dropBtn_xpath}
+    ${base_path}    Set Variable    //div[@class='panel combo-p' and contains(@style,'display: block')]
+    Click Element    ${base_path}//a[text()='清空']
+
+验证模糊查询后的列表数据
+    [Arguments]    ${查询关键字}    ${列表模式}=1    ${选择框ID}=cb
+    [Documentation]    该关键字适用于，模糊查询后对列表中的数据进行检查
+    ...
+    ...    1、由于模糊查询时，会对多个字段进行查询，所以查询出来的每条记录都需要包含查询关键字
+    ...    2、评E评含有多种列表，该关键字定义了以下的列表模式：
+    ...    0（没有标签页的列表，如：审核调度模块），1（含有标签页的列表，如外业分配模块）
+    ${panel_value}    Set Variable If    ${列表模式}==1    //div[@class="panel" and contains(@style,"display: block")]    ${EMPTY}
+    ${表格行数}    Get Matching Xpath Count    .${panel_value}//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="${选择框ID}"]/div
+    Should Not Be Equal    '${表格行数}'    '0'    表格中没有查询到数据
+    : FOR    ${row_num}    IN RANGE    ${表格行数}
+    \    验证xpath路径匹配的数量    .${panel_value}//*[@class="datagrid-btable"]//tr[@datagrid-row-index]/td[@field="${选择框ID}"]/ancestor::tr[@datagrid-row-index="${row_num}"]/descendant::div[contains(text(),"${查询关键字}")]/ancestor::tr    1    该记录没有找到“${查询关键字}”的关键字
+
+时间选择
+    [Arguments]    ${newtime}    ${startime}    ${endtime}
+    Assign Id To Element    xpath=.//*[@id='CreatedDate1']    new_time
+    Assign Id To Element    xpath=.//*[@id='CreatedDate1From']    new_time1
+    Assign Id To Element    xpath=.//*[@id='CreatedDate1To']    new_time2
+    Execute JavaScript    window.document.getElementById('new_time').value='${newtime}'
+    Execute JavaScript    window.document.getElementById('new_time1').value='${startime}'
+    Execute JavaScript    window.document.getElementById('new_time1').value='${startime}'
+    Execute JavaScript    window.document.getElementById('new_time2').value='${endtime}'
+    Execute JavaScript    window.document.getElementById('new_time').removeAttribute("readonly")

@@ -84,6 +84,7 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     Choose Ok On Next Confirmation
     Comment    sleep    5
     Set Selenium Speed    0.5s
+    [Return]    ${mes}
 
 浏览器弹出框取消操作
     Set Selenium Speed    1s
@@ -95,7 +96,7 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     Set Selenium Speed    0.5s
 
 查勘任务非线上业务
-    浏览器弹出框取消操作
+    浏览器弹出框确定操作
     等待加载完毕
     确定按钮
 
@@ -121,8 +122,9 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}    ${挂起状态}
     等待列表创建完毕
     ${总数据量}    询价获取页面数据总量
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
     Comment    输入流水号    ${流水号}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
     询价查询按钮
     等待列表创建完毕
     询价查询按钮
@@ -130,7 +132,8 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     Comment    领取
     查勘任务操作    ${操作方式}
     挂起操作    ${挂起状态}
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
@@ -153,7 +156,8 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}
     等待列表创建完毕
     ${总数据量}    询价获取页面数据总量
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
@@ -188,13 +192,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     log    ${路径}
     : FOR    ${row}    IN RANGE    ${领取数目}
     \    log    ${LIST[${row}]}
-    \    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${LIST[${row}]}    ${路径}
+    \    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${LIST[${row}]}    ${路径}
+    \    根据模糊条件模式进行查询    ${查询类型}    ${LIST[${row}]}
     \    询价查询按钮
     \    等待列表创建完毕
     \    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
     \    ${获取报告打印第一页列数}    获取询价列表列数据
-    \    log    ${输入参数}
-    \    批量领取查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${LIST[${row}]}    ${输入参数}    ${路径}
+    \    Comment    log    ${输入参数}
+    \    批量领取查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${LIST[${row}]}    ${路径}
     Comment    输入流水号    ${流水号}
     Comment    询价查询按钮
     Comment    等待列表创建完毕
@@ -203,7 +208,7 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     Comment    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
 
 批量领取查询结果校验
-    [Arguments]    ${行数}    ${查询类型}    ${输入参数}    ${查询条件名}    ${路径}
+    [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
     : FOR    ${row}    IN RANGE    1    ${行数}+1
     \    log    ${row}
     \    log    ${查询类型}
@@ -226,7 +231,7 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     \    ...    ELSE IF    '${查询类型}'=='撰写人员'    获取询价列表单元格    ${row}    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='查勘人员'    获取询价列表单元格    ${row}    ${路径}
     \    ...    ELSE IF    '${查询类型}'=='分配人员'    获取询价列表单元格    ${row}    ${路径}
-    \    Run Keyword If    '${字段值}'=='${输入参数}'    log    领取成功
+    \    Run Keyword If    '${字段值}'=='${查询条件名}'    log    领取成功
     \    ...    ELSE    Fail
 
 批量完成操作
@@ -255,7 +260,8 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${操作方式}
     等待列表创建完毕
     ${总数据量}    询价获取页面数据总量
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
@@ -268,8 +274,27 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     已完成按钮
     等待列表创建完毕
     ${总数据量}    询价获取页面数据总量
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
     领取到进行中数据校验    ${查询类型}    ${输入参数}    ${路径}
+
+随机勾选列表数据
+    [Arguments]    ${开始位置}    ${结束位置}
+    ${f}    Create List
+    log    ${f}
+    : FOR    ${row}    IN RANGE    ${开始位置}    ${结束位置}+1
+    \    log    ${row}
+    \    ${操作}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class='datagrid-btable']/tbody/tr[${row}]//*[@field='Update']
+    \    ${No}    Run Keyword If    '${操作}'!=''    选择勾选    ${操作}    ${row}
+    \    Run Keyword If    '${No}'!='None'    Return List    ${f}    ${No}
+    log    ${f}
+    [Return]    ${f}
+
+选择勾选
+    [Arguments]    ${操作}    ${row}
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[@class='datagrid-view2']/div[@class='datagrid-body']//*[@class='datagrid-btable']/tbody/tr[${row}]//*[@field='cb']
+    ${No}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[@class='datagrid-view2']/div[@class='datagrid-body']//*[@class='datagrid-btable']/tbody/tr[${row}]//*[@field='ProjectNo']
+    [Return]    ${No}

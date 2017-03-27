@@ -12,7 +12,7 @@ Resource          内业业务层.txt
 
 判断是否分配成功
     [Arguments]    ${流水号}
-    Input Text    id=ProjectNo    ${流水号}
+    Input Text    id=filter    ${流水号}
     等待列表创建完毕
     Click Element    xpath=.//span[text()="查询"]/ancestor::a
     等待列表创建完毕
@@ -30,16 +30,31 @@ Resource          内业业务层.txt
     ${EMPTY}
 
 判断是挂起还是解挂
-    ${挂起解挂}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="Fenpei"]/div/a[1]
+    等待列表创建完毕
+    ${挂起解挂}    Get Text    xpath=//td[@field="Fenpei"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="Fenpei"]/div/a[1]
     Run Keyword If    '${挂起解挂}'=='解挂'    log    pass
     ...    ELSE    挂起
 
 挂起校验
-    ${rand}    Evaluate    random.randint(1,9)    random
-    Comment    :FOR    ${i}    IN RANGE    ${总数量}
+    ${rand}    Evaluate    random.randint(1,10)    random
     log    ${rand}
-    ${获取查勘任务操作状态}    Get Text    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="Fenpei"]/div/a[1]
-    ${获取查勘任务流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="ProjectNo"]/div
-    Run Keyword If    '${获取查勘任务操作状态}'=='任务分配'    Run Keywords    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="TID"]/div/input
-    ...    AND    Click Element    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand+1}]/td[@field="Fenpei"]/div/a[2]
+    ${获取查勘任务操作状态}    Get Text    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="Fenpei"]/div/a[1]
+    ${获取查勘任务流水号}    Get Text    xpath=//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=filter    ${获取查勘任务流水号}
+    点击查询按钮
+    等待列表创建完毕
+    Comment    Run Keyword If    '${获取查勘任务操作状态}'=='任务分配'    Run Keywords    Click Element    xpath=//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="TID"]/div/input
+    ...    AND    Click Element    xpath=//td[@field="Fenpei"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="Fenpei"]/div/a[2]
     Comment    Exit For Loop If    '${获取查勘任务操作状态}'=='任务分配'
+    Run Keyword If    '${获取查勘任务操作状态}'=='任务分配'    点击挂起
+    ...    ELSE IF    '${获取查勘任务操作状态}'=='解挂'    点击解挂
+    [Return]    ${获取查勘任务流水号}
+
+点击解挂
+    Click Element    //td[@field="Fenpei"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="Fenpei"]/div/a[1]
+    等待提示框出现
+    点击提示框中的确定按钮
+    挂起
+
+点击挂起
+    Click Element    //td[@field="Fenpei"]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="Fenpei"]/div/a[2]

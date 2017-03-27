@@ -14,7 +14,7 @@ Resource          ../外业分配/外业分配业务层.txt
     ${流水号}    查询流水号
     Comment    项目查询
     等待列表创建完毕
-    等待加载完毕
+    Comment    等待加载完毕
     审核接收
     等待提示框出现
     click Element    xpath=/html/body/div[6]/div[2]/div[4]/a
@@ -43,7 +43,7 @@ Resource          ../外业分配/外业分配业务层.txt
     Comment    sleep    5
     Comment    Comment    退出窗口
     Comment    审核报告窗口
-    Comment    上传文件
+    Comment    审核报告上传文件
     Comment    click Element    xpath=//*[@id="barother"]/table/tbody/tr/td[2]/a
     Comment    sleep    5
     Comment    select frame    id=xubox_iframe2
@@ -84,17 +84,14 @@ Resource          ../外业分配/外业分配业务层.txt
     Comment    sleep    5
     Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
     ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
-    Input Text    id=ProjectNo    ${流水号}
+    Input Text    id=filter    ${流水号}
     点击查询按钮
     [Return]    ${流水号}
 
 随机选择一条查看详情
-    ${rand}    Evaluate    random.randint(1,4)    random
-    Comment    sleep    5
-    Wait Until Page Contains Element    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
-    ${流水号}    Get Text    //form[@id="form1"]//div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
-    Input Text    id=ProjectNo    ${流水号}
-    点击查询按钮
+    ${rand}    Evaluate    random.randint(1,10)    random
+    ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    Input Text    id=filter    ${流水号}
 
 估价作业随机选择流水号
     ${rand}    Evaluate    random.randint(1,4)    random
@@ -103,3 +100,267 @@ Resource          ../外业分配/外业分配业务层.txt
     ${勘察转态}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
     Input Text    id=ProjectNo    ${流水号}
     点击查询按钮
+
+审核
+    等待列表创建完毕    审核加载时间
+    ${count}    Get Matching Xpath Count    xpath=.//div[@id="tabs"]/div[2]/div[1]//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    Comment    log    ${count}
+    Comment    ${i}    Evaluate    random.randint(1, 1)    random
+    Comment    ${审核状态}    Get Text    //div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="CurrentState"]/div
+    Comment    ${流水号}    Get Text    //div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]/div
+    Comment    Set Global Variable    ${流水号}
+    输入值    550826439642
+    审核查询按钮
+    Comment    Run Keyword If    '${审核状态}'=='一审审核中'    Run Keyword    执行一审项目
+    ...    ELSE IF    '${审核状态}'=='二审审核中'    Run Keyword    执行二审项目
+    ...    ELSE IF    '${审核状态}'=='三审审核中'    Run Keyword    执行三审项目
+    ...    ELSE IF    '${审核状态}'=='一审未接收'    log    一审未接收不能进行下面的操作
+    ...    ELSE    log    Fail
+
+执行一审项目
+    等待列表创建完毕    打开项目审核中
+    点击审核报告按钮
+    Unselect Frame
+    Select Frame    id=audit_report
+    填写分数    65
+    项目审核选择审核人    李楠
+    展开按钮
+    添加错误记录
+    选择错误类型    低级错误
+    填写错误描述    文件错误
+    点击保存按钮
+    错误记录(其他)    盖章满200字.xlsx
+    附言
+    项目审核提交按钮
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    输入值    ${pno}
+    审核查询按钮
+    等待列表创建完毕    打开项目审核中
+    ${审核状态}    Get Text    //div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="CurrentState"]/div
+    Run Keyword If    '${审核状态}'=='二审审核中'    一审到二审的操作
+    ...    ELSE    Fail
+
+执行二审项目
+    等待列表创建完毕    打开项目审核中
+    点击审核报告按钮
+    Unselect Frame
+    Select Frame    id=audit_report
+    填写分数    45
+    项目审核选择审核人    李楠
+    展开按钮
+    添加错误记录
+    选择错误类型    一般性错误
+    填写错误描述    二审错误
+    点击保存按钮
+    错误记录(其他)    光大银行 - 副本.doc
+    附言
+    项目审核提交按钮
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    输入值    ${流水号}
+    ${审核状态}    Get Text    //div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="CurrentState"]/div
+    Run Keyword If    '${审核状态}'=='三审审核中'    二审到三审的操作
+    ...    ELSE    Fail
+
+执行三审项目
+    等待列表创建完毕    打开项目审核中
+    点击审核报告按钮
+    Unselect Frame
+    Select Frame    id=audit_report
+    填写分数    45
+    展开按钮
+    添加错误记录
+    选择错误类型    严重性错误
+    填写错误描述    三审错误
+    点击保存按钮
+    错误记录(其他)    小白鞋.jpg
+    附言
+    项目审核提交按钮
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    输入值    ${流水号}
+
+一审到二审的操作
+    点击审核报告按钮
+    Unselect Frame
+    Select Frame    id=audit_report
+    填写分数    80
+    项目审核选择审核人    李楠
+    展开按钮
+    添加错误记录
+    选择错误类型    一般性错误
+    填写错误描述    二审错误
+    点击保存按钮
+    错误记录(其他)    光大银行 - 副本.doc
+    附言
+    项目审核提交按钮
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    输入值    ${pno}
+    审核查询按钮
+    等待列表创建完毕    打开项目审核中
+    ${审核状态}    Get Text    //div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="CurrentState"]/div
+    Run Keyword If    '${审核状态}'=='三审审核中'    二审到三审的操作
+    ...    ELSE    Fail
+
+二审到三审的操作
+    点击审核报告按钮
+    Unselect Frame
+    Select Frame    id=audit_report
+    填写分数    57
+    展开按钮
+    添加错误记录
+    选择错误类型    低级错误
+    填写错误描述    文件错误
+    点击保存按钮
+    错误记录(其他)    小白鞋.jpg
+    附言
+    项目审核提交按钮
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    切换到已审核过子模块
+    输入值    ${pno}
+    审核查询按钮
+
+填写分数
+    [Arguments]    ${分数}
+    Input Text    id=TotalScore    ${分数}
+
+选择错误类型
+    [Arguments]    ${错误类型}
+    Input Text    xpath=//*[contains(@id,"datagrid-row")]/td[1]/div/table/tbody/tr/td/span/input[1]    ${错误类型}
+
+填写错误描述
+    [Arguments]    ${错误描述}
+    Input Text    xpath=//*[contains(@id,"datagrid-row")]/td[2]/div/table/tbody/tr/td/input    ${错误描述}
+
+点击保存按钮
+    Get Text    xpath=.//td[@field="TaskName"]/div/a[1]
+    log    Get Text
+    Click Element    xpath=.//td[@field="TaskName"]/div/a[text()="保存"]
+
+错误记录(其他)
+    [Arguments]    ${文件类型}
+    Wait Until Page Contains Element    xpath=//form[@id="form1"]/div/div[6]//div/div[@class="panel-header"]    10s
+    Click Element    xpath=.//form[@id="form1"]/div/div[6]//div[@class="panel-tool"]/a
+    审核报告上传文件    ${文件类型}
+
+审核报告上传文件
+    [Arguments]    ${文件类型}
+    Click Element    xpath=.//span[text()='上传文件']
+    等待弹出窗口出现
+    Choose File    id=upload    ${CURDIR}/${文件类型}
+    Click Element    id=BtnSave
+    sleep    5s
+    ${网页信息}    Confirm Action
+    Choose Ok On Next Confirmation
+    Unselect Frame
+
+附言
+    Select Frame    id=audit_report
+    Click Element    xpath=.//form[@id="form1"]/div/div[8]//div[@class="panel-tool"]
+    Input Text    xpath=.//*[@id='divfuyan']/span/textarea    请确认是否提交
+
+项目审核提交按钮
+    Click Element    id=btn_submit
+    ${网页信息}    Confirm Action
+    log    ${网页信息}
+    Choose Ok On Next Confirmation
+
+进行判断几审
+    [Arguments]    ${审核状态}
+    Run Keyword If    '${审核状态}'=='一审审核中'    执行一审项目
+    ...    ELSE IF    '${审核状态}'=='二审审核中'    执行二审项目
+    ...    ELSE IF    '${审核状态}'=='三审审核中'    执行三审项目
+
+项目估价作业
+    打开功能模块    我的项目    估价作业
+    等待列表创建完毕
+    Select Frame    id=ProjectAllot_ReportAccept
+    Click Element    xpath=//span[text()='高级查询']/..
+    Select From List By Label    //select[@id='OuterStatus']    已完成
+    公共.普通查询
+    Wait Until Page Contains    内业进行中    30    选择查勘状态点击查询后数据在30s内未加载出来
+    ${pno}    循环获取文本值    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div
+    Set Global Variable    ${pno}
+    点击线下报告
+    点击报告上传
+    Unselect Frame
+    Select Frame    id=offline_report
+    汇总数据新建或编辑
+    填写汇总数据    6    云房土地评估项目    为确定估价对象抵押贷款额度提供参考依据而评估房地产抵押价值    广东省    广州市    增城市
+    ...    天天家园    12    12    12    房地产评估项目    北京云房
+    ...    北京仁达    中国银行    一年    李文    ${USER_NAME}    李伟
+    ...    微微    直接估算    混合估算    50000    555555    234235
+    ...    44444    20160421    234234    23424    123334    12312
+    ...    费所得到的    程序徐翠翠是多少方法    234234    234324    是    水电费加快递费邓丽君手动阀的说法反反复复反复反复反复
+    ...    时间段发扣水电费就    手动阀放大顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶大地的    钢筋结构    90    12    13
+    ...    12/13    士大夫的    23423sdfsdsd234234    米兰    200    商用住宅
+    ...    精装    商品房    70    69    ${USER_NAME}    手动阀
+    ...    出让    100    234234sdsdf    dssd324    89    24234gsdsdg
+    ...    双方都大幅度发方法    李文    440892993423242341    A级    9527    经办单位
+    Click Element    id=BtnSubmit
+    等待提示框出现    #等待确定窗口弹出
+    点击提示框中的确定按钮
+    Comment    点击确定
+    切换选项卡    估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    进行中.点击提交
+    估价作业提交审核    ${pno}    一审
+    Unselect Frame
+    打开功能模块    我的项目    项目审核
+    等待列表创建完毕
+    select frame    id=ProjectAllot_Audit
+    输入值    ${pno}
+    审核查询按钮
+    等待列表创建完毕    查询项目审核
+    ${审核状态}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="CurrentState"]/div
+    Run Keyword If    '${审核状态}'=='一审核审核中'    执行一审项目
+    ...    ELSE    估价作业到项目审核退回
+
+估价作业提交审核
+    [Arguments]    ${pno}    ${审核阶段}
+    Select Frame    css=.xubox_iframe
+    Wait Until Page Contains    附言信息    20    提交审核窗口20s内未打开
+    Select From List By Label    id=nextTask    ${审核阶段}
+    Wait Until Page Contains    ${USER_NAME}    60    60s内审核人员未加载出来
+    Select From List By Label    id=ReceiverId    ${USER_NAME}
+    ${element_tip}    Get Webelement    id=Span_ReportType_Tip
+    ${status}    Set Variable    ${element_tip.is_displayed()}
+    Run Keyword If    ${status}==True    选择线下报告    ${pno}
+    ...    ELSE    获取提交结果    ${pno}
+
+选择线下报告
+    [Arguments]    ${pno}
+    Click Element    //input[@name='ReportType' and @value='线下报告']
+    获取提交结果    ${pno}
+
+估价作业到项目审核退回
+    等待列表创建完毕    打开项目审核中
+    点击审核报告按钮
+    Unselect Frame
+    Select Frame    id=audit_report
+    审核退回按钮
+    Unselect Frame
+    select frame    id=ProjectAllot_Audit
+    切换到已审核过子模块
+    输入值    ${pno}
+    审核查询按钮
+    等待列表创建完毕    打开项目已审核过
+    ${审核状态}    Get Text    //div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="CurrentState"]/div
+    Run Keyword If    '${审核状态}'=='内业进行中'    验证估价作业是否返回
+    ...    ELSE    Fail
+
+验证估价作业是否返回
+    Unselect Frame
+    打开功能模块    我的项目    估价作业
+    Select Frame    id=ProjectAllot_ReportAccept
+    Transaction Start    估价作业-进行中
+    等待列表创建完毕
+    输入值    ${pno}
+    Click Element    xpath=//span[text()='高级查询']/..
+    等待列表创建完毕    估价作业查询
+
+审核退回按钮
+    Click Element    id=btn_return

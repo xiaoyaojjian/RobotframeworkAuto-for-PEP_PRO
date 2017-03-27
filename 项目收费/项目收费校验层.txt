@@ -36,6 +36,6 @@ Resource          ../公共模块.txt
     Run Keyword If    '${付款方式}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="PaymentTerms"]/div    ${付款方式}
     Run Keyword If    '${单据编号}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="OrderNo"]/div    ${单据编号}
     Run Keyword If    '${缴费人}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="FeeMan"]/div    ${缴费人}
-    Run Keyword If    '${收费人}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="OperationName"]/div    ${收费人}
+    Run Keyword If    '${收费人}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="ComfirmEmpName"]/div    ${收费人}
     Run Keyword If    '${收费确认}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="IsComfirm"]/div    ${收费确认}
     Run Keyword If    '${备注}'!='None'    Run Keyword And Continue On Failure    Element Text Should Be    xpath=//div[@class="datagrid-body"]//tr[@datagrid-row-index="${row_num}"]/td[@field="Remark"]/div    ${备注}

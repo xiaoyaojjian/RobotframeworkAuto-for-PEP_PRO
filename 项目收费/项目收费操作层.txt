@@ -32,6 +32,14 @@ Resource          ../公共模块.txt
     等待列表创建完毕
     切换到${子模块名称}子模块
     等待列表创建完毕
-    ${流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]//td[@field="ProjectNo"]/div
+    ${page_count_msg}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[contains(@class,"datagrid-pager")]//td[8]/span    #获取列表总页数
+    ${page_count}    Findall    共(.*)页    ${page_count_msg}    #获取列表总页数
+    ${page}    Evaluate    random.randint(1,${page_count[0]})    modules=random    #获取一个随机页数
+    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[contains(@class,"datagrid-pager")]//input[@class="pagination-num"]    ${page}
+    Press Key    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[contains(@class,"datagrid-pager")]//input[@class="pagination-num"]    \\13
+    等待列表创建完毕
+    ${row_count}    Get Matching Xpath Count    .//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//td[@field="ProjectNo"]/..    #获取当前页的总行数
+    ${row}    Evaluate    random.randint(1,${row_count})    modules=random    #获取一个随机页数
+    ${流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@class="datagrid-btable"]//tr[@datagrid-row-index="${row}"]//td[@field="ProjectNo"]/div
     Unselect Frame
     [Return]    ${流水号}

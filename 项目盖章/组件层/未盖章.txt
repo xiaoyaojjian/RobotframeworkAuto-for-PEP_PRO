@@ -62,7 +62,7 @@ Library           Collections
 
 点击流程信息
     Click Element    //span[text()='流程信息']/..
-    ${跟进信息}    Get Text    //div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[@field='Description']/div
+    ${跟进信息}    Get Text    //div[@id='otherInfo']//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[@field='Description']/div
     [Return]    ${跟进信息}
 
 点击汇总信息

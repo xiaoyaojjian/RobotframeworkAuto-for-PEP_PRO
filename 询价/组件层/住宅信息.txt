@@ -253,7 +253,9 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
     询价窗口
     询价查询按钮
+    Transaction Start    询价列表数据查询
     等待列表创建完毕
+    Transaction End    询价列表数据查询
     ${pep_info}    获取询价列表行所有数据    ${pep_info}
     [Return]    ${pep_info}
 
@@ -281,8 +283,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 报盘案例校验
     报盘案例按钮
+    Transaction Start    报盘案例
     报盘案例不限按钮
     等待加载完毕
+    Transaction End    报盘案例
     案例校验
 
 案例校验
@@ -293,21 +297,27 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 成交案例校验
     成交案例按钮
+    Transaction Start    成交案例
     成交案例不限按钮
     等待加载完毕
+    Transaction End    成交案例
     成交案例案例独立校验
 
 报告案例校验
     报告案例按钮
+    Transaction Start    报告案例
     报告案例不限按钮
     等待加载完毕
+    Transaction End    报告案例
     报告案例独立校验
 
 旧系统报告记录校验
     旧报告系统记录
+    Transaction Start    旧报告系统
     select frame    id=frame_oldReport
     Wait Until Element Is Visible    xpath=//*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
     等待列表创建完毕
+    Transaction End    旧报告系统
     ${获取旧系统记录数据}    Get Text    //*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
     Run Keyword If    '${获取旧系统记录数据}'!=''    log    案例成功
     ...    ELSE    fail
@@ -322,8 +332,10 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
 
 旧系统询价记录校验
     旧系统询价记录
+    Transaction Start    旧系统询价
     select frame    id=frame_oldInquiry
     Wait Until Element Is Visible    xpath=//*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
+    Transaction End    旧系统询价
     ${获取旧系统记录数据}    get text    xpath=//*[@id="hidden-table-info_wrapper"]/table/tbody/tr[1]/td[1]
     Run Keyword If    '${获取旧系统记录数据}'!=''    log    案例成功
     ...    ELSE    fail
@@ -421,3 +433,84 @@ Resource          ../../报告打印装订/组件层/报告装订打印.txt
     ${字段值}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="${路径}"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field='${路径}']
     log    ${字段值}
     [Return]    ${字段值}
+
+询价时间选择
+
+根据模糊条件模式进行查询
+    [Arguments]    ${查询类型}    ${输入参数}
+    Comment    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    输入流水号    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    输入报告号    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    输入项目地址    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    输入小区名称    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    输入询价机构    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    输入询价人(客户名称)    ${输入参数}    ${路径}
+    log    ${查询类型}
+    Comment    ${输入参数}    Run Keyword If    '${查询类型}'=='流水号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='客户名称'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='客户手机'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='收款责任人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='预估单编号'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人估价人'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='评估人员'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构'    下拉选项框条件输入参数1    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='状态'    下拉选项框条件输入参数1    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构1'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='撰写人员'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='查勘人员'    条件输入参数    ${输入参数}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='分配人员'    条件输入参数    ${输入参数}    ${路径}
+    Input Text    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//*[@id='filter']    ${输入参数}
+    [Return]    ${输入参数}
+
+获取table每一行数据
+    [Arguments]    ${行数}    ${查询类型}    ${查询条件名}    ${路径}
+    Comment    : FOR    ${row}    IN RANGE    1    ${行数}+1
+    Comment    \    log    ${row}
+    Comment    \    log    ${查询类型}
+    Comment    \    ${字段值}    Run Keyword If    '${查询类型}'=='流水号'    获取询价列表单元格    ${row}
+    ...    ${路径}
+    ...    ELSE IF    '${查询类型}'=='报告号'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='小区名称'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='项目地址'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价机构'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='询价人(客户名称)'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='预估单编号'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='委托人'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='权利人'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='评估人员'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='状态'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='客户名称'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='客户手机'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='收款责任人'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='所属机构1'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='撰写人员'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='查勘人员'    获取询价列表单元格    ${row}    ${路径}
+    ...    ELSE IF    '${查询类型}'=='分配人员'    获取询价列表单元格    ${row}    ${路径}
+    Comment    \    Run Keyword If    '${查询条件名}'=='已立项'    Should Match Regexp    ${字段值}    (.*)是(.*)
+    ...    ELSE IF    '${查询条件名}'=='未立项'    Should Match Regexp    ${字段值}    (.*)否(.*)
+    ...    ELSE    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+    Comment    \    Comment    Should Match Regexp    ${字段值}    (.*)${查询条件名}(.*)
+    : FOR    ${row}    IN RANGE    1    ${行数}+1
+    \    log    ${row}
+    \    ${行数据}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[@class='datagrid-view2']/div[@class='datagrid-body']//*[@class='datagrid-btable']/tbody/tr[${row}]
+    \    log    ${行数据}
+    \    Comment    ${列表中是否存在相应值}    Return Value In List    ${查询条件名}    ${行数据}
+    \    Comment    log    ${列表中是否存在相应值}
+    \    ${a}    Return Value In String    ${查询条件名}    ${行数据}
+    \    log    ${a}
+    \    Run Keyword If    '${a}'=='True'    log    pass
+    \    ...    ELSE    log    fail
+
+获取table每一列数据
+    [Arguments]    ${行数}    ${查询条件名}    ${路径}
+    :FOR    ${row}    IN RANGE    1    ${行数}+1
+    \    log    ${row}
+    \    ${行数据}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//div[@class='datagrid-view2']/div[@class='datagrid-body']//*[@class='datagrid-btable']/tbody/tr[${row}]//*[@field='${路径}']
+    \    Run Keyword If    '${行数据}' == '${查询条件名}'    log    pass
+    \    ...    ELSE    log    fail

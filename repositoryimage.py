@@ -41,7 +41,7 @@ class repositoryimage:
         nwi = new_image[0].split('\\')[-1]
         print nwi
         url = Request_the_address + addr
-        mu = repositoryimage().create_new(url, Local_initial_address)
+        mu = repositoryimage().create_new(url, new_image)
         return mu
 
     def show_upload_result(self,Request_the_address,addr1,par,addr2):
@@ -79,7 +79,7 @@ class repositoryimage:
         alpha = watermark.split()[2]
         alpha = ImageEnhance.Brightness(alpha).enhance(0.50)
         watermark.putalpha(alpha)
-        a = local_store_address + u'测试图片' + str(i) + '.jpg'
+        a = local_store_address + 'ceshi' + str(i) + '.jpg'
         Image.composite(watermark, im, watermark).save(a, 'JPEG')
         return a
 

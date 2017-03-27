@@ -4,6 +4,8 @@ Resource          ../组件层/公共.txt
 Resource          ../组件层/未盖章.txt
 Resource          ../组件层/已盖章.txt
 Resource          ../流程层/流程.txt
+Library           Collections
+Library           GetTimestamp
 
 *** Test Cases ***
 主流程
@@ -44,4 +46,8 @@ Resource          ../流程层/流程.txt
 
 流程完成已盖章不显示回收
     Run Keyword And Continue On Failure    流程完成已盖章不显示回收
+    [Teardown]    Close Browser
+
+按盖章时间查询
+    按盖章时间查询
     [Teardown]    Close Browser

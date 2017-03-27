@@ -18,7 +18,9 @@ Library           ../../ReportRequests.py
     Run Keyword If    ${status}==False    循环获取列表中各列的值    ${page_index}    ${col_index}    ${content}    ${page_count}
     Clear Element Text    ${locator}
     点击查询    ${page_index}
+    Transaction Start    项目盖章${id}查询
     等待列表加载完成    ${page_index}
+    Transaction Start    项目盖章${id}查询
 
 有效下拉查询模板
     [Arguments]    ${page_index}    ${locator}    ${label_name}    ${col_index}

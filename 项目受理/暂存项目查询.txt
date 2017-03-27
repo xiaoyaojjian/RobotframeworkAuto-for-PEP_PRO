@@ -17,6 +17,7 @@ Resource          项目受理业务层.txt
     ...    结束时间
 
 查询条件错误提示
+    [Tags]    test
     打开功能模块    询价立项管理    项目受理
     Select Frame    id=InquiryAndProject_ProjectAccept
     等待列表创建完毕

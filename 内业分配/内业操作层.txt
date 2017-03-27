@@ -4,11 +4,12 @@ Resource          ../公共模块.txt
 
 *** Keywords ***
 内业查询流水号
+    [Arguments]    ${CMM}
     ${rand}    Evaluate    random.randint(1,10)    random
-    Sleep    6
-    ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
-    ${报告编号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ReportNo"]/div
-    Input Text    id=ProjectNo    ${流水号}
+    等待列表创建完毕
+    ${流水号}    Get Text    xpath=//form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
+    ${报告编号}    Get Text    xpath=//form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ReportNo"]/div
+    Input Text    id=${CMM}    ${流水号}
     [Return]    ${流水号}    ${报告编号}
 
 内业分配用户

@@ -3,7 +3,6 @@ Library           Selenium2Library
 Library           Collections
 Library           re
 Resource          公共.txt
-Library           ../../ReportRequests.py
 
 *** Keywords ***
 有效文本查询模板
@@ -13,12 +12,14 @@ Library           ../../ReportRequests.py
     ${element}    Get Webelement    ${locator}
     ${id}    Set Variable    ${element.get_attribute ('id')}
     普通查询
-    ${status}    Run Keyword And Continue On Failure    Run Keyword And Return Status    Wait Until Page Contains    显示1到1,共1记录    30
+    ${status}    Run Keyword And Continue On Failure    Run Keyword And Return Status    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div    20
     ${page_count}    get总页数    ${page_index}
-    Run Keyword If    ${status}==False    循环获取列表中各列的值    ${page_index}    ${col_index}    ${content}    ${page_count}
+    Run Keyword If    ${status}==True    循环获取列表中各列的值    ${page_index}    ${col_index}    ${content}    ${page_count}
     Clear Element Text    ${locator}
     普通查询
+    Transaction Start    估价作业${id}查询
     等待列表加载完成    ${page_index}
+    Transaction End    估价作业${id}查询
 
 有效下拉查询模板
     [Arguments]    ${page_index}    ${locator}    ${label_name}    ${col_index}
@@ -26,7 +27,7 @@ Library           ../../ReportRequests.py
     ${element}    Get Webelement    ${locator}
     ${id}    Set Variable    ${element.get_attribute ('id')}
     普通查询
-    Wait Until Page Contains    内业未接收    30    估价作业列表在30s内未加载出来
+    Wait Until Page Contains    内业进行中    30    估价作业列表在30s内未加载出来
     ${总页数}    get总页数    ${page_index}
     Run Keyword And Continue On Failure    循环获取列表中各列的值    ${page_index}    ${col_index}    ${label_name}    ${总页数}
     Select From List By Index    ${locator}    0

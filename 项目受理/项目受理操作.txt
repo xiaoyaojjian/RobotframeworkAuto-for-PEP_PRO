@@ -1,6 +1,6 @@
 *** Settings ***
 Test Setup        登录
-Test Teardown     关闭浏览器_TestTeardown
+Test Teardown     Close Browser
 Resource          项目受理业务层.txt
 
 *** Test Cases ***
@@ -64,8 +64,12 @@ Resource          项目受理业务层.txt
     Set Pep Value    ${pep_input}    收取方式    快递
     ${pep_input1}    Create Pep Object
     Set Pep Value    ${pep_input1}    小区名    立项并继续002
+    Set Pep Value    ${pep_input1}    看房联系人    李四
+    Set Pep Value    ${pep_input1}    联系人电话    13456744444
     ${pep_input2}    Create Pep Object
     Set Pep Value    ${pep_input2}    小区名    立项并继续003
+    Set Pep Value    ${pep_input1}    看房联系人    王五
+    Set Pep Value    ${pep_input1}    联系人电话    13456755555
     @{pep_object_list}    Create List    ${pep_input}    ${pep_input1}    ${pep_input2}
     立项并继续操作    @{pep_object_list}
 
@@ -171,7 +175,7 @@ Resource          项目受理业务层.txt
     Run Keyword And Continue On Failure    Should Be Equal    ${pep.get_value(u'快递信息')[0][u'公司']}    ${分支机构}
 
 线上业务进立项
-    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托
+    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托    小区名称=链家
     Click Element    xpath=.//span[text()="受理"]/ancestor::a
     Unselect Frame
     Select Frame    id=create_project_
@@ -188,7 +192,7 @@ Resource          项目受理业务层.txt
     查询并验证项目详情的值是否正确    ${pep}
 
 线上业务进暂存后立项
-    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托
+    ${pep}    查看线上业务详情并获取一个pep对象    业务类型=正式委托    小区名称=链家
     Click Element    xpath=.//span[text()="受理"]/ancestor::a
     Unselect Frame
     Select Frame    id=create_project_
@@ -206,6 +210,7 @@ Resource          项目受理业务层.txt
     切换到暂存项目子模块
     输入暂存项目查询条件    ${pep.get_value(u'流水号')}
     点击查询按钮
+    等待列表创建完毕
     验证暂存项目查询数据    ${pep.get_value(u'流水号')}    ${pep.get_value(u'项目地址')}    ${pep.get_value(u'小区名')}    ${pep.get_value(u'项目分类')}    ${pep.get_value(u'物业类型')}    ${pep.get_value(u'估价目的')}
     ...    ${pep.get_value(u'报告类型')}    ${pep.get_value(u'业务来源')}    ${pep.get_value(u'客户姓名')}    ${pep.get_value(u'估价委托方')}
     点击列表的编辑按钮进入审核项目

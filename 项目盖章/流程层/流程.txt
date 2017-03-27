@@ -6,6 +6,7 @@ Resource          ../组件层/已盖章.txt
 Resource          ../组件层/查询.txt
 Resource          ../组件层/估价作业.txt
 Resource          ../../公共模块.txt
+Library           ../../GetTimestamp.py
 
 *** Keywords ***
 盖章
@@ -59,7 +60,9 @@ Resource          ../../公共模块.txt
     点击我的项目
     点击项目盖章
     Select Frame    id=ProjectAllot_Seal
+    Transaction Start    未盖章页面加载时间
     等待列表加载完成    1
+    Transaction End    未盖章页面加载时间
     ${serial_no}    随机选择一条记录    1
     ${result}    查询盖章结果    ${serial_no}
     Run Keyword If    ${result}==True    Capture Page Screenshot    第一次查询成功.png
@@ -112,7 +115,9 @@ Resource          ../../公共模块.txt
     Select Frame    id=ProjectAllot_Seal
     等待列表加载完成    1
     点击已盖章
+    Transaction Start    已盖章页面加载
     等待列表加载完成    2
+    Transaction End    已盖章页面加载
     ${serial_no}    随机选择一条记录    2
     ${seal_status}    点击报告信息
     Run Keyword And Continue On Failure    Should Be True    '${seal_status}'=='是'
@@ -212,3 +217,33 @@ Resource          ../../公共模块.txt
     点击已盖章
     等待列表加载完成    2
     对比流程信息和按钮的关系
+
+按盖章时间查询
+    Set Selenium Speed    0.5
+    登录
+    点击我的项目
+    点击项目盖章
+    Select Frame    id=ProjectAllot_Seal
+    等待列表加载完成    1
+    点击已盖章
+    等待列表加载完成    2
+    Comment    按输入时间查询    2015-5-28    2019-6-9
+    ${start_date}    Set Variable    2016-12-1
+    ${end_date}    Set Variable    2017-1-10
+    设置查询时间    ${start_date}    //td[@id='sealTime']/span/span
+    设置查询时间    ${end_date}    //td[@id='sealTime2']/span/span
+    ${min_stamp}    Get Stamp    ${start_date}
+    ${max_stamp}    Get Stamp    ${end_date}
+    点击查询    2
+    ${no}    get总页数    2
+    ${no}    Run Keyword If    ${no}<10    Set Variable    ${no}
+    ...    ELSE    Set Variable    10
+    : FOR    ${i}    IN RANGE    10
+    \    Wait Until Element Is Visible    //div[@id='tabs']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tbody/tr[${i+1}]    10
+    \    ${result}    Get Text    //div[@id='tabs']/div[2]/div[2]//div[@class='datagrid-view2']/div[2]//tbody/tr[${i+1}]/td[8]/div
+    \    ${list}    Evaluate    '${result}'.split(' ')
+    \    ${date}    Evaluate    ${list}[0]
+    \    ${arr}    Evaluate    '${date}'.split('/')
+    \    ${current_date}    Evaluate    '-'.join(${arr})
+    \    ${current_stamp}    Get Stamp    ${current_date}
+    \    Should Be True    ${current_stamp}>=${min_stamp} and ${current_stamp}<=${max_stamp}    已盖章页面按照盖章时间查询不正确

@@ -29,7 +29,7 @@ Resource          报告发送校验层.txt
     [Arguments]    ${pep}    ${发送份数}    ${发送方式}=快递    ${快递公司}=顺丰
     点击列表中的发送报告按钮
     等待弹出窗口出现
-    等待列表创建完毕
+    等待列表创建完毕    报告发送-打开发送报告窗口
     验证收件地址列表是否正常    ${pep}    快递
     Run Keyword If    '${pep.get_value(u'快递信息').__len__()}'!='0'    验证界面是否自动填充收件人信息    ${pep}
     Select From List By Label    xpath=.//*[@id='sendtype']    ${发送方式}
@@ -42,9 +42,11 @@ Resource          报告发送校验层.txt
     Run Keyword If    '${发送方式}'!='快递'    文本框清空并输入    .//*[@id='sendpiece']    ${发送份数}
     将发送信息写入pep对象    ${pep}
     Click Element    xpath=.//*[@id='sumbut']    #点击提交按钮
+    Transaction Start    报告发送-提交发送报告表单
     Unselect Frame
     Select Frame    id=ProjectAllot_Send
     等待提示框出现
+    Transaction End    报告发送-提交发送报告表单
     点击提示框中的确定按钮
 
 填报告发送写收件信息
@@ -118,9 +120,11 @@ Resource          报告发送校验层.txt
 批量发送报告操作
     [Arguments]    ${pep_list}    ${发送方式}=快递    ${快递公司}=顺丰
     Click Element    xpath=//span[text()="批量发送报告"]/ancestor::a    #点击批量发送按钮
+    Transaction Start    进入报告批量发送界面
     Unselect Frame
     Select Frame    id=Project_BatchSendReport    #跳转到批量发送页面
     等待列表创建完毕
+    Transaction Start    进入报告批量发送界面
     Select From List By Label    xpath=.//*[@id='sendtype']    ${发送方式}
     ${快递单号}    获取当前时间
     Run Keyword If    '${发送方式}'=='快递'    文本框清空并输入    .//*[@id='expressno' and not(@disabled)]    ${快递单号}
@@ -131,9 +135,11 @@ Resource          报告发送校验层.txt
     : FOR    ${pep}    IN ZIP    ${pep_list}
     \    将发送信息写入pep对象    ${pep}
     Click Element    xpath=.//*[@id='sumbut']    #点击提交按钮
-    Unselect Frame
+    Transaction Start    批量发送-表单提交
     等待提示框出现
-    点击提示框中的Ok按钮
+    Transaction End    批量发送-表单提交
+    点击提示框中的确定按钮
+    Unselect Frame
 
 将报告发送列表送指定行的数据写入pep对象
     [Arguments]    ${pep}    ${row_num}
@@ -173,9 +179,11 @@ Resource          报告发送校验层.txt
     将发送信息写入pep对象    ${pep1}
     Click Element    xpath=.//*[@id='sumbut']    #点击添加按钮
     Click Element    xpath=//span[text()="提交"]/ancestor::a    #点击提交按钮
-    Unselect Frame
+    Transaction Start    分批发送报告-提交表单
     等待提示框出现
-    点击提示框中的Ok按钮
+    Transaction End    分批发送报告-提交表单
+    点击提示框中的确定按钮
+    Unselect Frame
     ${pep_list}    Create List    ${pep}    ${pep1}
     [Return]    ${pep_list}
 
@@ -183,6 +191,7 @@ Resource          报告发送校验层.txt
     [Arguments]    ${pep_list}    ${流水号}
     输入报告发送查询条件    已发送    ${流水号}
     点击查询按钮    0
+    等待列表创建完毕
     Select Checkbox    xpath=.//*[@class="datagrid-btable"]//tr[@datagrid-row-index="0"]/td[@field="cb"]//input    #选中第一条记录
     等待列表创建完毕
     : FOR    ${pep}    IN ZIP    ${pep_list}

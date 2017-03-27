@@ -5,94 +5,9 @@ Resource          ../报告打印装订/组件层/报告装订打印.txt
 Resource          ../项目受理/项目受理操作层.txt
 Resource          ../公共模块.txt
 Resource          元素/外业元素层.txt
+Resource          ../内业分配/内业业务层.txt
 
 *** Keywords ***
-紧急程度状态查询
-    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
-    等待列表创建完毕
-    ${总数据量}    获取页面显示总数据量
-    log    ${查询类型}
-    log    ${路径}
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
-    Comment    内业输入流水号    ${流水号}
-    询价查询按钮
-    等待列表创建完毕
-    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
-    ${获取报告打印第一页列数}    获取询价列表列数据
-    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
-    \    \    \    \    \    \    ${路径}
-
-...
-    ELSE    log    查询数据为空，请确保数据库是否有数据
-    [Return]    ${总数据量}
-
-物业类型状态查询
-    [Arguments]    ${物业类型状态列表值}    ${路径}
-    等待列表创建完毕
-    ${总数据量}    获取页面显示总数据量
-    Comment    ${总数据量}    报告装订打印打开模块公共方法
-    物业类型选择查询方式    ${物业类型状态列表值}    ${路径}
-    物业类型状态    ${物业类型状态列表值}
-    点击查询按钮
-    等待列表创建完毕
-    ${总数据量}    获取页面显示总数据量
-    ${获取报告打印第一页行数}    获取分配查询数据行数
-    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
-    Comment    查询操作单元结果检测    ${获取报告打印第一页行数}    ${紧急程度状态列表值}    ${路径}
-    Run Keyword If    ${获取报告打印第一页行数}!=0    查询操作单元结果检测    ${获取报告打印第一页行数}    ${物业类型状态列表值}    ${路径}
-    ...    ELSE    log    查询数据为空，请确保数据库是否有数据    WARN
-    [Return]    ${总数据量}
-
-随机勾选列表数据
-    [Arguments]    ${num1}    ${num2}
-    ${LIST}    Create List
-    : FOR    ${i}    IN RANGE    ${num1}    ${num2}
-    \    log    ${i}
-    \    等待加载完毕
-    \    ${获取查勘任务操作状态}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="Update"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="Update"]
-    \    ${获取查勘任务流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]
-    \    Comment    Return List    ${LIST}    ${获取查勘任务流水号}
-    \    Run Keyword If    '${获取查勘任务操作状态}'=='领取 \ \ 挂起' or '${获取查勘任务操作状态}'=='资料补充 \ \ 完成 \ \ 挂起'    随机选择    ${i}    ${LIST}    ${获取查勘任务流水号}
-    \    ...    ELSE    log    该项目不可领取
-    log    ${LIST}
-    [Return]    ${LIST}
-
-获取分配查询数据行数
-    ${lineNumberP1}    Get Matching Xpath Count    //div[@class='panel' and @style='display: block;']//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr
-    [Return]    ${lineNumberP1}
-
-分配正确查询数据
-    [Arguments]    ${查询类型}    ${路径}    ${列表路径}    ${状态}=0    ${流水号}=None    ${报告号}=None
-    ...    ${项目地址}=None    ${小区名称}=None
-    等待列表创建完毕
-    ${总数据量}    获取页面显示总数据量    2
-    log    ${查询类型}
-    log    ${路径}
-    ${输入参数}    根据查询条件选择查询类型    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
-    ...    ${路径}
-    Comment    内业输入流水号    ${流水号}
-    变更点击查询按钮
-    等待列表创建完毕
-    ${获取报告打印第一页行数}    获取分配查询数据行数
-    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
-    Run Keyword If    ${获取报告打印第一页行数}>10    ${获取报告打印第一页行数}    Set Variable    ${获取报告打印第一页行数}-1
-    查询结果检测    ${获取报告打印第一页行数}    ${获取报告打印第一页列数}    ${输入参数}    ${查询类型}    ${路径}    ${列表路径}
-    [Return]    ${总数据量}
-
-外业分配模糊查询
-    [Arguments]    ${查询类型}    ${路径}    ${列表路径}    ${流水号}    ${报告号}    ${项目地址}
-    ...    ${小区名称}
-    清空输入框装订流水号    ${路径}
-    等待列表创建完毕
-    ${输入参数}    根据查询条件选择查询类型    ${查询类型}    ${流水号}    ${报告号}    ${项目地址}    ${小区名称}
-    ...    ${路径}
-    Comment    内业输入流水号    ${流水号}
-    变更点击查询按钮
-    等待列表创建完毕
-    ${获取报告打印第一页行数}    获取分配查询数据行数
-    ${获取报告打印第一页列数}    获取报告装订打印查询数据列数
-    查询结果检测    ${获取报告打印第一页行数}    ${获取报告打印第一页列数}    ${输入参数}    ${查询类型}    ${路径}    ${列表路径}
-
 查询流水号
     Comment    : FOR    ${i}    IN RANGE    获取页面显示总数据量
     Comment    \    log    ${i}
@@ -104,8 +19,7 @@ Resource          元素/外业元素层.txt
     Comment    sleep    5
     Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
     ${流水号}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
-    Input Text    id=ProjectNo    ${流水号}
-    点击查询按钮
+    Input Text    id=filter    ${流水号}
     Comment    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="op"]/div/a[1]
     [Return]    ${流水号}
 
@@ -114,9 +28,95 @@ Resource          元素/外业元素层.txt
     ${LIST}    Create List
     : FOR    ${i}    IN RANGE    ${num1}    ${num2}
     \    log    ${i}
-    \    等待加载完毕
+    \    等待列表创建完毕
     \    Comment    ${获取查勘任务操作状态}    Get Text    xpath=.//td[@field="op"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="op"]
     \    ${获取查勘任务流水号}    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="ProjectNo"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]
     \    log    ${获取查勘任务流水号}
     \    Click Element    xpath=//div[@id="tabs"]/div[2]/div[1]//td[@field="cb"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[${i+1}]/td[@field="cb"]
     [Return]    ${LIST}
+
+外业未分配选择数据查询
+    [Arguments]    ${q}
+    输入正确的流水号    ${q}
+    输入正确的报告编号    ${q}
+    输入正确的项目地址    ${q}    ResidentialAreaAddress
+    输入正确的小区名称    ${q}    ResidentialAreaName
+    内业紧急程度查询    3
+    未分配内业物业类型查询
+
+已分配选择数据查询
+    [Arguments]    ${q}
+    Comment    输入正确的流水号    ${q}
+    Comment    输入正确的报告编号    ${q}
+    Comment    输入正确的项目地址    ${q}    ResidentialAreaAddress
+    Comment    输入正确的小区名称    ${q}    ResidentialAreaName
+    Comment    内业紧急程度查询    2
+    Comment    未分配内业物业类型查询
+    Comment    内业业务层.查勘人员    2
+    内业业务层.分配人员
+
+已回收选择数据查询
+    [Arguments]    ${q}
+    Comment    输入正确的流水号    ${q}
+    Comment    输入正确的报告编号    ${q}
+    Comment    输入正确的项目地址    ${q}    ResidentialAreaAddress
+    Comment    输入正确的小区名称    ${q}    ResidentialAreaName
+    内业紧急程度查询    3
+    Comment    外业已回收物业类型查询
+
+外业已回收紧急程度查询
+    [Arguments]    ${b}
+    普通查询    ${b}    普通
+    紧急查询    ${b}    紧急
+    加急查询    ${b}    加急
+    选择全部    ${b}
+
+外业已回收物业类型查询
+    成套住宅查询    3
+    成套商业查询    3
+    成套办公查询    3
+
+判断时间段
+    Run Keyword If    ${老的时间}<${时间}<${完整时间}    log    pass
+    ...    ELSE    Fail
+
+分配时间
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    等待列表创建完毕
+    点击高级查询按钮
+    ${完整时间}    Get Time    yyyy-mm-dd
+    Set Global Variable    ${完整时间}
+    ${老的时间}    Get Time    yyyy-mm-dd    NOW -3day
+    Set Global Variable    ${老的时间}
+    ${newtime}    Evaluate    time.strftime("%Y-%m-%d") \    time
+    ${year}    ${month}    ${day}    Evaluate    '${newtime}'.split('-')
+    ${addDays}    Set Variable    -3
+    ${oldtime}    Evaluate    datetime.date(int('${year}'),int('${month}'),int('${day}'))+datetime.timedelta(days=int('${addDays}')) \    datetime
+    Assign Id To Element    xpath=.//*[@id='AssignDate']    new_time
+    Assign Id To Element    xpath=.//*[@id='AssignDateFrom']    new_time1
+    Assign Id To Element    xpath=.//*[@id='AssignDateTo']    new_time2
+    Execute JavaScript    window.document.getElementById('new_time').value='${oldtime}至${newtime}'
+    点击查询按钮
+
+完成时间
+    打开功能模块    我的项目    外业分配
+    Select Frame    id=ProjectAllot_OutsideAssign
+    切换到已分配子模块
+    等待列表创建完毕
+    点击高级查询按钮
+    ${完整时间}    Get Time    yyyy-mm-dd
+    Set Global Variable    ${完整时间}
+    ${老的时间}    Get Time    yyyy-mm-dd    NOW -3day
+    Set Global Variable    ${老的时间}
+    ${newtime}    Evaluate    time.strftime("%Y-%m-%d") \    time
+    ${year}    ${month}    ${day}    Evaluate    '${newtime}'.split('-')
+    ${addDays}    Set Variable    -3
+    ${oldtime}    Evaluate    datetime.date(int('${year}'),int('${month}'),int('${day}'))+datetime.timedelta(days=int('${addDays}')) \    datetime
+    Assign Id To Element    xpath=.//*[@id='EndAt']    new_time
+    Assign Id To Element    xpath=.//*[@id='EndAtFrom']    new_time1
+    Assign Id To Element    xpath=.//*[@id='EndAtTo']    new_time2
+    Execute JavaScript    window.document.getElementById('new_time').value='${oldtime}至${newtime}'
+    Execute JavaScript    window.document.getElementById('new_time').removeAttribute("readonly")
+    点击查询按钮

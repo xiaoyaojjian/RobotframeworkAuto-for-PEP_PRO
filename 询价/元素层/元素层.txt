@@ -109,10 +109,11 @@ Resource          ../流程层/流程层.txt
     Click Element    xpath=.//*[@id='BtnSave']//span[text()="保存"]/.
 
 下拉选项框条件输入参数
-    [Arguments]    ${输入条件}    ${路径}
+    [Arguments]    ${输入条件}    ${路径}    ${状态}=1
     log    ${输入条件}
     log    ${路径}
-    下拉选项框条件参数    ${输入条件}    ${路径}
+    Run Keyword If    ${状态}==0    下拉选项框条件参数    ${输入条件}    ${路径}
+    ...    ELSE    Click Element    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//option[contains(.,'${输入条件}')]
     [Return]    ${输入条件}
 
 清空下拉选项框输入框内容
@@ -139,7 +140,10 @@ Resource          ../流程层/流程层.txt
 下拉选项框条件参数
     [Arguments]    ${输入流水号}    ${路径}
     Comment    Run Keyword And Continue On Failure    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路径}']/../span/input    ${输入流水号}
-    Click Element    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//div//div[contains(.,'${输入流水号}')]
+    Comment    Click Element    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//div//div[contains(.,'${输入流水号}')]//select[@id='${路径}']/option[contains(.,'${输入流水号}')]
+    log    ${路径}
+    Run Keyword If    '${路径}'!='Orientation'and '${路径}'!='HouseType'and '${路径}'!='BuildStruct' and '${路径}'!='UsePowerSource' and '${路径}'!='LandUse' and '${路径}'!='EvalMethod' and '${路径}'!='EvaluatePrice' and '${路径}'!='CertificateName' and '${路径}'!='IsToProject'    Click Element    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//div//div[contains(.,'${输入流水号}')]
+    ...    ELSE    Click Element    xpath=.//div[contains(@class,"panel combo-p") and contains(@style,"display: block")]//div//div[contains(.,'${输入流水号}')]
 
 点击新建预估单
     Click Element    id=AddPredictPrice
@@ -161,16 +165,23 @@ Resource          ../流程层/流程层.txt
     Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="批量领取"]/..
 
 编辑可输入下拉框
-    [Arguments]    ${路劲}    ${参数}
-    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路劲}']/../span/span/a
+    [Arguments]    ${路劲}    ${参数}    ${xapth路劲}=0
+    Run Keyword If    ${xapth路劲}==0    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路劲}']/../span/span/a
+    ...    ELSE    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路劲}']
     Comment    sleep    3
-    ${a}    Get Text    xpath=.//div[@class="panel combo-p" and contains(@style,"display: block")]//*[@class='combo-panel panel-body panel-body-noheader']
-    下拉选项框条件输入参数    ${参数}    ${路劲}
+    ${a}    Run Keyword If    ${xapth路劲}==0    Get Text    xpath=.//div[@class="panel combo-p" and contains(@style,"display: block")]//*[@class='combo-panel panel-body panel-body-noheader']
+    ...    ELSE    Get Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//*[@id='${路劲}']
+    log    ${a}
+    log    ${参数}
+    ${b}    Return Value In List    ${参数}    ${a}
+    Run Keyword If    ${b}==True    下拉选项框条件输入参数    ${参数}    ${路劲}    0
+    ...    ELSE    fail
+    Comment    下拉选项框条件输入参数    ${参数}    ${路劲}
     Comment    Run Keyword If
 
 点击空白处
     Comment    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="询价"]/..
-    Click Element    xpath=.//*[@id='Decoration']/..//span//*[@class='textbox-icon combo-arrow']
+    Click Element    xpath=.//*[@id='SpecialInfo']/..//span//*[@class='textbox-icon combo-arrow']
 
 成交案例不限按钮
     sleep    2
@@ -197,3 +208,12 @@ Resource          ../流程层/流程层.txt
     log    ${路径}
     下拉选项框条件参数1    ${输入条件}    ${路径}
     [Return]    ${输入条件}
+
+询价高级查询按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="高级查询"]/..
+
+高级查询按钮
+    Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//span[text()="高级查询"]/..
+
+清空新查询输入框内容
+    clear Element Text    xpath=.//div[contains(@class,"panel") and contains(@style,"display: block")]//*[@id='filter']

@@ -84,3 +84,35 @@ class PepExt:
         """计算时间差，以秒为单位返回"""
         computingtime = (lasttime-nowtime)
         return computingtime,transactionName,nowtime,lasttime
+
+    def return_value_in_list(self, olderstring, getstring):
+        """判断参数是否存在列表中"""
+        liststring = []
+        liststring1 = getstring.split('\n')
+        for i in range(0, len(liststring1)):
+            print(liststring1[i].strip())
+            liststring.append(liststring1[i].strip())
+        print(olderstring,liststring[0])
+        if olderstring in liststring:
+            return True
+        else:
+            return False
+
+    def return_value_in_string(self,olderstring, getstring):
+        """判断参数是否存在字符串中"""
+        liststring = getstring.split('\n')
+        print(olderstring, liststring[0],len(liststring))
+        tem = False
+        for i in range(0,len(liststring)):
+            print(i,liststring[i])
+            print(liststring[i].find(olderstring))
+            if liststring[i].find(olderstring)>=0:
+                tem = True
+                break
+            else:
+                tem = False
+        return tem
+
+
+
+

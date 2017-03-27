@@ -3,7 +3,6 @@ Library           Selenium2Library
 Library           Collections
 Library           re
 Resource          公共.txt
-Library           ../../ReportRequests.py
 Resource          未领取.txt
 Resource          查勘任务.txt
 
@@ -64,6 +63,8 @@ Resource          查勘任务.txt
     ${报告年度}    get value    xpath=//*[@id="ReportYear"]
     ${报告月度}    get value    xpath=//*[@id="ReportMonth"]
     ${估价目的}    get value    xpath=//*[@id="EvalGoal"]
+    Clear Element Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportNo']/../span/input[1]
+    Input Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportNo']/../span/input[1]    123456789123456
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Company']    ${所属公司}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Department']
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Department']    ${所属部门}
@@ -96,8 +97,8 @@ Resource          查勘任务.txt
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectAddress']/../span/input[1]    ${项目所在省}${项目所在市}${项目区县}${小区名称}${楼栋号}${单元号}${户号}${余下地址}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectPopularizeName']
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ProjectPopularizeName']    ${项目推广名}
-    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalEntrust']
-    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalEntrust']    ${估价委托人}
+    Clear Element Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalEntrust']/../span/input[1]
+    Input Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalEntrust']/../span/input[1]    ${估价委托人}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportUse']
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='ReportUse']    ${报告使用方}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Subbranch']
@@ -118,8 +119,8 @@ Resource          查勘任务.txt
     ${方法汇总}    get value    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvalMethodJoin']
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluateTotal']/../span/input[1]
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluateTotal']/../span/input[1]    ${评估总价（万元）}
-    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluatePrice']
-    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluatePrice']    ${评估单价（元/㎡）}
+    Clear Element Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluatePrice']/../span/input[1]
+    Input Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='EvaluatePrice']/../span/input[1]    ${评估单价（元/㎡）}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DealTotal']
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DealTotal']    ${成交总价（万元）}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='DeaPrice']
@@ -152,8 +153,8 @@ Resource          查勘任务.txt
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='LandUse']/../span/input[1]    ${现状用途}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingStructure']/../span/input[1]
     Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuildingStructure']/../span/input[1]    ${建筑结构}
-    Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuiltYear']
-    Input Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuiltYear']    ${建成年代}
+    Clear Element Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuiltYear']/../span/input[1]
+    Input Text    //div[@class="panel" and contains(@style,"display: block")]//form//*[@id='BuiltYear']/../span/input[1]    ${建成年代}
     Clear Element Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Floor']
     Input Text    xpath=//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='Floor']    ${所在楼层}
     Clear Element Text    xpath=.//div[@class="panel" and contains(@style,"display: block")]//form//*[@id='MaxFloor']
@@ -236,7 +237,9 @@ Resource          查勘任务.txt
 获取提交结果
     [Arguments]    ${pno}
     Click Element    //span[text()='提交']/..
+    Transaction Start    估价作业-提交审核响应时间
     ${text}    Get Text    xpath=html/body/div[4]/div[2]/div[2]
+    Transaction End    估价作业-提交审核响应时间
     ${status}    Evaluate    '${text}'.find('是否提交流水号')
     Run Keyword If    ${status}!=-1    Run Keywords    Click Element    //span[text()='确定']/../..
     ...    AND    Unselect Frame

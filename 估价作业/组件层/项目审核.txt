@@ -3,7 +3,6 @@ Library           Selenium2Library
 Library           Collections
 Library           re
 Resource          公共.txt
-Library           ../../ReportRequests.py
 Resource          未领取.txt
 Resource          查勘任务.txt
 
@@ -13,8 +12,9 @@ Resource          查勘任务.txt
     Unselect Frame
     Click Element    //a[contains(text(),'项目审核') and @href]
     Select Frame    id=ProjectAllot_Audit
-    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody//tr    30
-    Input Text    //input[@id='ProjectNo']    ${pno}
-    Click Element    //span[text()='查询']/../..
-    Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]    20
+    Wait Until Page Contains    转让    30
+    Input Text    xpath=//input[@id='filter']    ${pno}
+    Click Element    xpath=//span[text()='查询']/..
+    Comment    Wait Until Page Contains Element    xpath=//div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]    20
+    等待列表加载完成    查询项目审核
     Run Keyword And Continue On Failure    Page Should Contain    显示1到1,共1记录    WARN

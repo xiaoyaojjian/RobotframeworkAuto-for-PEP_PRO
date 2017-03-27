@@ -2,7 +2,6 @@
 Library           Selenium2Library
 Library           Collections
 Library           re
-Resource          公共.txt
 
 *** Keywords ***
 根据勘察状态随机获取一个未领取的流水号

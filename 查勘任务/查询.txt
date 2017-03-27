@@ -19,11 +19,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     ${总数据量}    询价正确数据查询    流水号    509575745964    ProjectNo
-    询价错误特殊字符查询    流水号    @$@    ProjectNo
-    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    Comment    询价错误特殊字符查询    流水号    @$@    ProjectNo
+    Comment    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
     询价模糊查询    流水号    158    ProjectNo
     询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
-    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
+    Comment    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
     [Teardown]    Close Browser
 
 未领取报告查询
@@ -38,11 +38,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     ${总数据量}    询价正确数据查询    报告号    201601101001788    ReportNo
-    询价错误特殊字符查询    报告号    @$@    ReportNo
-    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    Comment    询价错误特殊字符查询    报告号    @$@    ReportNo
+    Comment    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
     询价模糊查询    报告号    110100    ReportNo
     询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
-    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
+    Comment    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
     [Teardown]    Close Browser
 
 未领取小区名称查询
@@ -57,11 +57,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     ${总数据量}    询价正确数据查询    小区名称    五栋大楼    AreaName
-    询价错误特殊字符查询    小区名称    @$@    AreaName
-    询价为空查询    小区名称    ${empty}    AreaName    ${总数据量}
+    Comment    询价错误特殊字符查询    小区名称    @$@    AreaName
+    Comment    询价为空查询    小区名称    ${empty}    AreaName    ${总数据量}
     询价模糊查询    小区名称    盘古    AreaName
     询价错误查询    小区名称    232收到罚单是打发反反    AreaName    ${总数据量}
-    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}
+    Comment    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}
     [Teardown]    Close Browser
 
 未领取项目地址查询
@@ -76,11 +76,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     ${总数据量}    询价正确数据查询    项目地址    北京市西城区    Address
-    询价错误特殊字符查询    项目地址    @$@    Address
-    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
+    Comment    询价错误特殊字符查询    项目地址    @$@    Address
+    Comment    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
     询价模糊查询    项目地址    盘古    Address
     询价错误查询    项目地址    232收到罚单是打发反反    Address    ${总数据量}
-    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
+    Comment    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
     [Teardown]    Close Browser
 
 未领取紧急程度查询
@@ -93,10 +93,13 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     查勘打开功能模块公共方法
-    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=1
-    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=1
-    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=1
-    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=1
+    Comment    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=1
+    Comment    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=1
+    Comment    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=1
+    Comment    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=1
+    ${普通数据总量}    高级下拉框查询    普通    PriorityLevel    8    状态=1    按钮状态=0
+    ${普通数据总量}    高级下拉框查询    紧急    PriorityLevel    8    状态=1    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    加急    PriorityLevel    8    状态=1    按钮状态=1
     [Teardown]    Close Browser
 
 未领取物业类型查询
@@ -110,10 +113,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     查勘打开功能模块公共方法
-    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=1
-    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=1
-    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=1
-    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=1
+    Comment    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=1
+    Comment    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=1
+    Comment    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=1
+    Comment    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=1
+    ${普通数据总量}    高级下拉框查询    成套住宅    ProjectType    6    状态=1    按钮状态=0
+    ${普通数据总量}    高级下拉框查询    成套商业    ProjectType    6    状态=1    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    成套办公    ProjectType    6    状态=1    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    别墅    ProjectType    6    状态=1    按钮状态=1
     [Teardown]    Close Browser
 
 进行中流水号查询
@@ -129,11 +136,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     进行中按钮
     ${总数据量}    询价正确数据查询    流水号    482626266749    ProjectNo
-    询价错误特殊字符查询    流水号    @$@    ProjectNo
-    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    Comment    询价错误特殊字符查询    流水号    @$@    ProjectNo
+    Comment    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
     询价模糊查询    流水号    2151    ProjectNo
     询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
-    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
+    Comment    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
     [Teardown]    Close Browser
 
 进行中报告查询
@@ -149,11 +156,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     进行中按钮
     ${总数据量}    询价正确数据查询    报告号    201601101002639    ReportNo
-    询价错误特殊字符查询    报告号    @$@    ReportNo
-    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    Comment    询价错误特殊字符查询    报告号    @$@    ReportNo
+    Comment    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
     询价模糊查询    报告号    110100    ReportNo
     询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
-    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
+    Comment    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
     [Teardown]    Close Browser
 
 进行中小区名称查询
@@ -169,11 +176,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     进行中按钮
     ${总数据量}    询价正确数据查询    小区名称    五栋大楼    AreaName
-    询价错误特殊字符查询    小区名称    @$@    AreaName
-    询价为空查询    小区名称    ${empty}    AreaName    ${总数据量}
+    Comment    询价错误特殊字符查询    小区名称    @$@    AreaName
+    Comment    询价为空查询    小区名称    ${empty}    AreaName    ${总数据量}
     询价模糊查询    小区名称    盘古    AreaName
     询价错误查询    小区名称    232收到罚单是打发反反    AreaName    ${总数据量}
-    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}
+    Comment    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}
     [Teardown]    Close Browser
 
 进行中项目地址查询
@@ -189,11 +196,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     进行中按钮
     ${总数据量}    询价正确数据查询    项目地址    北京市西城区    Address
-    询价错误特殊字符查询    项目地址    @$@    Address
-    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
+    Comment    询价错误特殊字符查询    项目地址    @$@    Address
+    Comment    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
     询价模糊查询    项目地址    盘古    Address
     询价错误查询    项目地址    232收到罚单是打发反反    Address    ${总数据量}
-    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
+    Comment    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
     [Teardown]    Close Browser
 
 进行中紧急程度查询
@@ -207,11 +214,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     进行中按钮
-    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
-    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
-    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
-    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2
-    [Teardown]
+    Comment    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
+    Comment    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
+    Comment    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
+    Comment    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2
+    ${普通数据总量}    高级下拉框查询    普通    PriorityLevel    8    状态=2    按钮状态=0
+    ${普通数据总量}    高级下拉框查询    紧急    PriorityLevel    8    状态=2    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    加急    PriorityLevel    8    状态=2    按钮状态=1
+    [Teardown]    Close Browser
 
 进行中物业类型查询
     [Documentation]    该用例含有
@@ -225,10 +235,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     进行中按钮
-    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=2
-    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=2
-    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=2
-    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=2
+    Comment    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=2
+    Comment    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=2
+    Comment    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=2
+    Comment    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=2
+    ${普通数据总量}    高级下拉框查询    成套住宅    ProjectType    6    状态=2    按钮状态=0
+    ${普通数据总量}    高级下拉框查询    成套商业    ProjectType    6    状态=2    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    成套办公    ProjectType    6    状态=2    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    别墅    ProjectType    6    状态=2    按钮状态=1
     [Teardown]    Close Browser
 
 完成流水号查询
@@ -244,11 +258,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     已完成按钮
     ${总数据量}    询价正确数据查询    流水号    574276489043    ProjectNo
-    询价错误特殊字符查询    流水号    @$@    ProjectNo
-    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
+    Comment    询价错误特殊字符查询    流水号    @$@    ProjectNo
+    Comment    询价为空查询    流水号    ${empty}    ProjectNo    ${总数据量}
     询价模糊查询    流水号    2151    ProjectNo
     询价错误查询    流水号    234234234234    ProjectNo    ${总数据量}
-    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
+    Comment    询价超长字符查询    流水号    23423423423423423    ProjectNo    ${总数据量}
     [Teardown]    Close Browser
 
 完成报告查询
@@ -264,11 +278,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     已完成按钮
     ${总数据量}    询价正确数据查询    报告号    201601101003332    ReportNo
-    询价错误特殊字符查询    报告号    @$@    ReportNo
-    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
+    Comment    询价错误特殊字符查询    报告号    @$@    ReportNo
+    Comment    询价为空查询    报告号    ${empty}    ReportNo    ${总数据量}
     询价模糊查询    报告号    110100    ReportNo
     询价错误查询    报告号    234234234234    ReportNo    ${总数据量}
-    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
+    Comment    询价超长字符查询    报告号    23423423423423423    ReportNo    ${总数据量}
     [Teardown]    Close Browser
 
 完成小区名称查询
@@ -284,11 +298,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     已完成按钮
     ${总数据量}    询价正确数据查询    小区名称    珠江罗马嘉园    AreaName
-    询价错误特殊字符查询    小区名称    @$@    AreaName
-    询价为空查询    小区名称    ${empty}    AreaName    ${总数据量}
+    Comment    询价错误特殊字符查询    小区名称    @$@    AreaName
+    Comment    询价为空查询    小区名称    ${empty}    AreaName    ${总数据量}
     询价模糊查询    小区名称    盘古    AreaName
     询价错误查询    小区名称    232收到罚单是打发反反    AreaName    ${总数据量}
-    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}
+    Comment    询价超长字符查询    小区名称    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    AreaName    ${总数据量}
     [Teardown]    Close Browser
 
 完成项目地址查询
@@ -304,11 +318,11 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     查勘打开功能模块公共方法
     已完成按钮
     ${总数据量}    询价正确数据查询    项目地址    北京市    Address
-    询价错误特殊字符查询    项目地址    @$@    Address
-    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
+    Comment    询价错误特殊字符查询    项目地址    @$@    Address
+    Comment    询价为空查询    项目地址    ${empty}    Address    ${总数据量}
     询价模糊查询    项目地址    盘古    Address
     询价错误查询    项目地址    232收到罚单是打发反反    Address    ${总数据量}
-    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
+    Comment    询价超长字符查询    项目地址    时间段发就快快快快快快快快快快快快快快快快快快快快快快快卡快快快快快快快快快快快快快快快快快快快快快快玩儿为鹅鹅鹅鹅鹅鹅鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿鹅鹅鹅饿呃呃呃呃呃呃为鹅1    Address    ${总数据量}
     [Teardown]    Close Browser
 
 完成紧急程度查询
@@ -322,10 +336,13 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     已完成按钮
-    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
-    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
-    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
-    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2
+    Comment    ${普通数据总量}    装订状态查询    普通    PriorityLevel    8    状态=2
+    Comment    ${紧急数据总量}    装订状态查询    紧急    PriorityLevel    8    状态=2
+    Comment    ${加急数据总量}    装订状态查询    加急    PriorityLevel    8    状态=2
+    Comment    ${全部数据总量}    装订状态查询    ${empty}    PriorityLevel    8    状态=2
+    ${普通数据总量}    高级下拉框查询    普通    PriorityLevel    8    状态=2    按钮状态=0
+    ${普通数据总量}    高级下拉框查询    紧急    PriorityLevel    8    状态=2    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    加急    PriorityLevel    8    状态=2    按钮状态=1
     [Teardown]    Close Browser
 
 完成物业类型查询
@@ -340,10 +357,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     已完成按钮
-    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=2
-    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=2
-    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=2
-    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=2
+    Comment    ${成套住宅数据总量}    装订状态查询    成套住宅    ProjectType    6    状态=2
+    Comment    ${成套商业数据总量}    装订状态查询    成套商业    ProjectType    6    状态=2
+    Comment    ${成套办公数据总量}    装订状态查询    成套办公    ProjectType    6    状态=2
+    Comment    ${别墅数据总量}    装订状态查询    别墅    ProjectType    6    状态=2
+    ${普通数据总量}    高级下拉框查询    成套住宅    ProjectType    6    状态=2    按钮状态=0
+    ${普通数据总量}    高级下拉框查询    成套商业    ProjectType    6    状态=2    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    成套办公    ProjectType    6    状态=2    按钮状态=1
+    ${普通数据总量}    高级下拉框查询    别墅    ProjectType    6    状态=2    按钮状态=1
     [Teardown]    Close Browser
 
 完成所属机构查询
@@ -358,12 +379,13 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     已完成按钮
-    ${总数据量}    询价正确数据查询    所属机构1    农业银行    Department
-    询价错误特殊字符查询    所属机构1    @$@    Department
-    询价为空查询    所属机构1    ${empty}    Department    ${总数据量}
-    询价模糊查询    所属机构1    搜    Department
-    询价错误查询    所属机构1    234234234234    Department    ${总数据量}
-    询价超长字符查询    所属机构1    23423423423423423234234234    Department    ${总数据量}
+    Comment    ${总数据量}    询价正确数据查询    所属机构1    农业银行    Department
+    Comment    询价错误特殊字符查询    所属机构1    @$@    Department
+    Comment    询价为空查询    所属机构1    ${empty}    Department    ${总数据量}
+    Comment    询价模糊查询    所属机构1    搜    Department
+    Comment    询价错误查询    所属机构1    234234234234    Department    ${总数据量}
+    Comment    询价超长字符查询    所属机构1    23423423423423423234234234    Department    ${总数据量}
+    高级可输入框查询    农业银行    Department    13    状态=2    按钮状态=0
     [Teardown]    Close Browser
 
 完成客户名称查询
@@ -378,12 +400,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     已完成按钮
-    ${总数据量}    询价正确数据查询    客户名称    链家顾问    CustomerName
-    询价错误特殊字符查询    客户名称    @$@    CustomerName
-    询价为空查询    客户名称    ${empty}    CustomerName    ${总数据量}
+    Comment    ${总数据量}    询价正确数据查询    客户名称    链家顾问    CustomerName
+    Comment    Comment    询价错误特殊字符查询    客户名称    @$@    CustomerName
+    Comment    Comment    询价为空查询    客户名称    ${empty}    CustomerName    ${总数据量}
     Comment    询价模糊查询    客户名称    搜    CustomerName
-    询价错误查询    客户名称    234234234234    CustomerName    ${总数据量}
-    询价超长字符查询    客户名称    23423423423423423234234234    CustomerName    ${总数据量}
+    Comment    询价错误查询    客户名称    234234234234    CustomerName    ${总数据量}
+    Comment    Comment    询价超长字符查询    客户名称    23423423423423423234234234    CustomerName    ${总数据量}
+    高级可输入框查询    搜房测试    CustomerName    14    状态=2    按钮状态=0
+    高级可输入框查询    李建新    CustomerName    14    状态=2    按钮状态=1
     [Teardown]    Close Browser
 
 完成客户手机查询
@@ -398,12 +422,14 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     已完成按钮
-    ${总数据量}    询价正确数据查询    客户手机    13418024243    CustomerMobile
-    Comment    询价错误特殊字符查询    客户手机    @$@    CustomerMobile
-    询价为空查询    客户手机    ${empty}    CustomerMobile    ${总数据量}
+    Comment    ${总数据量}    询价正确数据查询    客户手机    13418024243    CustomerMobile
+    Comment    Comment    询价错误特殊字符查询    客户手机    @$@    CustomerMobile
+    Comment    Comment    询价为空查询    客户手机    ${empty}    CustomerMobile    ${总数据量}
     Comment    询价模糊查询    客户手机    150    CustomerMobile
-    询价错误查询    客户手机    13418024245    CustomerMobile    ${总数据量}
-    Comment    询价超长字符查询    客户手机    23423423423423423234234234    CustomerMobile    ${总数据量}
+    Comment    询价错误查询    客户手机    13418024245    CustomerMobile    ${总数据量}
+    Comment    Comment    询价超长字符查询    客户手机    23423423423423423234234234    CustomerMobile    ${总数据量}
+    高级可输入框查询    13623166342    CustomerMobile    15    状态=2    按钮状态=0
+    高级可输入框查询    13784363104    CustomerMobile    15    状态=2    按钮状态=1
     [Teardown]    Close Browser
 
 完成收款责任人查询
@@ -418,12 +444,13 @@ Resource          ..//查勘任务/查勘任务业务层.txt
     [Setup]    登录
     查勘打开功能模块公共方法
     已完成按钮
-    ${总数据量}    询价正确数据查询    收款责任人    李楠    FinanceUser
-    Comment    询价错误特殊字符查询    收款责任人    @$@    FinanceUser
-    询价为空查询    收款责任人    ${empty}    FinanceUser    ${总数据量}
-    询价模糊查询    收款责任人    李    FinanceUser
-    询价错误查询    收款责任人    13418024245    FinanceUser    ${总数据量}
-    询价超长字符查询    收款责任人    23423423423423423234234234234234234223423423    FinanceUser    ${总数据量}
+    Comment    ${总数据量}    询价正确数据查询    收款责任人    李楠    FinanceUser
+    Comment    Comment    询价错误特殊字符查询    收款责任人    @$@    FinanceUser
+    Comment    Comment    询价为空查询    收款责任人    ${empty}    FinanceUser    ${总数据量}
+    Comment    询价模糊查询    收款责任人    李    FinanceUser
+    Comment    询价错误查询    收款责任人    13418024245    FinanceUser    ${总数据量}
+    Comment    Comment    询价超长字符查询    收款责任人    23423423423423423234234234234234234223423423    FinanceUser    ${总数据量}
+    高级可输入框查询    李楠    FinanceUser    16    状态=2    按钮状态=0
     [Teardown]    Close Browser
 
 *** Keywords ***

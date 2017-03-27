@@ -17,13 +17,15 @@ Resource          ../../项目受理/项目受理操作层.txt
     ${总数据量}    询价获取页面数据总量
     log    ${查询类型}
     log    ${路径}
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
     ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
     ${获取报告打印第一页列数}    获取询价列表列数据
-    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    Comment    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    获取table每一行数据    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
     [Return]    ${总数据量}
 
 询价错误特殊字符查询
@@ -51,21 +53,23 @@ Resource          ../../项目受理/项目受理操作层.txt
 
 询价模糊查询
     [Arguments]    ${查询类型}    ${输入参数}    ${路径}
-    清空询价输入框内容    ${路径}
+    清空新查询输入框内容
     等待列表创建完毕
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
     ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
     ${获取报告打印第一页列数}    获取询价列表列数据
-    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    获取table每一行数据    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
 
 询价错误查询
     [Arguments]    ${查询类型}    ${输入参数}    ${路径}    ${总数据量}
-    清空询价输入框内容    ${路径}
+    Comment    清空新查询输入框内容
     等待列表创建完毕
-    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
     Comment    输入流水号    ${流水号}
     询价查询按钮
     等待列表创建完毕
@@ -103,13 +107,16 @@ Resource          ../../项目受理/项目受理操作层.txt
     ...    ${朝向}    ${建成年代}    ${户型}    ${房屋类型}    ${装修情况}    ${特殊因素}
     ...    ${询价来源}    ${备注}    ${询价地址}    ${修正单价}    ${抵押单价}    ${抵押总价}
     ...    ${市场单价}    ${市场总价}
-    通过手机号码获取客户信息    ${pep_input}
+    通过手机号码获取客户信息    ${pep_input}    0
     将客户信息写入PEP对象    ${pep_input}    is_xunjia=1
     估值信息参数    ${pep_input}
     sleep    2
-    Click Element    xpath=.//*[@id='areapricetotal']
+    Comment    Click Element    xpath=.//*[@id='areapricetotal']
+    点击空白处
     询价按钮
+    Transaction Start    添加询价进行询价
     ${price_range}    获取询价系统价格    ${pep_input}
+    Transaction End    添加询价进行询价
     添加系统价格校验    ${price_range}
     Comment    获取添加询价所有数据校验    ${pep_input}
     [Return]    ${price_range}
@@ -120,10 +127,14 @@ Resource          ../../项目受理/项目受理操作层.txt
     Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
     询价窗口
     询价查询按钮
+    Transaction Start    询价列表数据查询
     等待列表创建完毕
+    Transaction End    询价列表数据查询
     Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="查看"]
+    Transaction Start    进入询价查看页面
     Unselect Frame
     Select Frame    xpath=//iframe[@name="询价查看"]
+    Transaction End    进入询价查看页面
     获取添加询价所有数据校验    ${pep_input}
 
 询价编辑
@@ -136,10 +147,14 @@ Resource          ../../项目受理/项目受理操作层.txt
     Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
     询价窗口
     询价查询按钮
+    Transaction Start    询价列表查询数据
     等待列表创建完毕
+    Transaction End    询价列表查询数据
     Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="编辑"]
+    Transaction Start    添加询价进行编辑页面
     Unselect Frame
     Select Frame    xpath=//iframe[@name="询价编辑"]
+    Transaction End    添加询价进行编辑页面
     获取添加询价所有数据校验    ${pep_input}
     ${new_pep_input}    住宅询价参数    ${客户手机}    ${城市}    ${行政区}    ${小区名称}    ${小区地址}
     ...    ${楼栋号}    ${单元号}    ${户号名}    ${建筑面积}    ${所在楼层}    ${总楼层}
@@ -152,12 +167,16 @@ Resource          ../../项目受理/项目受理操作层.txt
     估值信息参数    ${new_pep_input}
     点击空白处
     询价按钮
+    Transaction Start    询价重新进行编辑后询价
     等待加载完毕
+    Transaction End    询价重新进行编辑后询价
     ${price_range}    获取询价系统价格    ${new_pep_input}
     添加系统价格校验    ${price_range}
     询价保存按钮
+    Transaction Start    询价进行重新编辑后保存
     等待提示框出现
     确定按钮
+    Transaction End    询价进行重新编辑后保存
     [Return]    ${price_range}
 
 下拉选项为空查询
@@ -184,3 +203,22 @@ Resource          ../../项目受理/项目受理操作层.txt
     Select Frame    xpath=//iframe[@name="询价查看"]
     sleep    5
     获取添加非询价所有数据校验    ${pep_input}    ${fei_xunjia_info}
+
+高级查询下拉框
+    [Arguments]    ${查询类型}    ${输入参数}    ${路径}
+    等待列表创建完毕
+    ${总数据量}    询价获取页面数据总量
+    log    ${查询类型}
+    log    ${路径}
+    Comment    ${输入参数}    根据询价查询条件选择查询类型    ${查询类型}    ${输入参数}    ${路径}
+    Comment    根据模糊条件模式进行查询    ${查询类型}    ${输入参数}
+    Comment    输入流水号    ${流水号}
+    高级查询按钮
+    sleep    3
+    编辑可输入下拉框    ${路径}    ${输入参数}
+    询价查询按钮
+    等待列表创建完毕
+    ${获取报告打印第一页行数}    获取询价列表行数据    ${路径}
+    ${获取报告打印第一页列数}    获取询价列表列数据
+    Comment    询价查询结果校验    ${获取报告打印第一页行数}    ${查询类型}    ${输入参数}    ${路径}
+    [Return]    ${总数据量}

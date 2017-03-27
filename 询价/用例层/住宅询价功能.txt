@@ -38,7 +38,7 @@ Resource          ../../项目受理/项目受理业务层.txt
     ...    400000.00    4000.00
     ${price_range1}    询价完成到住宅信息校验    ${price_range}
     询价查看信息校验    ${price_range1}
-    [Teardown]
+    [Teardown]    Close Browser
 
 编辑
     [Documentation]    该用例描述
@@ -55,7 +55,9 @@ Resource          ../../项目受理/项目受理业务层.txt
     ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    北京市西城区车公庄大街9号院(五栋大楼)五栋大楼E座默认单元609    50000    35000.00    350.00
     ...    400000.00    4000.00
     询价保存按钮
+    Transaction Start    询价完成进行保存
     等待提示框出现
+    Transaction End    询价完成进行保存
     确定按钮
     ${new_price_range}    询价编辑    ${price_range}    13975626251    北京市    朝阳区    北京华贸城
     ...    清河营南街7号院    北京华贸城18号楼    2单元    101    100.00    6
@@ -80,9 +82,11 @@ Resource          ../../项目受理/项目受理业务层.txt
     ...    电话    询价相聚时刻的分离式的解放路快圣诞节饭    北京市西城区车公庄大街9号院(五栋大楼)五栋大楼E座默认单元609    50000    35000.0    350.0
     ...    400000    4000
     转立项按钮
+    Transaction Start    转立项页面
     Unselect Frame
     Select Frame    xpath=//iframe[@name="立项"]
     等待加载完毕
+    Transaction End    转立项页面
     验证立项界面的值是否正常    ${price_range}    跳转来源=1
     Comment    询价完成返回询价页面后点击转立项
     Unselect Frame
@@ -98,11 +102,15 @@ Resource          ../../项目受理/项目受理业务层.txt
     Click Element    xpath=.//*[@id='framecenter']//li[@tabid='InquiryAndProject_Residential']
     询价窗口
     询价查询按钮
+    Transaction Start    询价列表数据查询
     等待列表创建完毕
+    Transaction End    询价列表数据查询
     Click Element    xpath=.//div[@class="panel" and contains(@style,"display: block")]//td[@field="TID"]/ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[text()="转立项"]
+    Transaction Start    转立项页面
     Unselect Frame
     Select Frame    xpath=//iframe[@name="create_project_"]
     等待加载完毕
+    Transaction End    转立项页面
     验证立项界面的值是否正常    ${price_range1}    跳转来源=1
     [Teardown]    Close Browser
 

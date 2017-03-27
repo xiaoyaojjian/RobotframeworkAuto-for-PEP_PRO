@@ -12,13 +12,15 @@ Library           ../../ReportRequests.py
     Input Text    ${locator}    ${content}
     ${element}    Get Webelement    ${locator}
     ${id}    Set Variable    ${element.get_attribute ('id')}
-    普通查询
+     公共.普通查询
     ${status}    Run Keyword And Continue On Failure    Run Keyword And Return Status    Wait Until Page Contains    显示1到1,共1记录    30
     ${page_count}    get总页数
     Run Keyword If    ${status}==False    循环获取列表中各列的值    ${page_index}    ${col_index}    ${content}    ${page_count}
     Clear Element Text    ${locator}
-    普通查询
+     公共.普通查询
+    Transaction Start    项目变更按${id}查询
     等待列表加载完成
+    Transaction End    项目变更按${id}查询
 
 有效下拉查询模板
     [Arguments]    ${page_index}    ${locator}    ${label_name}    ${col_index}
@@ -55,10 +57,10 @@ Library           ../../ReportRequests.py
     Input Text    ${locator}    ${content}
     ${element}    Get Webelement    ${locator}
     ${id}    Set Variable    ${element.get_attribute ('id')}
-    普通查询
+     公共.普通查询
     ${status}    Run Keyword And Continue On Failure    Run Keyword And Return Status    Wait Until Page Contains    显示0到0,共0记录    60    通过${id}不应该能够查询出数据
     Clear Element Text    ${locator}
-    普通查询
+     公共.普通查询
     等待列表加载完成
 
 get总页数

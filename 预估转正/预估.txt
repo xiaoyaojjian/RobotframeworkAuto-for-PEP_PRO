@@ -21,14 +21,13 @@ Resource          ..//项目变更/组件层/估价作业验证.txt
     Select From List By Label    id=IsPositive    未转正
     等待列表创建完毕
     转正查询按钮
-    ${流水号}    ${报告编号}    内业查询流水号
+    ${流水号}    ${报告编号}    内业查询流水号    ProjectNo
     转正查询按钮
     等待列表创建完毕
     Comment    等待加载完毕
     Comment    Click Element    .//a[text()="转正"]
     转正
     等待弹出窗口出现
-    等待加载完毕
     选择报告撰写人和收费信息
     预估操作层.点击提交
     等待提示框出现
@@ -50,12 +49,17 @@ Resource          ..//项目变更/组件层/估价作业验证.txt
     Comment    ${检测是否已经转正}    检测是否已经转正
     预估获取页面总数量
     已转正校验
-    变更后估价未领取页面验证    ${流水号}    ${报告编号}    正常
-    Comment    判断转正是否成功
-    Comment    打开功能模块    我的项目    估价作业
-    Comment    Input Text    id=ReportNo    ${流水号}
-    Comment    Click Element    //span[text()='查询']
-    Comment    ${总数量}    询价获取页面数据总量
+    Unselect Frame
+    Wait Until Page Does Not Contain Element    xpath=.//ul[@class="menu" and @style="display: none;"]//a[text()="估价作业"]    timeout=10s
+    Click Element    //a[contains(.,'估价作业')]
+    Select Frame    id=ProjectAllot_ReportAccept
+    点击高级查询按钮
+    Input Text    id=OldProjectNo    ${流水号}
+    Click Element    //span[text()='查询']/..
+    等待一条记录查询出来
+    ${oldPNO}    获取旧流水号
+    Run Keyword If    '${流水号}'=='${oldPNO}'    log    pass
+    ...    ELSE IF    log    Fail
 
 查看
     [Setup]    登录
@@ -64,7 +68,7 @@ Resource          ..//项目变更/组件层/估价作业验证.txt
     Comment    ${总数据量}    分配正确查询数据    流水号    ProjectNo    ProjectNo    504777503841
     Comment    ${预估已转正}    预估转正查询状态    已转正查询    IsPositive
     等待列表创建完毕
-    内业查询流水号
+    内业查询流水号    ProjectNo
     转正查询按钮
     等待列表创建完毕
     点击查看数据

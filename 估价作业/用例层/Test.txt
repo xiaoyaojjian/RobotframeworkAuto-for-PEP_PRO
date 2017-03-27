@@ -6,7 +6,6 @@ Resource          ../组件层/进行中.txt
 Resource          ../组件层/已完成.txt
 Resource          ../../公共模块.txt
 Resource          ../流程层/流程.txt
-Library           DatabaseLibrary
 
 *** Test Cases ***
 线下报告
@@ -14,6 +13,7 @@ Library           DatabaseLibrary
     [Teardown]    Close Browser
 
 线上报告
+    [Tags]    线上报告
     Run Keyword And Continue On Failure    线上报告
     [Teardown]    Close Browser
 

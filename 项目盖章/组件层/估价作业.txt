@@ -8,9 +8,12 @@ Resource          公共.txt
 输入流水号查询是否存在记录
     [Arguments]    ${pno}
     Unselect Frame
-    Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
+    Comment    Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
+    打开功能模块    我的项目    估价作业
     Select Frame    id=ProjectAllot_ReportAccept
     等待列表加载完成    1
-    Input Text    //input[@id='ProjectNo']    ${pno}
+    Input Text    //input[@id='filter']    ${pno}
     Click Element    //span[text()='查询']/../..
-    Wait Until Page Contains    显示1到1,共1记录    60    未盖章页面回收后在估价作业页面无法查询到
+    Wait Until Page Contains    正常    10    估价作业页面10s未加载出数据
+    ${text}    Get Text    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[1]/td[2]/div
+    Should Be Equal    ${text}    ${pno}    估价作业未查询到记录

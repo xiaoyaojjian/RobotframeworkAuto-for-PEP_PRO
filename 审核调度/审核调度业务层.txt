@@ -154,3 +154,198 @@ Resource          ..//询价/组件层/住宅信息.txt
     ...    ELSE    Fail
     Run Keyword If    ${n}==int('300')    log    pass
     ...    ELSE    Fail
+
+流水号查询
+    全局变量
+    Run Keyword If    '${count}'>1 or '${count}'==2    审核判断是否有流水号
+    ...    ELSE    Fail
+
+审核判断是否有流水号
+    ${i}    Evaluate    random.randint(1,${count})    random
+    ${PNO}    Get Text    //td[@field="ProjectNo"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ProjectNo"]/div
+    输入框    ProjectNo    ${PNO}
+    审核查询按钮
+    审核获取页面总数量
+    Should Be Equal    ${PNO}    ${PNO}    相等流水号
+    审核清空输入框    ProjectNo
+    审核查询按钮
+    等待列表创建完毕
+    审核获取页面总数量
+
+报告号查询
+    全局变量
+    Run Keyword If    '${count}'>1 or '${count}'==2    审核判断是否有报告号
+    ...    ELSE    Fail
+
+审核判断是否有报告号
+    ${i}    Evaluate    random.randint(1,${count})    random
+    ${PNO}    Get Text    //td[@field="ReportNo"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="ReportNo"]/div
+    输入框    ReportNo    ${PNO}
+    审核查询按钮
+    审核获取页面总数量
+    Should Be Equal    ${PNO}    ${PNO}    相等报告号
+    Clear Element Text    id=ReportNo
+    审核查询按钮
+    等待列表创建完毕
+    审核获取页面总数量
+
+项目地址查询
+    全局变量
+    Run Keyword If    '${count}'>1 or '${count}'==2    审核判断是否有项目地址
+    ...    ELSE    Fail
+
+审核判断是否有项目地址
+    ${i}    Evaluate    random.randint(1,${count})    random
+    ${PNO}    Get Text    //td[@field="Pro_Adress"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="Pro_Adress"]/div
+    输入框    address    ${PNO}
+    审核查询按钮
+    审核获取页面总数量
+    Should Be Equal    ${PNO}    ${PNO}    相等报告号
+    Clear Element Text    id=address
+    审核查询按钮
+    等待列表创建完毕
+    审核获取页面总数量
+
+全局变量
+    ${count}    Get Matching Xpath Count    xpath=//div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Set Global Variable    ${count}
+
+输入框
+    [Arguments]    ${y}    ${pno}
+    Input Text    id=${y}    ${pno}
+
+审核清空输入框
+    [Arguments]    ${e}
+    Clear Element Text    id=${e}
+
+审核查询按钮
+    Wait Until Element Contains    xpath=//span[text()='查询']    查询    5s
+    Click Element    id=BtnSearch
+
+审核获取页面总数量
+    ${列表总共数据数}    Get Text    //div[@class="pagination-info"]
+    ${显示第}    Findall    显示(.*)到    ${列表总共数据数}
+    ${到第}    Findall    到(.*),共    ${列表总共数据数}
+    ${总共多少条}    Findall    共(.*)记录    ${列表总共数据数}
+    log    ${总共多少条}
+    [Return]    ${总共多少条}
+
+无效查询
+    输入特殊字符
+    输入不正确整数    address
+    输入字符串
+    输入空格符    address
+
+输入特殊字符
+    流水号特殊字符
+    报告号特殊字符
+    项目地址特殊字符    address
+
+输入不正确整数
+    [Arguments]    ${项目地址}
+    随机生成数    string.digits    12    ProjectNo    1
+    Clear Element Text    id=ProjectNo
+    审核查询按钮
+    随机生成数    string.digits    14    ReportNo    1
+    Clear Element Text    id=ReportNo
+    审核查询按钮
+    随机生成数    string.ascii_letters    50    ${项目地址}    1
+    Clear Element Text    id=${项目地址}
+    审核查询按钮
+
+输入字符串
+    随机生成数    string.ascii_letters    12    ProjectNo    2
+    Clear Element Text    id=ProjectNo
+    审核查询按钮
+    随机生成数    string.ascii_letters    14    ReportNo    3
+    Clear Element Text    id=ReportNo
+    审核查询按钮
+
+输入空格符
+    [Arguments]    ${项目地址}
+    输入框    ProjectNo    ${SPACE}
+    验证流水号提示语
+    审核清空输入框    ProjectNo
+    输入框    ReportNo    ${SPACE}
+    验证报告号提示语
+    审核清空输入框    ReportNo
+    输入框    ${项目地址}    ${SPACE}
+    验证项目地址提示语
+    审核清空输入框    ${项目地址}
+
+流水号特殊字符
+    Input Text    id=ProjectNo    @#$%^&*()
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确流水号
+    Clear Element Text    id=ProjectNo
+
+报告号特殊字符
+    Input Text    id=ReportNo    %%$#$&**~
+    Element Should Contain    //div[@class="tooltip-content"]    请正确输入报告号
+    Clear Element Text    id=ReportNo
+
+项目地址特殊字符
+    [Arguments]    ${项目地址}
+    Input Text    id=${项目地址}    (*&^$%##%
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确的地址(不能含特殊字符和空格)
+    Clear Element Text    id=${项目地址}
+
+随机生成数
+    [Arguments]    ${k}    ${f}    ${h}    ${d}
+    ${str}    Evaluate    ${k}    string
+    ${len}    Evaluate    len('${str}')
+    ${num}    Set Variable    ${f}
+    ${newstr}    Set Variable    ${EMPTY}
+    : FOR    ${index}    IN RANGE    ${num}
+    \    ${i}    Evaluate    random.randint(0,int(${len})-1)    random
+    \    ${temp}    Set Variable    ${str[int(${i})-1]}
+    \    ${newstr}    Set Variable    ${newstr}${temp}
+    log    ${newstr}
+    Input Text    id=${h}    ${newstr}
+    审核查询按钮
+    Run Keyword If    ${d}==1    查询数量
+    ...    ELSE IF    ${d}==2    验证流水号提示语
+    ...    ELSE IF    ${d}==3    验证报告号提示语
+
+查询数量
+    ${总共多少条}    审核获取页面总数量
+    ${count}    Get Matching Xpath Count    //div[@class="datagrid-view2"]//ancestor::table[@class="datagrid-btable"]/tbody/tr
+    log    ${count}
+    Run Keyword If    ${count}==1    log    pass
+    ...    ELSE    Fail
+
+验证流水号提示语
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确流水号
+
+验证报告号提示语
+    Element Should Contain    //div[@class="tooltip-content"]    请正确输入报告号
+
+验证项目地址提示语
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确的地址(不能含特殊字符和空格)
+
+审核流水号模糊查询
+    [Arguments]    ${pno}    ${流水号关键词}    ${列表模式}    ${选择框ID}
+    输入框    ${pno}    ${流水号关键词}
+    审核查询按钮
+    等待列表创建完毕
+    验证模糊查询后的列表数据    ${流水号关键词}    ${列表模式}    ${选择框ID}
+    审核清空输入框    ${pno}
+    审核查询按钮
+
+审核报告号模糊查询
+    [Arguments]    ${pno}    ${报告号关键词}    ${列表模式}    ${选择框ID}
+    输入框    ${pno}    ${报告号关键词}
+    审核查询按钮
+    等待列表创建完毕
+    验证模糊查询后的列表数据    ${报告号关键词}    ${列表模式}    ${选择框ID}
+    审核清空输入框    ${pno}
+    审核查询按钮
+
+审核项目地址模糊查询
+    [Arguments]    ${项目地址}    ${pno}    ${列表模式}    ${选择框ID}
+    输入框    ${项目地址}    ${pno}
+    审核查询按钮
+    等待列表创建完毕
+    验证模糊查询后的列表数据    ${pno}    ${列表模式}    ${选择框ID}
+    审核清空输入框    ${项目地址}
+    审核查询按钮

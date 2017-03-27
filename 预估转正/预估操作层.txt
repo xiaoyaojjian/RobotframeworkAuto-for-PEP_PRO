@@ -6,6 +6,7 @@ Resource          ../报告打印装订/组件层/报告装订打印.txt
 Resource          ../项目受理/项目受理操作层.txt
 Resource          ../外业分配/外业分配业务层.txt
 Resource          预估校验.txt
+Resource          ../审核调度/审核调度业务层.txt
 
 *** Keywords ***
 转正
@@ -14,16 +15,18 @@ Resource          预估校验.txt
     Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${row}]/td[@field="TID"]/div/a[2]
 
 选择报告撰写人和收费信息
-    Clear Element Text    xpath=.//*[@id='people']/..//span/input[1]
-    Input Text    xpath=.//*[@id='people']/..//span/input[1]    李楠
-    Clear Element Text    xpath=.//*[@id='price']/..//span/input[1]
-    Input Text    xpath=.//*[@id='price']/..//span/input[1]    200
+    Clear Element Text    xpath=.//span[@class="textbox combo"]//input[1]
+    Input Text    xpath=//tr[5]/td[2]/span/input[1]    李楠
+    Clear Element Text    xpath=//span[@class="textbox numberbox"]/input[1]
+    Input Text    xpath=//tr[5]/td[4]/span/input[1]    200
+    Click Element    id=address
 
 点击提交
-    Click Element    xpath=html/body/div[1]/table/tbody/tr[6]/td/input
+    sleep    10s
+    Click Element    xpath=//ancestor::table//input[contains(@value,"提交")and(contains(@type,'button'))]
 
 点击查看数据
-    Click Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[1]
+    Click Element    xpath=//form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="TID"]/div/a[1]
 
 检测是否已经转正
     ${检测是否已经转正}    Get Text    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="IsPositive"]/div
@@ -294,3 +297,75 @@ Resource          预估校验.txt
     Comment    ${行数}    预估获取列表列数    IsPositive
     sleep    5
     已转正校验
+
+获取旧流水号
+    ${oldPNO}    Get Text    xpath=//form[@id="form1"]/div/div[2]/div[1]//ancestor::table[@class="datagrid-btable"]/tbody/tr/td[@field="OldProjectNo"]/div
+    [Return]    ${oldPNO}
+
+预估验证是否有项目地址
+    ${i}    Evaluate    random.randint(1,${count})    random
+    ${PNO}    Get Text    //td[@field="AreaAddress"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${1}]/td[@field="AreaAddress"]/div
+    输入框    Address    ${PNO}
+    审核查询按钮
+    审核获取页面总数量
+    Should Be Equal    ${PNO}    ${PNO}    相等报告号
+    Clear Element Text    id=Address
+    审核查询按钮
+    等待列表创建完毕
+    审核获取页面总数量
+
+预估项目地址查询
+    全局变量
+    Run Keyword If    '${count}'>1 or '${count}'==2    预估验证是否有项目地址
+    ...    ELSE    Fail
+
+预估小区名称查询
+    全局变量
+    Run Keyword If    '${count}'>1 or '${count}'==2    预估判断是否有小区名称
+    ...    ELSE    Fail
+
+预估判断是否有小区名称
+    ${i}    Evaluate    random.randint(1,${count})    random
+    ${PNO}    Get Text    //td[@field="AreaName"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${i}]/td[@field="AreaName"]/div
+    输入框    AreaName    ${PNO}
+    审核查询按钮
+    审核获取页面总数量
+    Should Be Equal    ${PNO}    ${PNO}    相等小区名称
+    审核清空输入框    AreaName
+    审核查询按钮
+    等待列表创建完毕
+    审核获取页面总数量
+
+预估特殊字符查询
+    流水号特殊字符
+    报告号特殊字符
+    项目地址特殊字符    Address
+    小区名称特殊字符
+
+小区名称输入不正确整数
+    随机生成数    string.ascii_letters    30    AreaName    1
+    Clear Element Text    id=AreaName
+    审核查询按钮
+
+小区名称输入字符串
+    随机生成数    string.ascii_letters    14    ReportNo    3
+    Clear Element Text    id=ReportNo
+    审核查询按钮
+
+小区名称输入空格符
+    输入框    AreaName    ${SPACE}
+    验证项目地址提示语
+    审核清空输入框    AreaName
+
+小区名称特殊字符
+    Input Text    id=AreaName    (*&^$%##%
+    Element Should Contain    //div[@class="tooltip-content"]    请输入正确小区名称
+    Clear Element Text    id=AreaName
+
+预估小区名称模糊查询
+    [Arguments]    ${小区名称地址}    ${pno}    ${列表模式}    ${选择框ID}
+    输入框    ${小区名称地址}    ${pno}
+    审核查询按钮
+    等待列表创建完毕
+    验证模糊查询后的列表数据    ${pno}    ${列表模式}    ${选择框ID}
+    审核清空输入框    ${小区名称地址}

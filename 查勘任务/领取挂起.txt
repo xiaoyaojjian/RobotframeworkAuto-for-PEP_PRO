@@ -50,7 +50,7 @@ Resource          ..//项目受理/项目受理业务层.txt
     查勘打开功能模块公共方法
     查勘任务挂起    流水号    ${pep.get_value(u'流水号')}    ProjectNo    挂起    1
     查勘任务解挂    流水号    ${pep.get_value(u'流水号')}    ProjectNo    解挂
-    [Teardown]
+    [Teardown]    Close Browser
 
 批量领取
     [Documentation]    该用例含有
@@ -59,8 +59,8 @@ Resource          ..//项目受理/项目受理业务层.txt
     ...    编写人：吕梓清
     [Setup]    登录
     查勘打开功能模块公共方法
-    批量领取    ProjectNo    2    5
-    [Teardown]    Close Browser
+    批量领取    ProjectNo    5    5
+    [Teardown]
 
 完成
     [Setup]    登录

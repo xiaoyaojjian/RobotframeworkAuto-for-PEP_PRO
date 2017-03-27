@@ -7,25 +7,20 @@ Resource          审核验证.txt
 Resource          业务层.txt
 Library           Selenium2Library
 Resource          ../审核调度/审核调度操作层.txt
+Resource          ../估价作业/流程层/流程.txt
 
 *** Test Cases ***
-审核流程
-    [Setup]    登录
-    打开功能模块    我的项目    项目审核
-    等待列表创建完毕
-    项目审核流程    低级错误    界面需要优化，不符合用户需求
-
 (未)转让
     [Setup]    登录
     打开功能模块    我的项目    项目审核
-    等待列表创建完毕
+    等待列表创建完毕    项目审核
     select frame    id=ProjectAllot_Audit
     随机选择一条数据
-    Comment    sleep    7
-    Click Element    //div[@id='tabs']//div[2]/div[1]//div[@class='datagrid-view1']/div[2]//tbody//tr[1]//a[text()='转让']
+    等待列表创建完毕    项目审核查询响应时间
+    Click Element    xpath=//a[text()='转让']
     select Frame    xpath=//iframe[contains(@id,"xubox_iframe")]
     Wait Until Page Contains    ${USER_NAME}    20
-    项目审核选择审核人
+    Select From List By Label    id=userId    李楠
     审核点击提交
     Unselect Frame
     select frame    id=ProjectAllot_Audit
@@ -35,57 +30,18 @@ Resource          ../审核调度/审核调度操作层.txt
 查看详情
     [Setup]    登录
     打开功能模块    我的项目    项目审核
-    等待列表创建完毕
+    等待列表创建完毕    项目审核
     select frame    id=ProjectAllot_Audit
     切换到已审核过子模块
+    等待列表创建完毕    已审核过
     随机选择一条查看详情
+    点击查询按钮
+    等待列表创建完毕
     点击查看详细
+    sleep    5s
 
-(中)转让
-    Comment    打开功能模块    我的项目    项目审核
-    Comment    等待列表创建完毕
-    Comment    select frame    id=ProjectAllot_Audit
-    Comment    切换到审核中子模块
-    Comment    ${rand}    Evaluate    random.randint(1,3)    random
-    Comment    Comment    sleep    5
-    Comment    Wait Until Page Contains Element    //form[@id="form1"]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div    timeout=30s
-    Comment    ${流水号}    Get Text    xpath=//div[@id="tabs"]/div[2]/div[2]//ancestor::table[@class="datagrid-btable"]/tbody/tr[${rand}]/td[@field="ProjectNo"]/div
-    Comment    Input Text    id=ProjectNo    ${流水号}
-    Comment    点击查询按钮
-    Comment    select frame    id=ProjectAllot_Audit
-    Comment    等待提示框出现
-    Comment    Click Element    //span[text()='确定']/../..
+估价作业到项目审核
+    Run Keyword And Continue On Failure    项目估价作业
 
-一审到三审流程
-    [Tags]    test
-    打开功能模块    我的项目    估价作业
-    Select Frame    id=ProjectAllot_ReportAccept
-    等待列表创建完毕
-    勘察状态
-    点击查询按钮
-    ${流水号}    随机选择一条数据
-    点击领取估价作业
-    切换到进行中子模块
-    进行中点击线下报告
-    切换选项卡    估价作业
-    Select Frame    id=ProjectAllot_ReportAccept
-    点击提交
-    提交审核中的信息
-    Comment    提交审核    ${pno}    一审
-    Unselect Frame
-    切换到已完成子模块
-    Select Frame    id=ProjectAllot_ReportAccept
-    ${已完成流水号}    Get Text    //div[@id="tabs"]/div[2]/div[3]//ancestor::table[@class="datagrid-btable"]/tbody/tr[1]/td[@field="ProjectNo"]/div
-    Run Keyword If    '${已完成流水号}'=='${流水号}'    log    pass    else    Fail
-    Unselect Frame
-    打开功能模块    我的项目    项目审核
-    等待列表创建完毕
-    Input Text    id=ProjectNo    ${流水号}
-    点击查询按钮
-    审核接收
-    等待提示框出现
-    点击提示框中的确定按钮
-    切换到审核中子模块
-    等待列表创建完毕
-    点击审核报告按钮
-    审核报告
+项目审核退回
+    Run Keyword And Continue On Failure    项目估价作业

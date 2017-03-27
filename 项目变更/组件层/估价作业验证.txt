@@ -8,18 +8,18 @@ Resource          ../../公共模块.txt
 *** Keywords ***
 变更后估价未领取页面验证
     [Arguments]    ${旧流水号}    ${旧报告编号}    ${项目状态}
-    Unselect Frame
-    Click Element    //a[contains(text(),'估价作业')]/parent::li[@class='ubale11']
+    打开功能模块    我的项目    估价作业
     Select Frame    id=ProjectAllot_ReportAccept
     Wait Until Page Contains Element    //div[@id='tabs']/div[2]/div[1]//div[@class='datagrid-view2']/div[2]//tbody/tr[10]    60    60s未加载出数据
+    Click Element    //span[text()='高级查询']/..
     Input Text    //input[@id='OldProjectNo']    ${旧流水号}
     Click Element    //span[text()='查询']/..
-    Wait Until Page Contains    内业未接收    60
+    Wait Until Page Contains Element    //div[@class='datagrid-view']/div[2]/div[2]//tbody/tr[1]/td[2]/div    60
     ${new_pno}    获取指定列的值    1    2    1
     ${new_rno}    获取指定列的值    1    3    1
     ${old_pno}    获取指定列的值    1    4    1
     ${old_rno}    获取指定列的值    1    5    1
-    ${状态}    获取指定列的值    1    11    1
+    ${状态}    获取指定列的值    1    12    1
     Run Keyword And Continue On Failure    Should Be Equal    ${状态}    ${项目状态}
     Run Keyword If    '${项目状态}'=='加出'    Run Keyword And Continue On Failure    Should Be Equal    ${旧报告编号}    ${new_rno}    变更后报告编号不相等
     ...    ELSE IF    '${项目状态}'=='正常'    Run Keyword And Continue On Failure    Should Not Be Equal    ${旧报告编号}    ${new_rno}
